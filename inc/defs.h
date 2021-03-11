@@ -4,6 +4,8 @@
 #define screenWidth 1600
 #define screenHeight 800
 #define INVALID -1
+#define TRUE 1
+#define FALSE 0
 // COLORS
 #define RED 0x00FF0000
 #define YELLOW 0x00FFFF00
@@ -11,6 +13,8 @@
 #define BLUE 0xFF7580FF
 #define WHITE 0x00FFFFFF
 #define BLACK 0x00000000
+
+
 
 #define PI 3.14159265358979323846
 

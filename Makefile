@@ -5,25 +5,30 @@ TEST_CFLAGS= -ggdb3 -Wall -Wextra -Werror #-fsanitize=address -fsanitize=leak
 INC_PATH=-I./mlx_linux -I./inc -I./
 LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz
 
-SRC_FILES=\
-	src/raycaster.c \
-	src/keyboard.c	\
-	src/map.c	    \
-	src/player.c	\
-	src/utils.c  	\
+SRC_FILES=				\
+	src/raycaster.c 	\
+	src/keyboard.c		\
+	src/map.c	    	\
+	src/player.c		\
+	src/utils.c  		\
+	src/math_utils.c  	\
+	src/direction.c  	\
 
-INC_FILES=\
-	inc/raycaster.h \
-	inc/keyboard.h	\
-	inc/map.h	    \
-	inc/player.h	\
-	inc/utils.h  	\
+INC_FILES=				\
+	inc/raycaster.h  	\
+	inc/keyboard.h	 	\
+	inc/map.h	     	\
+	inc/player.h	 	\
+	inc/utils.h  	 	\
+	inc/math_utils.h 	\
+	inc/direction.h  	\
 
-TEST_FILES= \
-	test/main.c \
-	test/test_horizontal_lines_detection.c \
-	test/test_vertical_lines_detection.c \
-	test/test_player_forward_move.c
+TEST_FILES= 								\
+	test/main.c 							\
+	test/test_horizontal_lines_detection.c 	\
+	test/test_vertical_lines_detection.c 	\
+	test/test_player_forward_move.c			\
+	test/test_player_backward_move.c		\
 
 all: $(NAME)
 

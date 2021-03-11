@@ -1,8 +1,16 @@
 #include <math.h>
+#include <math_utils.h>
 #include <player.h>
 #include <raycaster.h>
 #include <utils.h>
 
+static t_bool hit_wall(t_map worldMap, t_position new_pos)
+{
+	t_grid_position pos = to_grid_position(worldMap, new_pos);
+	if (worldMap.matrix[pos.y][pos.x] > 0)
+		return (TRUE);
+	return (FALSE);
+}
 int draw_player(t_data *data)
 {
 	draw_square(&data->map,
@@ -24,28 +32,48 @@ void init_player(t_data *data)
 	data->player.plane_x = 320;
 	data->player.plane_y = 200;
 	data->player.angle = 90;
-	data->player.speed = 10;
+	data->player.speed = 5;
 	data->player.color = BLUE;
-}
-
-static t_bool hit_wall(t_map worldMap, t_position new_pos)
-{
-	t_grid_position pos = to_grid_position(worldMap, new_pos);
-	if(worldMap.matrix[pos.y][pos.x] > 0)
-		return (1);
-	return (0);
 }
 
 t_bool move_forward(t_player *player, t_data *data)
 {
 	t_position new_pos = player->position;
-	new_pos.x += cos(degree_to_radians(player->angle)) * player->speed;
-	new_pos.y -= sin(degree_to_radians(player->angle)) * player->speed;
-	if(!hit_wall(data->worldMap, new_pos))
+	new_pos.x += floor(cos(degree_to_radians(player->angle)) * player->speed);
+	new_pos.y -= floor(sin(degree_to_radians(player->angle)) * player->speed);
+	if (!hit_wall(data->worldMap, new_pos))
 	{
 		player->position.y = new_pos.y;
 		player->position.x = new_pos.x;
-		return (1);
+		return (TRUE);
 	}
-	return (0);
+	return (FALSE);
+}
+
+t_bool move_backward(t_player *player, t_data *data)
+{
+	t_position new_pos = player->position;
+	new_pos.x -= floor(cos(degree_to_radians(player->angle)) * player->speed);
+	new_pos.y += floor(sin(degree_to_radians(player->angle)) * player->speed);
+	if (!hit_wall(data->worldMap, new_pos))
+	{
+		player->position.y = new_pos.y;
+		player->position.x = new_pos.x;
+		return (TRUE);
+	}
+	return (FALSE);
+}
+
+void turn_counterclockwise(t_player *player)
+{
+	if (player->angle >= 360)
+		player->angle = 0;
+	player->angle += 1.5;
+}
+
+void turn_clockwise(t_player *player)
+{
+	if (player->angle <= 0)
+		player->angle = 360;
+	player->angle -= 1.5;
 }

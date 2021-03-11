@@ -10,6 +10,6 @@
 
 #include "defs.h"
 
-int keypress(int keycode, t_data *data);
+int keypressed(int keycode, t_data *data);
 
 #endif

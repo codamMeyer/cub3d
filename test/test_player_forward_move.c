@@ -6,6 +6,7 @@
 #include <inc/utils.h>
 #include <math.h>
 #include <stdio.h>
+#include <math_utils.h>
 
 static void draw_map(t_data game, int expected_x, int expected_y)
 {
@@ -45,7 +46,7 @@ CTEST_SETUP(player_forward_move)
 	data->game.player.color = BLUE;
 	data->game.worldMap.height = 5;
 	data->game.worldMap.width = 7;
-	data->game.worldMap.matrix = init_world(5, 7);
+	data->game.worldMap.matrix = init_matrix(data->game.worldMap.height, data->game.worldMap.width);
 	data->game.worldMap.matrix[2][3] = 1;
 }
 
