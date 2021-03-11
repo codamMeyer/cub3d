@@ -1,0 +1,77 @@
+#ifndef DEFS_H
+#define DEFS_H
+
+#define screenWidth 1600
+#define screenHeight 800
+#define INVALID -1
+// COLORS
+#define RED 0x00FF0000
+#define YELLOW 0x00FFFF00
+#define GREEN 0x0000FF00
+#define BLUE 0xFF7580FF
+#define WHITE 0x00FFFFFF
+#define BLACK 0x00000000
+
+#define PI 3.14159265358979323846
+
+typedef int t_bool;
+
+typedef struct s_position
+{
+	double x;
+	double y;
+} t_position;
+
+typedef struct s_grid_position
+{
+	int x;
+	int y;
+} t_grid_position;
+
+typedef struct s_img
+{
+	void *img;
+	char *addr;
+	int bits_per_pixel;
+	int line_length;
+	int endian;
+	int color;
+} t_img;
+
+typedef struct s_ray
+{
+	float angle;
+	double increment_angle;
+	int precision;
+	t_position position;
+} t_ray;
+
+typedef struct s_player
+{
+	t_position position;
+	int FOV;
+	int plane_x;
+	int plane_y;
+	double angle;
+	int size;
+	int speed;
+	int color;
+} t_player;
+
+typedef struct s_map
+{
+	int width;
+	int height;
+	int **matrix;
+} t_map;
+
+typedef struct s_data
+{
+	void *mlx;
+	void *window;
+	t_img map;
+	t_map worldMap;
+	t_player player;
+} t_data;
+
+#endif
