@@ -132,7 +132,7 @@ As an example the following is how you can get the point 1:
 
 ![figure 11](./images/figure11.png)
 
-   (In the picture, the ray is facing up, so we use the first formula.
+   In the picture, the ray is facing up, so we use the first formula.
       
       1.y = rounded_down( 224 / 64 ) * (64) = 192;
    
@@ -187,21 +187,23 @@ So the grid coordinate of intersection 3 is (2, 1).
 
 #Checking Vertical Intersections
 
-![figure 10](./images/figure13.png)
+![figure 13](./images/figure13.png)
 
 #### Steps of finding intersections with vertical grid lines:
 
 
 ##### 1. Find coordinate of the first intersection (point 2 in this example).
 
-   The ray is facing right in the picture,so:
+![figure 14](./images/figure14.png)
 
-      2.x = rounded_down(player_x / GRID_SIZE) * (GRID_SIZE) + GRID_SIZE.
-  
-   If the ray had been facing left:
-      
-      2.x = rounded_down(player_x / GRID_SIZE) * (GRID_SIZE) – 1.
-      2.y = player_y + (player_x - 2.x) * tan(ALPHA);
+   in this example the ray is facing right so:
+
+      2.x = rounded_down(player_x / GRID_SIZE) * (GRID_SIZE);
+ 
+   Finding y coordinate:
+   
+      width = (player_x - ray.x) * tan_angle;
+	   2.y = player_y + width;
 
 ##### 2. Find x_increment.
 
@@ -219,4 +221,6 @@ So the grid coordinate of intersection 3 is (2, 1).
       If there is no wall we repeat the process until we find one:
       x = x + x_increment
       y = y + y_increment.
+   
 
+   
