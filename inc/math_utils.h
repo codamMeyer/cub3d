@@ -9,4 +9,6 @@ double min_d(double a, double b);
 double max_d(double a, double b);
 t_grid_position to_grid_position(t_map worldMap, t_position pos);
 double degree_to_radians(double degree);
+double abs_value(double value);
+
 #endif

@@ -16,6 +16,7 @@
         - [2. Find x_increment.](#2-find-x_increment)
         - [3. Find y_increment](#3-find-y_increment)
         - [4. Check the grid at the intersection point.](#4-check-the-grid-at-the-intersection-point)
+  - [STEP 3: Get distance from walls](#step-3-get-distance-from-walls)
 
 
 ## STEP 1: creating a world
@@ -224,3 +225,6 @@ So the grid coordinate of intersection 3 is (2, 1).
    
 
    
+## STEP 3: Get distance from walls
+
+![figure 15](./images/figure15.png)

@@ -17,7 +17,7 @@ int draw_map_2d(t_data *data)
 	int j;
 	int color;
 	int x = 0;
-	int y = 0;
+	int y = 400;
 	int grid_size = GRID_SIZE;
 
 	for (i = 0; i < data->worldMap.height; i++)

@@ -16,17 +16,17 @@ int draw_player(t_data *data)
 	draw_square(&data->map,
 				6,
 				data->player.position.x - data->player.size / 2,
-				data->player.position.y - data->player.size / 2,
+				400 + (data->player.position.y - data->player.size / 2),
 				YELLOW);
 
-	draw_square(&data->map, 2, data->player.position.x, data->player.position.y, RED);
+	draw_square(&data->map, 2, data->player.position.x, 400 + (data->player.position.y), RED);
 	return (1);
 }
 
 void init_player(t_data *data)
 {
-	data->player.position.x = 48;
-	data->player.position.y = 113;
+	data->player.position.x = GRID_SIZE + 20;
+	data->player.position.y = GRID_SIZE + 20;
 	data->player.size = 5;
 	data->player.FOV = 60;
 	data->player.plane_x = 320;

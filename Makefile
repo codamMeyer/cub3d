@@ -29,6 +29,7 @@ TEST_FILES= 								\
 	test/test_vertical_lines_detection.c 	\
 	test/test_player_forward_move.c			\
 	test/test_player_backward_move.c		\
+	test/test_wall_distance.c
 
 all: $(NAME)
 

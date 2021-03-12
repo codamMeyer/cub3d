@@ -36,3 +36,11 @@ double degree_to_radians(double degree)
 {
     return (degree * PI / 180.0);
 }
+
+
+double abs_value(double value)
+{
+	if (value < 0.0)
+		return (value * -1.0);
+	return (value);
+}
