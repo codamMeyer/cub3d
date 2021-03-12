@@ -6,7 +6,16 @@
   - [STEP 2: Defining projection attributes](#step-2-defining-projection-attributes)
   - [STEP 3: Finding walls](#step-3-finding-walls)
       - [Steps of finding intersections with horizontal grid lines:](#steps-of-finding-intersections-with-horizontal-grid-lines)
+        - [1. Finding y_increment](#1-finding-y_increment)
+        - [2. Finding x_increment](#2-finding-x_increment)
+        - [3. We can get the coordinate of the next intersection as follows:](#3-we-can-get-the-coordinate-of-the-next-intersection-as-follows)
+        - [4. Convert this into grid coordinate by dividing each component with GRID_SIZE.](#4-convert-this-into-grid-coordinate-by-dividing-each-component-with-grid_size)
+        - [5. repeat the process until we hit a wall.](#5-repeat-the-process-until-we-hit-a-wall)
       - [Steps of finding intersections with vertical grid lines:](#steps-of-finding-intersections-with-vertical-grid-lines)
+        - [1. Find coordinate of the first intersection (point 2 in this example).](#1-find-coordinate-of-the-first-intersection-point-2-in-this-example)
+        - [2. Find x_increment.](#2-find-x_increment)
+        - [3. Find y_increment](#3-find-y_increment)
+        - [4. Check the grid at the intersection point.](#4-check-the-grid-at-the-intersection-point)
 
 
 ## STEP 1: creating a world
@@ -123,98 +132,91 @@ As an example the following is how you can get the point 1:
 
 ![figure 11](./images/figure11.png)
 
-  1. Finding the coordinate of intersection 1.  
-     If the ray is facing up
-      **1.y = rounded_down( player_y / grid_size ) * (grid_size) - 1;**
-     If the ray is facing down
-      **1.y = rounded_down( player_y / grid_size ) * (grid_size) + grid_size;**
-
-   (In the picture, the ray is facing up, so we use
-   the first formula.
-   **1.y = rounded_down( 224 / 64 ) * (64) - 1 = 191;**
-   Now at this point, we can find out the grid 
-   coordinate of y.
-   However, we must decide whether A is part of 
-   the block above the line,
-   or the block below the line.  
-   Here, we chose to make A part of the block
-   above the line, that is why we subtract 1 from 1.y.
-   So the grid coordinate of 1.y is 191/64 = 2;
-
-   **1.x = player_x + (Py-1.y) / tan(ALPHA);**
-   In the picture, (assume ALPHA is 60 degrees), 
-   **1.x = 96 + ( 224 - 191 ) / tan(60) = about 115;**
-   The grid coordinate of 1.x is 115/64 = 1;
-
-   So 1 is at grid **(1,2)** and we can check 
-   whether there is a wall on that grid.
-   There is no wall on **(1,2)** so the ray will be 
-   extended to intersection 3.
-
-1. Finding y_increment
-   If the ray is facing up
-     **y_increment = -grid_size;**
-   If the ray is facing down
-     **y_increment = grid_size;**
-
-2. Finding x_increment
-   **x_increment = 64 / tan(60) = 36;**
-
-3. We can get the coordinate of intersection 3 as follows:
-   **3.x = 1.x + x_increment = 115 + 36 = 151;**
-   **3.y = 1.y + y_increment = 191 - 64 = 127;**
-   Convert this into grid coordinate by 
-   dividing each component with 64.  
-   The result is 
-   **3.x = 151 / 64 = 2 (grid coordinate),**
-   **3.y = 127 / 64 = 1 (grid coordinate)** 
-   So the grid coordinate of intersection 3 is **(2, 1)**.  
-   (C programmer's note: Remember we always round down, 
-   this is especially true since
-   you can use right shift by 8 to divide by 64).
-
-4. Grid **(2,1)** is checked.  
-   Again, there is no wall, so the ray is extended 
-   to intersection 4.  
+   (In the picture, the ray is facing up, so we use the first formula.
+      
+      1.y = rounded_down( 224 / 64 ) * (64) = 192;
    
-5. We can get the coordinate of D as follows:
-   **4.x= 3.x + x_increment = 151 + 36 = 187;**
-   **4.y= 3.y + y_increment = 127 - 64 = 63;**
-   Convert this into grid coordinate by 
-   dividing each component with 64.
-   The result is 
-   **4.x = 187 / 64 = 2 (grid coordinate),** 
-   **4.y = 63 / 64 = 0 (grid coordinate)** 
-   So the grid coordinate of D is (2, 0).  
+   The ray is facing up and we want to check the grid above the line, that's why we subtract 1 from it:
+      
+      1.y = 1.y - 1;
+      So the grid coordinate of 1.y is 191 / 64 = 2;
+   
+   if the ray were facing down, we'd do:
+      
+      1.y = 1.y + GRID_SIZE) // to check the bellow the line.
 
-6. Grid **(2,0)** is checked.  
-   There is a wall there, so the process stop.
+   In the picture, (assume ALPHA is 60 degrees),
+  
+      width = ( 224 - 191 ) / tan(60)
+      1.x = 96 + width = about 115;
+      The grid coordinate of 1.x is 115 / 64 = 1;
 
+   So 1 is at grid **(1,2)** and we can check whether there is a wall on that grid. There is no wall on **(1,2)** so the ray will be extended to the next intersection.
+
+![figure 12](./images/figure12.png)
+
+##### 1. Finding y_increment
+      If the ray is facing UP
+         y_increment = -GRID_SIZE;
+      Else
+         y_increment = GRID_SIZE;
+
+##### 2. Finding x_increment
+
+      x_increment = GRID_SIZE / tan(ALPHA);
+      in this case:
+      x_increment = 64 / tan(60) = 36
+
+##### 3. We can get the coordinate of the next intersection as follows:
+
+      3.x = 1.x + x_increment = 115 + 36 = 151;
+      3.y = 1.y + y_increment = 191 - 64 = 127;
+
+#####  4. Convert this into grid coordinate by dividing each component with GRID_SIZE.
+
+      3.x = 151 / 64 = 2 (grid coordinate)
+      3.y = 127 / 64 = 1 (grid coordinate) 
+
+So the grid coordinate of intersection 3 is (2, 1).  
+
+##### 5. repeat the process until we hit a wall.
+
+      x = x + x_increment;
+      y = y + y_increment;
 
 
 #Checking Vertical Intersections
 
-![figure 10](./images/figure12.png)
+![figure 10](./images/figure13.png)
 
 #### Steps of finding intersections with vertical grid lines:
 
-    1. Find coordinate of the first intersection (point 2 in this example).
-       The ray is facing right in the picture,so:
-       2.x = rounded_down(player_x / grid_size) * (grid_size) + grid_size.
-       If the ray had been facing left:
-       2.x = rounded_down(player_x / grid_size) * (grid_size) – 1.
-       2.y = player_y + (player_x - 2.x) * tan(ALPHA);
-    2. Find x_increment.
-       (Note: x_increment is just the width of the grid; however, if the ray is facing right, x_increment will be positive, if the ray is facing left, y_increment will be negative.)
-    3. Find Ya using the equation given above.
-    4. Check the grid at the intersection point. If there is a wall on the grid, stop and 
-       calculate the distance.
-    5. If there is no wall, extend the to the next intersection point. Notice that the coordinate of the next intersection point -
-    
-    call it (Xnew,Ynew)
-    Xnew = Xold + x_increment
-    Ynew = YOld + y_increment.
 
-In the picture, first, the ray hits point 2. Grid (2,2) is checked. There no wall on (2,2) so the ray is extended to 5. Grid (3,0) is checked. There is a wall there, so we stop and calculate the distance.
+##### 1. Find coordinate of the first intersection (point 2 in this example).
 
-In this example, point 4 is closer than 5. So the wall slice at 4 (not 5) will be drawn.
+   The ray is facing right in the picture,so:
+
+      2.x = rounded_down(player_x / GRID_SIZE) * (GRID_SIZE) + GRID_SIZE.
+  
+   If the ray had been facing left:
+      
+      2.x = rounded_down(player_x / GRID_SIZE) * (GRID_SIZE) – 1.
+      2.y = player_y + (player_x - 2.x) * tan(ALPHA);
+
+##### 2. Find x_increment.
+
+      If the ray is facing RIGHT
+         x_increment = GRID_SIZE;
+      Else
+         x_increment = -GRID_SIZE;
+
+##### 3. Find y_increment
+
+      y_increment = GRID_SIZE * tan(ALPHA);
+
+##### 4. Check the grid at the intersection point.
+
+      If there is no wall we repeat the process until we find one:
+      x = x + x_increment
+      y = y + y_increment.
+
