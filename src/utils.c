@@ -18,10 +18,10 @@ int paint_background(int w, int h, t_data *data)
 	int color;
 
 	x = w;
-	while(x--)
+	while (x--)
 	{
 		y = h;
-		while(y--)
+		while (y--)
 		{
 			color = YELLOW;
 			my_mlx_pixel_put(&data->map, x, y, color);
@@ -33,9 +33,9 @@ int paint_background(int w, int h, t_data *data)
 
 void draw_square(t_img *img, int size, int start_x, int start_y, int color)
 {
-	for(int i = start_x; i < start_x + size; i++)
+	for (int i = start_x; i < start_x + size; i++)
 	{
-		for(int j = start_y; j < start_y + size; j++)
+		for (int j = start_y; j < start_y + size; j++)
 		{
 			my_mlx_pixel_put(img, i, j, color);
 		}

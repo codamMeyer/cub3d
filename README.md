@@ -228,3 +228,5 @@ So the grid coordinate of intersection 3 is (2, 1).
 ## STEP 3: Get distance from walls
 
 ![figure 15](./images/figure15.png)
+
+[![forthebadge](https://forthebadge.com/images/badges/powered-by-coffee.svg)](https://forthebadge.com)
