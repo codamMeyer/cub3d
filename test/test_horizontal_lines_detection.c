@@ -4,23 +4,23 @@
 #include <inc/raycaster.h>
 #include <inc/utils.h>
 #include <math.h>
-#include <stdio.h>
 #include <math_utils.h>
+#include <stdio.h>
 
 static void draw_map(t_data game, int expected_x, int expected_y)
 {
 	printf("\n");
 	t_grid_position player_pos = to_grid_position(game.worldMap, game.player.position);
-	for (int i = 0; i < game.worldMap.height; i++)
+	for(int i = 0; i < game.worldMap.height; i++)
 	{
-		for (int j = 0; j < game.worldMap.width; j++)
+		for(int j = 0; j < game.worldMap.width; j++)
 		{
-			if (player_pos.x == j && player_pos.y == i)
+			if(player_pos.x == j && player_pos.y == i)
 				printf("👦");
-			else if ((j == expected_x && i == expected_y) &&
-					 (expected_x != INVALID && expected_y != INVALID))
+			else if((j == expected_x && i == expected_y) &&
+					(expected_x != INVALID && expected_y != INVALID))
 				printf("🔵");
-			else if (game.worldMap.matrix[i][j] == 1)
+			else if(game.worldMap.matrix[i][j] == 1)
 				printf("🟫");
 			else
 				printf("  ");

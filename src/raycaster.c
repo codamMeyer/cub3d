@@ -54,9 +54,9 @@ static t_bool is_straight_left_or_right(t_position *ray, double ray_angle)
 	return (FALSE);
 }
 
-static int get_y_increment_for_horizontal_detection(double ray_angle)
+static double get_y_increment_for_horizontal_detection(double ray_angle)
 {
-	int y_increment;
+	double y_increment;
 	if(is_facing_north(ray_angle))
 		y_increment = -GRID_SIZE;
 	else
@@ -64,9 +64,9 @@ static int get_y_increment_for_horizontal_detection(double ray_angle)
 	return (y_increment);
 }
 
-static int get_x_increment_for_horizontal_detection(double ray_angle, double tan_angle)
+static double get_x_increment_for_horizontal_detection(double ray_angle, double tan_angle)
 {
-	int x_increment = GRID_SIZE / tan_angle;
+	double x_increment = GRID_SIZE / tan_angle;
 	if(is_facing_south(ray_angle))
 		x_increment *= -1;
 	return (x_increment);
@@ -89,7 +89,7 @@ get_first_horizontal_intersection(t_player player, double ray_angle, double tan_
 }
 
 static t_position
-find_obstacle(t_data *data, t_map worldMap, int x_increment, int y_increment, t_position ray)
+find_obstacle(t_data *data, t_map worldMap, double x_increment, double y_increment, t_position ray)
 {
 	(void)data;
 	while(!hit_obstacle(worldMap, ray))
@@ -110,15 +110,15 @@ t_position find_horizontal_line(t_data *data, double ray_angle)
 	if(is_straight_left_or_right(&ray, ray_angle))
 		return (ray);
 	double tan_angle = tan(degree_to_radians(ray_angle));
-	int y_increment = get_y_increment_for_horizontal_detection(ray_angle);
-	int x_increment = get_x_increment_for_horizontal_detection(ray_angle, tan_angle);
+	double y_increment = get_y_increment_for_horizontal_detection(ray_angle);
+	double x_increment = get_x_increment_for_horizontal_detection(ray_angle, tan_angle);
 	ray = get_first_horizontal_intersection(data->player, ray_angle, tan_angle);
 	return (find_obstacle(data, data->worldMap, x_increment, y_increment, ray));
 }
 
-static int get_x_increment_for_vertical_detection(double ray_angle)
+static double get_x_increment_for_vertical_detection(double ray_angle)
 {
-	int x_increment;
+	double x_increment;
 	if(is_facing_west(ray_angle))
 		x_increment = -GRID_SIZE;
 	else
@@ -126,9 +126,9 @@ static int get_x_increment_for_vertical_detection(double ray_angle)
 	return (x_increment);
 }
 
-static int get_y_increment_for_vertical_detection(double ray_angle, double tan_angle)
+static double get_y_increment_for_vertical_detection(double ray_angle, double tan_angle)
 {
-	int y_increment = GRID_SIZE * tan_angle;
+	double y_increment = GRID_SIZE * tan_angle;
 	if(is_facing_east(ray_angle))
 		y_increment *= -1;
 	return (y_increment);
@@ -169,8 +169,8 @@ t_position find_vertical_line(t_data *data, double ray_angle)
 	if(is_straight_up_or_down(&ray, ray_angle))
 		return (ray);
 	double tan_angle = tan(degree_to_radians(ray_angle));
-	int x_increment = get_x_increment_for_vertical_detection(ray_angle);
-	int y_increment = get_y_increment_for_vertical_detection(ray_angle, tan_angle);
+	double x_increment = get_x_increment_for_vertical_detection(ray_angle);
+	double y_increment = get_y_increment_for_vertical_detection(ray_angle, tan_angle);
 	ray = get_first_vertical_intersection(data->player, ray_angle, tan_angle);
 	return (find_obstacle(data, data->worldMap, x_increment, y_increment, ray));
 }
@@ -241,7 +241,6 @@ static double find_closer_wall(t_position h_intersection,
 							   double ray_angle)
 {
 	double closer_wall;
-
 	if(!valid_position(h_intersection))
 		closer_wall = get_wall_distance(v_intersection, player.position);
 	else if(!valid_position(v_intersection))
@@ -263,17 +262,12 @@ static void rayCasting(t_data *data)
 
 	for(int col = 0; col < data->player.plane_x; col++)
 	{
-
 		h_intersection = find_horizontal_line(data, ray_angle);
 		v_intersection = find_vertical_line(data, ray_angle);
 		closer_wall = find_closer_wall(h_intersection, v_intersection, data->player, ray_angle);
 
-		// if (closer_wall == dist_h)
-		// 	draw_square(&data->map, 5, h_intersection.x, 400 + h_intersection.y, BLUE);
-		// else
-		// 	draw_square(&data->map, 5, v_intersection.x, 400 + v_intersection.y, BLUE);
-
 		draw_slice(data, closer_wall, col);
+
 		ray_angle -= ray_increment;
 	}
 	mlx_put_image_to_window(data->mlx, data->window, data->map.img, 0, 0);
@@ -282,9 +276,9 @@ static void rayCasting(t_data *data)
 static int display(t_data *data)
 {
 	paint_background(screenWidth, screenHeight, data);
+	rayCasting(data);
 	draw_map_2d(data);
 	draw_player(data);
-	rayCasting(data);
 	return (1);
 }
 
@@ -297,11 +291,12 @@ void run()
 	data.map.img = mlx_new_image(data.mlx, screenWidth, screenHeight);
 	data.map.addr = mlx_get_data_addr(
 		data.map.img, &data.map.bits_per_pixel, &data.map.line_length, &data.map.endian);
-	data.worldMap.height = 7;
-	data.worldMap.width = 7;
+	data.worldMap.height = 25;
+	data.worldMap.width = 25;
 	data.worldMap.matrix = init_matrix(data.worldMap.height, data.worldMap.width);
 
-	data.worldMap.matrix[5][3] = 1;
+	data.worldMap.matrix[3][3] = 1;
+	data.worldMap.matrix[3][4] = 1;
 
 	init_player(&data);
 	mlx_hook(data.window, 2, 1L << 0, keypressed, &data);
