@@ -2,7 +2,6 @@
 #include <map.h>
 #include <math.h>
 #include <math_utils.h>
-#include <mlx.h>
 #include <ray_casting_logic.h>
 #include <render.h>
 
@@ -160,9 +159,9 @@ double get_wall_distance(t_position ray_coord, t_position player_coord)
 }
 
 double find_closer_wall(t_position h_intersection,
-							   t_position v_intersection,
-							   t_player player,
-							   double ray_angle)
+						t_position v_intersection,
+						t_player player,
+						double ray_angle)
 {
 	double closer_wall;
 	if(!valid_position(h_intersection))
@@ -202,4 +201,3 @@ t_position find_horizontal_line(t_data *data, double ray_angle)
 	ray = get_first_horizontal_intersection(data->player, ray_angle, tan_angle);
 	return (find_obstacle(data, data->worldMap, x_increment, y_increment, ray));
 }
-
