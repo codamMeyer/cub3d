@@ -5,23 +5,27 @@ TEST_CFLAGS= -ggdb3 -Wall -Wextra -Werror #-fsanitize=address -fsanitize=leak
 INC_PATH=-I./mlx_linux -I./inc -I./
 LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz
 
-SRC_FILES=				\
-	src/raycaster.c 	\
-	src/keyboard.c		\
-	src/map.c	    	\
-	src/player.c		\
-	src/utils.c  		\
-	src/math_utils.c  	\
-	src/direction.c  	\
+SRC_FILES=						\
+	src/raycaster.c 			\
+	src/keyboard.c				\
+	src/map.c	    			\
+	src/player.c				\
+	src/utils.c  				\
+	src/math_utils.c  			\
+	src/direction.c  			\
+	src/ray_casting_logic.c		\
+	src/render.c
 
-INC_FILES=				\
-	inc/raycaster.h  	\
-	inc/keyboard.h	 	\
-	inc/map.h	     	\
-	inc/player.h	 	\
-	inc/utils.h  	 	\
-	inc/math_utils.h 	\
-	inc/direction.h  	\
+INC_FILES=						\
+	inc/raycaster.h  			\
+	inc/keyboard.h	 			\
+	inc/map.h	     			\
+	inc/player.h	 			\
+	inc/utils.h  	 			\
+	inc/math_utils.h 			\
+	inc/direction.h  			\
+	inc/ray_casting_logic.h		\
+	inc/render.h
 
 TEST_FILES= 								\
 	test/main.c 							\
