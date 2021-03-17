@@ -20,6 +20,8 @@
         - [To get the correct distance from distorted distance first notice that](#to-get-the-correct-distance-from-distorted-distance-first-notice-that)
   - [STEP 6: Drawing walls](#step-6-drawing-walls)
         - [The logic behind this formula:](#the-logic-behind-this-formula)
+- [Reference](#reference)
+
 
 
 ## STEP 1: creating a world
@@ -283,10 +285,9 @@ Since the center of the projection plane is defined to be at 100. The middle of 
 
 
 
+# Reference
 
-
-
-
+- [Ray-Casting Tutorial For Game Development And Other Purposes by F. Permadi](https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/)
 
 
 
