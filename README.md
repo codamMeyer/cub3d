@@ -1,6 +1,5 @@
 # Raycast tutorial
 
-
 - [Raycast tutorial](#raycast-tutorial)
   - [STEP 1: creating a world](#step-1-creating-a-world)
   - [STEP 2: Defining projection attributes](#step-2-defining-projection-attributes)
@@ -16,7 +15,11 @@
         - [2. Find x_increment.](#2-find-x_increment)
         - [3. Find y_increment](#3-find-y_increment)
         - [4. Check the grid at the intersection point.](#4-check-the-grid-at-the-intersection-point)
-  - [STEP 3: Get distance from walls](#step-3-get-distance-from-walls)
+  - [STEP 4: Get distance from walls](#step-4-get-distance-from-walls)
+  - [STEP 5: Fix fishbowl effect](#step-5-fix-fishbowl-effect)
+        - [To get the correct distance from distorted distance first notice that](#to-get-the-correct-distance-from-distorted-distance-first-notice-that)
+  - [STEP 6: Drawing walls](#step-6-drawing-walls)
+        - [The logic behind this formula:](#the-logic-behind-this-formula)
 
 
 ## STEP 1: creating a world
@@ -222,11 +225,69 @@ So the grid coordinate of intersection 3 is (2, 1).
       If there is no wall we repeat the process until we find one:
       x = x + x_increment
       y = y + y_increment.
-   
 
-   
-## STEP 3: Get distance from walls
+
+## STEP 4: Get distance from walls
 
 ![figure 15](./images/figure15.png)
+
+## STEP 5: Fix fishbowl effect
+Before drawing the wall, there is one problem that must be taken care of. This problem is known as the **“fishbowl effect”**. Fishbowl effect happens because ray-casting implementation mixes polar coordinate and Cartesian coordinate together. Therefore, using the above formula on wall slices that are not directly in front of the viewer will gives a longer distance. This is not what we want because it will cause a viewing distortion such as illustrated below.
+
+![figure 16](./images/figure16.png)
+![figure 17](./images/figure17.png)
+
+##### To get the correct distance from distorted distance first notice that
+
+      cos(β) = correct_distance / distorted_distance
+      so
+      correct_distance = distorted_distance * cos(β)
+      where β = player_angle - ray_angle
+
+Thus to remove the viewing distortion, the resulting distance obtained from equations in the image above must be multiplied by cos(BETA); where BETA is the angle of the ray that is being cast relative to the viewing angle. On the figure above, the viewing angle (ALPHA) is 90 degrees because the player is facing straight upward. Because we have 60 degrees field of view, BETA is 30 degrees for the leftmost ray and it is -30 degrees for the rightmost ray.
+
+## STEP 6: Drawing walls
+
+In the previous steps, 320 rays are casts, when each ray hits a wall, the distance to that wall is computed. Knowing the distance, the wall slice can then be projected onto the projection plane. To do this, the height of the projected wall slice need to be found. It turns out that this can be done with a simple formula:
+
+                                                 Actual Slice Height
+                        Projected Slice Height= --------------------- * Distance to Projection Plane
+                                                Distance to the Slice
+
+
+##### The logic behind this formula:
+![figure 18](./images/figure18.png)
+
+Our world consist cubes, where the dimension of each cube is 64x64x64 units, so the wall height is 64 units. We also already know the distance of the player to the projection plane (which is 277). Thus, the equation can be simplified to:
+
+      Projected Slice Height = GRID_SIZE / Distance to the Slice * distance_to_projection_plane
+
+In an actual implementation, several things can be considered:
+
+    For instance, 64/277 can be pre-computed, since this will be a constant value.
+    Once this is calculated, the wall slice can be drawn on the screen.
+    This can be done by simply drawing a vertical line on the corresponding
+    column on the projection plane (screen).
+
+    Remember where the number 277 came from?
+    This number can actually be deviated a bit without causing any huge impact.
+    In fact, it will save time to use the value of 255 because the programmer
+    can use shift operator to save computing time
+    (shift right by 3 to multiply, shift left to divide).
+
+For example, suppose the ray at column 200 hits a wall slice at distance of 330 units. The projection of the slice will be **64 / 330 * 277 = 54** **(rounded up)**.
+Since the center of the projection plane is defined to be at 100. The middle of the wall slice should appear at this point. Hence, the top position where the wall slice should be drawn is **100 - 27 = 73**. (where 27 is one half of 54). Finally, the projection of the slice will look something like the next figure.
+
+
+![figure 19](./images/figure19.png)
+
+
+
+
+
+
+
+
+
 
 [![forthebadge](https://forthebadge.com/images/badges/powered-by-coffee.svg)](https://forthebadge.com)
