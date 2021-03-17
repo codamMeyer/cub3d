@@ -1,13 +1,14 @@
 #ifndef DEFS_H
 #define DEFS_H
 
-#define screenWidth 1600
-#define screenHeight 800
+#define screenWidth 920
+#define screenHeight 700
 #define INVALID -1
 #define TRUE 1
 #define FALSE 0
 // COLORS
-#define RED 0x00FF0000
+#define RED 0x0096000f
+#define DARK_RED 0x0075040f
 #define YELLOW 0x00FFFF00
 #define GREEN 0x0000FF00
 #define BLUE 0xFF7580FF

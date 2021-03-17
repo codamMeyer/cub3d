@@ -16,22 +16,24 @@ int draw_map_2d(t_data *data)
 	int i;
 	int j;
 	int color;
-	int x = 750;
+	int x = 0;
 	int y = 0;
-	int grid_size = GRID_SIZE;
+	int grid_size = GRID_SIZE / 7;
 
 	for(i = 0; i < data->worldMap.height; i++)
 	{
 		for(j = 0; j < data->worldMap.width; j++)
 		{
-			if(data->worldMap.matrix[i][j] > 0)
+			if(data->worldMap.matrix[i][j] == 9)
+				color = YELLOW;
+			else if(data->worldMap.matrix[i][j] > 0)
 				color = WHITE;
 			else
 				color = BLACK;
-			draw_square(&data->map, grid_size - 1, x, y, color);
+			draw_square(&data->map, grid_size - 0.5, x, y, color);
 			x += grid_size;
 		}
-		x = 750;
+		x = 0;
 		y += grid_size;
 	}
 	return (0);

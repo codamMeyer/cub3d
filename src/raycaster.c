@@ -1,3 +1,4 @@
+#include <direction.h>
 #include <keyboard.h>
 #include <map.h>
 #include <mlx.h>
@@ -14,6 +15,7 @@ void rayCasting(t_data *data)
 	t_position h_intersection;
 	t_position v_intersection;
 	double closer_wall;
+	int color;
 
 	for(int col = 0; col < data->player.plane_x; col++)
 	{
@@ -21,7 +23,8 @@ void rayCasting(t_data *data)
 		v_intersection = find_vertical_line(data, ray_angle);
 		closer_wall = find_closer_wall(h_intersection, v_intersection, data->player, ray_angle);
 
-		draw_slice(data, closer_wall, col);
+		color = RED;
+		draw_slice(data, closer_wall, col, color);
 
 		ray_angle -= ray_increment;
 	}

@@ -7,19 +7,17 @@
 static t_bool hit_wall(t_map worldMap, t_position new_pos)
 {
 	t_grid_position pos = to_grid_position(worldMap, new_pos);
-	if(worldMap.matrix[pos.y][pos.x] > 0)
+	if(worldMap.matrix[pos.y][pos.x] > 0 && worldMap.matrix[pos.y][pos.x] < 9)
 		return (TRUE);
 	return (FALSE);
 }
 int draw_player(t_data *data)
 {
 	draw_square(&data->map,
-				6,
-				750 + (data->player.position.x - data->player.size / 2),
-				(data->player.position.y - data->player.size / 2),
+				data->player.size,
+				(data->player.position.x - data->player.size / 2) / 7,
+				(data->player.position.y - data->player.size / 2) / 7,
 				YELLOW);
-
-	draw_square(&data->map, 2, 750 + data->player.position.x, (data->player.position.y), RED);
 	return (1);
 }
 
@@ -29,8 +27,8 @@ void init_player(t_data *data)
 	data->player.position.y = GRID_SIZE + 20;
 	data->player.size = 5;
 	data->player.FOV = 60;
-	data->player.plane_x = 720;
-	data->player.plane_y = 500;
+	data->player.plane_x = 920;
+	data->player.plane_y = 700;
 	data->player.angle = 345;
 	data->player.speed = 5;
 	data->player.color = BLUE;

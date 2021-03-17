@@ -164,13 +164,24 @@ double find_closer_wall(t_position h_intersection,
 						double ray_angle)
 {
 	double closer_wall;
+	double v_dist;
+	double h_dist;
+
 	if(!valid_position(h_intersection))
+	{
 		closer_wall = get_wall_distance(v_intersection, player.position);
+	}
 	else if(!valid_position(v_intersection))
+	{
 		closer_wall = get_wall_distance(h_intersection, player.position);
+	}
 	else
+	{
+		v_dist = get_wall_distance(v_intersection, player.position);
+		h_dist = get_wall_distance(h_intersection, player.position);
 		closer_wall = min_d(get_wall_distance(v_intersection, player.position),
 							get_wall_distance(h_intersection, player.position));
+	}
 	ray_angle = fix_angle(player.angle - ray_angle);
 	return (fix_fisheye_effect(closer_wall, ray_angle));
 }
