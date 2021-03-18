@@ -7,7 +7,7 @@
 static t_bool hit_wall(t_map worldMap, t_position new_pos)
 {
 	t_grid_position pos = to_grid_position(worldMap, new_pos);
-	if(worldMap.matrix[pos.y][pos.x] > 0 && worldMap.matrix[pos.y][pos.x] < 9)
+	if(worldMap.matrix[pos.y][pos.x] > 0)
 		return (TRUE);
 	return (FALSE);
 }

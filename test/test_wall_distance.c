@@ -2,6 +2,7 @@
 #include <inc/defs.h>
 #include <inc/map.h>
 #include <inc/player.h>
+#include <inc/ray_casting_logic.h>
 #include <inc/raycaster.h>
 #include <inc/utils.h>
 #include <math.h>

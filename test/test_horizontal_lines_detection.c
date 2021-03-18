@@ -1,6 +1,7 @@
 #include "ctest.h"
 #include <inc/defs.h>
 #include <inc/map.h>
+#include <inc/ray_casting_logic.h>
 #include <inc/raycaster.h>
 #include <inc/utils.h>
 #include <math.h>
@@ -65,6 +66,7 @@ CTEST2(horizontal_lines, player_facing_90_degrees)
 	draw_map(data->game, expected_x, expected_y);
 
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
+	ray_angle = fix_angle(ray_angle);
 	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
 
 	t_grid_position ray_grid_position = to_grid_position(data->game.worldMap, ray_position);
@@ -83,6 +85,7 @@ CTEST2(horizontal_lines, player_facing_60_degrees)
 	draw_map(data->game, expected_x, expected_y);
 
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
+	ray_angle = fix_angle(ray_angle);
 	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
 
 	t_grid_position ray_grid_position = to_grid_position(data->game.worldMap, ray_position);
@@ -101,6 +104,7 @@ CTEST2(horizontal_lines, player_facing_0_degrees)
 	draw_map(data->game, expected_x, expected_y);
 
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
+	ray_angle = fix_angle(ray_angle);
 
 	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
 
@@ -121,6 +125,7 @@ CTEST2(horizontal_lines, player_facing_30_degrees)
 	draw_map(data->game, expected_x, expected_y);
 
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
+	ray_angle = fix_angle(ray_angle);
 
 	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
 
@@ -139,6 +144,7 @@ CTEST2(horizontal_lines, player_facing_300_degrees)
 	draw_map(data->game, expected_x, expected_y);
 
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
+	ray_angle = fix_angle(ray_angle);
 
 	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
 
@@ -159,6 +165,7 @@ CTEST2(horizontal_lines, player_facing_270_degrees)
 	draw_map(data->game, expected_x, expected_y);
 
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
+	ray_angle = fix_angle(ray_angle);
 
 	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
 
@@ -179,6 +186,7 @@ CTEST2(horizontal_lines, player_facing_210_degrees)
 	draw_map(data->game, expected_x, expected_y);
 
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
+	ray_angle = fix_angle(ray_angle);
 
 	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
 
@@ -197,6 +205,7 @@ CTEST2(horizontal_lines, player_facing_180_degrees)
 	draw_map(data->game, expected_x, expected_y);
 
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
+	ray_angle = fix_angle(ray_angle);
 
 	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
 
@@ -217,6 +226,7 @@ CTEST2(horizontal_lines, player_facing_140_degrees)
 	draw_map(data->game, expected_x, expected_y);
 
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
+	ray_angle = fix_angle(ray_angle);
 
 	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
 
@@ -237,6 +247,7 @@ CTEST2(horizontal_lines, player_facing_120_degrees)
 	draw_map(data->game, expected_x, expected_y);
 
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
+	ray_angle = fix_angle(ray_angle);
 
 	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
 

@@ -7,6 +7,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <math_utils.h>
+#include <inc/ray_casting_logic.h>
 
 static void draw_map(t_data game, int expected_x, int expected_y)
 {

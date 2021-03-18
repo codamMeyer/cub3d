@@ -1,11 +1,13 @@
 #include <direction.h>
 #include <keyboard.h>
 #include <map.h>
+#include <math_utils.h>
 #include <mlx.h>
 #include <player.h>
 #include <ray_casting_logic.h>
 #include <raycaster.h>
 #include <render.h>
+#include <stdio.h>
 #include <utils.h>
 
 void rayCasting(t_data *data)
@@ -19,13 +21,13 @@ void rayCasting(t_data *data)
 
 	for(int col = 0; col < data->player.plane_x; col++)
 	{
+		ray_angle = fix_angle(ray_angle);
 		h_intersection = find_horizontal_line(data, ray_angle);
 		v_intersection = find_vertical_line(data, ray_angle);
-		closer_wall = find_closer_wall(h_intersection, v_intersection, data->player, ray_angle);
 
-		color = RED;
+		closer_wall =
+			find_closer_wall(h_intersection, v_intersection, data->player, ray_angle, &color);
 		draw_slice(data, closer_wall, col, color);
-
 		ray_angle -= ray_increment;
 	}
 	mlx_put_image_to_window(data->mlx, data->window, data->map.img, 0, 0);
@@ -61,3 +63,17 @@ void run()
 	mlx_loop_hook(data.mlx, display, &data);
 	mlx_loop(data.mlx);
 }
+
+// col: 76
+// v_dist = 119.836409  h_dist = 120.415994
+// col: 77
+// v_dist = 119.812333  h_dist = 121.194976
+// col: 78
+// v_dist = 119.788422  h_dist = 121.984260
+// col: 79
+// v_dist = 119.764675  h_dist = 122.784053
+// col: 80
+// v_dist = 119.741093  h_dist = 123.594564
+// col: 81
+// v_dist = 119.717676  h_dist = 124.416009
+// col: 82

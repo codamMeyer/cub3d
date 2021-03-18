@@ -21,6 +21,7 @@ static void draw_wall_slice(t_data *data, int slice_col, int wall_bottom, int wa
 	int i = wall_top;
 	while(i <= wall_bottom)
 	{
+
 		my_mlx_pixel_put(&data->map, slice_col, i, color);
 		++i;
 	}

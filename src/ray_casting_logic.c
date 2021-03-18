@@ -4,6 +4,7 @@
 #include <math_utils.h>
 #include <ray_casting_logic.h>
 #include <render.h>
+#include <stdio.h>
 
 static t_bool hit_obstacle(t_map worldMap, t_position pos)
 {
@@ -26,15 +27,6 @@ static t_position keep_inside_map(t_map worldMap, t_position pos)
 	new_pos.x = min_d(new_pos.x, (double)worldMap.width * GRID_SIZE);
 	new_pos.y = min_d(new_pos.y, (double)worldMap.height * GRID_SIZE);
 	return (new_pos);
-}
-
-static double fix_angle(double angle)
-{
-	if(angle > 359)
-		angle -= 360;
-	if(angle < 0)
-		angle += 360;
-	return angle;
 }
 
 static t_bool is_straight_left_or_right(t_position *ray, double ray_angle)
@@ -116,7 +108,7 @@ get_first_vertical_intersection(t_player player, double ray_angle, double tan_an
 	double width;
 
 	if(is_facing_west(ray_angle))
-		ray.x = floor(player.position.x / GRID_SIZE) * (GRID_SIZE)-1;
+		ray.x = floor(player.position.x / GRID_SIZE) * (GRID_SIZE) - (1e-6);
 	else
 		ray.x = floor(player.position.x / GRID_SIZE) * (GRID_SIZE) + GRID_SIZE;
 	width = (player.position.x - ray.x) * tan_angle;
@@ -132,18 +124,13 @@ get_first_horizontal_intersection(t_player player, double ray_angle, double tan_
 	double width;
 
 	if(is_facing_north(ray_angle))
-		ray.y = floor(player.position.y / GRID_SIZE) * (GRID_SIZE)-1;
+		ray.y = floor(player.position.y / GRID_SIZE) * (GRID_SIZE) - (1e-6);
 	else
 		ray.y = floor(player.position.y / GRID_SIZE) * (GRID_SIZE) + GRID_SIZE;
 	width = (player.position.y - ray.y) / tan_angle;
 	ray.x = player.position.x + width;
 
 	return (ray);
-}
-
-static t_bool valid_position(t_position position)
-{
-	return (position.x != INVALID && position.y != INVALID);
 }
 
 static double fix_fisheye_effect(double closer_wall, double ray_angle)
@@ -161,36 +148,32 @@ double get_wall_distance(t_position ray_coord, t_position player_coord)
 double find_closer_wall(t_position h_intersection,
 						t_position v_intersection,
 						t_player player,
-						double ray_angle)
+						double ray_angle,
+						int *color)
 {
 	double closer_wall;
-	double v_dist;
-	double h_dist;
+	const double v_dist = get_wall_distance(v_intersection, player.position);
+	const double h_dist = get_wall_distance(h_intersection, player.position);
 
-	if(!valid_position(h_intersection))
+	if(v_dist < h_dist)
 	{
-		closer_wall = get_wall_distance(v_intersection, player.position);
-	}
-	else if(!valid_position(v_intersection))
-	{
-		closer_wall = get_wall_distance(h_intersection, player.position);
+		closer_wall = v_dist;
+		*color = DARK_RED;
 	}
 	else
 	{
-		v_dist = get_wall_distance(v_intersection, player.position);
-		h_dist = get_wall_distance(h_intersection, player.position);
-		closer_wall = min_d(get_wall_distance(v_intersection, player.position),
-							get_wall_distance(h_intersection, player.position));
+		closer_wall = h_dist;
+		*color = RED;
 	}
+	closer_wall = min_d(v_dist, h_dist);
 	ray_angle = fix_angle(player.angle - ray_angle);
 	return (fix_fisheye_effect(closer_wall, ray_angle));
 }
 
 t_position find_vertical_line(t_data *data, double ray_angle)
 {
-	ray_angle = fix_angle(ray_angle);
-	t_position ray;
 
+	t_position ray;
 	if(is_straight_up_or_down(&ray, ray_angle))
 		return (ray);
 	double tan_angle = tan(degree_to_radians(ray_angle));
@@ -202,7 +185,6 @@ t_position find_vertical_line(t_data *data, double ray_angle)
 
 t_position find_horizontal_line(t_data *data, double ray_angle)
 {
-	ray_angle = fix_angle(ray_angle);
 	t_position ray;
 	if(is_straight_left_or_right(&ray, ray_angle))
 		return (ray);

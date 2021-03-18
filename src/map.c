@@ -30,7 +30,7 @@ int draw_map_2d(t_data *data)
 				color = WHITE;
 			else
 				color = BLACK;
-			draw_square(&data->map, grid_size - 0.5, x, y, color);
+			draw_square(&data->map, grid_size, x, y, color);
 			x += grid_size;
 		}
 		x = 0;

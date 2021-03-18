@@ -1,9 +1,9 @@
-# Raycast tutorial
+# Raycast tutorial ( 👩🏾‍🔧 under construction 👷🏾‍♀️ ) 
 
-- [Raycast tutorial](#raycast-tutorial)
-  - [STEP 1: creating a world](#step-1-creating-a-world)
-  - [STEP 2: Defining projection attributes](#step-2-defining-projection-attributes)
-  - [STEP 3: Finding walls](#step-3-finding-walls)
+- [Raycast tutorial ( 👩🏾‍🔧 under construction 👷🏾‍♀️ )](#raycast-tutorial---under-construction-️-)
+  - [🗺️ STEP 1: creating a world](#️-step-1-creating-a-world)
+  - [📝 STEP 2: Defining projection attributes](#-step-2-defining-projection-attributes)
+  - [🧱 STEP 3: Finding walls](#-step-3-finding-walls)
       - [Steps of finding intersections with horizontal grid lines:](#steps-of-finding-intersections-with-horizontal-grid-lines)
         - [1. Finding y_increment](#1-finding-y_increment)
         - [2. Finding x_increment](#2-finding-x_increment)
@@ -15,16 +15,14 @@
         - [2. Find x_increment.](#2-find-x_increment)
         - [3. Find y_increment](#3-find-y_increment)
         - [4. Check the grid at the intersection point.](#4-check-the-grid-at-the-intersection-point)
-  - [STEP 4: Get distance from walls](#step-4-get-distance-from-walls)
-  - [STEP 5: Fix fishbowl effect](#step-5-fix-fishbowl-effect)
-        - [To get the correct distance from distorted distance first notice that](#to-get-the-correct-distance-from-distorted-distance-first-notice-that)
-  - [STEP 6: Drawing walls](#step-6-drawing-walls)
-        - [The logic behind this formula:](#the-logic-behind-this-formula)
-- [Reference](#reference)
+  - [📐 STEP 4: Get distance from walls](#-step-4-get-distance-from-walls)
+  - [🐟 STEP 5: Fix fishbowl effect](#-step-5-fix-fishbowl-effect)
+  - [🖍️ STEP 6: Drawing walls](#️-step-6-drawing-walls)
+- [📚 Reference](#-reference)
 
 
 
-## STEP 1: creating a world
+## 🗺️ STEP 1: creating a world
 
 To illustrate the process of ray-casting, we will create a maze world that has the following geometric constraints:
 
@@ -47,7 +45,7 @@ Before continuing, we will define our coordinate system so that there is no conf
 
 
 
-## STEP 2: Defining projection attributes
+## 📝 STEP 2: Defining projection attributes
 
 Now that we have the world, we need to define some attributes before we can project and render the world. Specifically, we need to know these attributes:
 
@@ -89,7 +87,7 @@ So now we know:
 (We will occasionally refer the “angle between subsequent rays” as the “angle between subsequent columns.” Later, this angle will be used to loop from column to column. The distance between player to the projection plane will be used for scaling.)
 
 
-## STEP 3: Finding walls
+## 🧱 STEP 3: Finding walls
 
 Notice from the previous image, that the wall can be viewed as collection of 320 vertical lines (or 320 wall slices).
 
@@ -142,9 +140,9 @@ As an example the following is how you can get the point 1:
       
       1.y = rounded_down( 224 / 64 ) * (64) = 192;
    
-   The ray is facing up and we want to check the grid above the line, that's why we subtract 1 from it:
+   The ray is facing up and we want to check the grid above the line, that's why we subtract a small amount from it from it:
       
-      1.y = 1.y - 1;
+      1.y = 1.y - (1e-6);
       So the grid coordinate of 1.y is 191 / 64 = 2;
    
    if the ray were facing down, we'd do:
@@ -202,9 +200,9 @@ So the grid coordinate of intersection 3 is (2, 1).
 
 ![figure 14](./images/figure14.png)
 
-   in this example the ray is facing right so:
+   In this example the ray is facing right so:
 
-      2.x = rounded_down(player_x / GRID_SIZE) * (GRID_SIZE);
+      2.x = rounded_down(player_x / GRID_SIZE) * (GRID_SIZE);  
  
    Finding y coordinate:
    
@@ -229,17 +227,17 @@ So the grid coordinate of intersection 3 is (2, 1).
       y = y + y_increment.
 
 
-## STEP 4: Get distance from walls
+##  📐 STEP 4: Get distance from walls
 
 ![figure 15](./images/figure15.png)
 
-## STEP 5: Fix fishbowl effect
+##  🐟 STEP 5: Fix fishbowl effect
 Before drawing the wall, there is one problem that must be taken care of. This problem is known as the **“fishbowl effect”**. Fishbowl effect happens because ray-casting implementation mixes polar coordinate and Cartesian coordinate together. Therefore, using the above formula on wall slices that are not directly in front of the viewer will gives a longer distance. This is not what we want because it will cause a viewing distortion such as illustrated below.
 
 ![figure 16](./images/figure16.png)
 ![figure 17](./images/figure17.png)
 
-##### To get the correct distance from distorted distance first notice that
+** To get the correct distance from distorted distance first notice that**
 
       cos(β) = correct_distance / distorted_distance
       so
@@ -248,7 +246,7 @@ Before drawing the wall, there is one problem that must be taken care of. This p
 
 Thus to remove the viewing distortion, the resulting distance obtained from equations in the image above must be multiplied by cos(BETA); where BETA is the angle of the ray that is being cast relative to the viewing angle. On the figure above, the viewing angle (ALPHA) is 90 degrees because the player is facing straight upward. Because we have 60 degrees field of view, BETA is 30 degrees for the leftmost ray and it is -30 degrees for the rightmost ray.
 
-## STEP 6: Drawing walls
+##  🖍️ STEP 6: Drawing walls
 
 In the previous steps, 320 rays are casts, when each ray hits a wall, the distance to that wall is computed. Knowing the distance, the wall slice can then be projected onto the projection plane. To do this, the height of the projected wall slice need to be found. It turns out that this can be done with a simple formula:
 
@@ -257,7 +255,7 @@ In the previous steps, 320 rays are casts, when each ray hits a wall, the distan
                                                 Distance to the Slice
 
 
-##### The logic behind this formula:
+**The logic behind this formula:**
 ![figure 18](./images/figure18.png)
 
 Our world consist cubes, where the dimension of each cube is 64x64x64 units, so the wall height is 64 units. We also already know the distance of the player to the projection plane (which is 277). Thus, the equation can be simplified to:
@@ -284,8 +282,7 @@ Since the center of the projection plane is defined to be at 100. The middle of 
 ![figure 19](./images/figure19.png)
 
 
-
-# Reference
+# 📚 Reference
 
 - [Ray-Casting Tutorial For Game Development And Other Purposes by F. Permadi](https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/)
 
