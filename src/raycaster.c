@@ -1,6 +1,7 @@
 #include <direction.h>
 #include <keyboard.h>
 #include <map.h>
+#include <math.h>
 #include <math_utils.h>
 #include <mlx.h>
 #include <player.h>
@@ -10,25 +11,57 @@
 #include <stdio.h>
 #include <utils.h>
 
+double get_wall_distance(t_position ray_coord, t_position player_coord)
+{
+	const double x_diff = (player_coord.x - ray_coord.x) * (player_coord.x - ray_coord.x);
+	const double y_diff = (player_coord.y - ray_coord.y) * (player_coord.y - ray_coord.y);
+	return (sqrt(x_diff + y_diff));
+}
+
+static double fix_fisheye_effect(double closest_wall, double ray_angle)
+{
+	return (closest_wall * cos(degree_to_radians(ray_angle)));
+}
+
+void find_closest_wall(t_position h_intersection,
+					   t_position v_intersection,
+					   t_player player,
+					   t_ray *ray)
+{
+	const double v_dist = get_wall_distance(v_intersection, player.position);
+	const double h_dist = get_wall_distance(h_intersection, player.position);
+	const double angle = fix_angle(player.angle - ray->angle);
+
+	if(v_dist < h_dist)
+	{
+		ray->pos = v_intersection;
+		ray->distance = fix_fisheye_effect(v_dist, angle);
+		ray->light = FALSE;
+	}
+	else
+	{
+		ray->pos = h_intersection;
+		ray->distance = fix_fisheye_effect(h_dist, angle);
+		ray->light = TRUE;
+	}
+}
+
+
 void rayCasting(t_data *data)
 {
-	double ray_angle = data->player.angle + (data->player.FOV / 2);
 	const double ray_increment = (double)data->player.FOV / (double)data->player.plane_x;
-	t_position h_intersection;
-	t_position v_intersection;
-	double closer_wall;
-	int color;
-
+	t_ray ray;
+	ray.angle = data->player.angle + (data->player.FOV / 2);
 	for(int col = 0; col < data->player.plane_x; col++)
 	{
-		ray_angle = fix_angle(ray_angle);
-		h_intersection = find_horizontal_line(data, ray_angle);
-		v_intersection = find_vertical_line(data, ray_angle);
+		ray.angle = fix_angle(ray.angle);
+		t_position h_intersection = find_horizontal_line(data, ray.angle);
+		t_position v_intersection = find_vertical_line(data, ray.angle);
 
-		closer_wall =
-			find_closer_wall(h_intersection, v_intersection, data->player, ray_angle, &color);
-		draw_slice(data, closer_wall, col, color);
-		ray_angle -= ray_increment;
+		find_closest_wall(h_intersection, v_intersection, data->player, &ray);
+	
+		draw_slice(data, col, ray);
+		ray.angle -= ray_increment;
 	}
 	mlx_put_image_to_window(data->mlx, data->window, data->map.img, 0, 0);
 }
@@ -55,25 +88,11 @@ void run()
 	data.worldMap.width = 25;
 	data.worldMap.matrix = init_matrix(data.worldMap.height, data.worldMap.width);
 
-	data.worldMap.matrix[3][3] = 1;
-	data.worldMap.matrix[3][4] = 1;
+	data.worldMap.matrix[3][3] = object;
+	data.worldMap.matrix[3][4] = object;
 
 	init_player(&data);
 	mlx_hook(data.window, 2, 1L << 0, keypressed, &data);
 	mlx_loop_hook(data.mlx, display, &data);
 	mlx_loop(data.mlx);
 }
-
-// col: 76
-// v_dist = 119.836409  h_dist = 120.415994
-// col: 77
-// v_dist = 119.812333  h_dist = 121.194976
-// col: 78
-// v_dist = 119.788422  h_dist = 121.984260
-// col: 79
-// v_dist = 119.764675  h_dist = 122.784053
-// col: 80
-// v_dist = 119.741093  h_dist = 123.594564
-// col: 81
-// v_dist = 119.717676  h_dist = 124.416009
-// col: 82

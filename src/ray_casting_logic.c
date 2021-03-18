@@ -133,46 +133,8 @@ get_first_horizontal_intersection(t_player player, double ray_angle, double tan_
 	return (ray);
 }
 
-static double fix_fisheye_effect(double closer_wall, double ray_angle)
-{
-	return (closer_wall * cos(degree_to_radians(ray_angle)));
-}
-
-double get_wall_distance(t_position ray_coord, t_position player_coord)
-{
-	const double x_diff = (player_coord.x - ray_coord.x) * (player_coord.x - ray_coord.x);
-	const double y_diff = (player_coord.y - ray_coord.y) * (player_coord.y - ray_coord.y);
-	return (sqrt(x_diff + y_diff));
-}
-
-double find_closer_wall(t_position h_intersection,
-						t_position v_intersection,
-						t_player player,
-						double ray_angle,
-						int *color)
-{
-	double closer_wall;
-	const double v_dist = get_wall_distance(v_intersection, player.position);
-	const double h_dist = get_wall_distance(h_intersection, player.position);
-
-	if(v_dist < h_dist)
-	{
-		closer_wall = v_dist;
-		*color = DARK_RED;
-	}
-	else
-	{
-		closer_wall = h_dist;
-		*color = RED;
-	}
-	closer_wall = min_d(v_dist, h_dist);
-	ray_angle = fix_angle(player.angle - ray_angle);
-	return (fix_fisheye_effect(closer_wall, ray_angle));
-}
-
 t_position find_vertical_line(t_data *data, double ray_angle)
 {
-
 	t_position ray;
 	if(is_straight_up_or_down(&ray, ray_angle))
 		return (ray);

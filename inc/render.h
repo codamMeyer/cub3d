@@ -1,6 +1,7 @@
 #ifndef RENDER_H
 #define RENDER_H
+#include <defs.h>
 
-void draw_slice(t_data *data, double dist, int slice_col, int color);
+void draw_slice(t_data *data, int slice_col, t_ray ray);
 
 #endif

@@ -10,7 +10,8 @@
 #define RED 0x0096000f
 #define DARK_RED 0x0075040f
 #define YELLOW 0x00FFFF00
-#define GREEN 0x0000FF00
+#define GREEN 0xaa55aa00
+#define DARK_GREEN 0xaa005500
 #define BLUE 0xFF7580FF
 #define WHITE 0x00FFFFFF
 #define BLACK 0x00000000
@@ -19,6 +20,19 @@
 #define PI 3.14159265358979323846
 
 typedef int t_bool;
+
+typedef struct s_color
+{
+	int light;
+	int shadow;
+} t_color;
+
+typedef enum e_collider
+{
+	empty,
+	wall,
+	object
+} t_collider;
 
 typedef struct s_position
 {
@@ -32,6 +46,21 @@ typedef struct s_grid_position
 	int y;
 } t_grid_position;
 
+typedef struct s_ray
+{
+	t_position pos;
+	double distance;
+	double angle;
+	t_bool light;
+} t_ray;
+
+typedef struct s_dimentions
+{
+	int height;
+	int top;
+	int bottom;
+} t_dimentions;
+
 typedef struct s_img
 {
 	void *img;
@@ -41,14 +70,6 @@ typedef struct s_img
 	int endian;
 	int color;
 } t_img;
-
-typedef struct s_ray
-{
-	float angle;
-	double increment_angle;
-	int precision;
-	t_position position;
-} t_ray;
 
 typedef struct s_player
 {

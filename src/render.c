@@ -37,15 +37,51 @@ static void draw_floor_slice(t_data *data, int slice_col, int wall_bottom)
 	}
 }
 
-void draw_slice(t_data *data, double dist, int slice_col, int color)
+static int get_height(double closest_wall, double dist_to_plane, int max_height)
 {
-	const double dist_to_plane =
-		(data->player.plane_x / 2.0) / tan(degree_to_radians(data->player.FOV / 2.0));
-	int wall_height = round((GRID_SIZE / dist) * dist_to_plane);
-	wall_height = min_d(wall_height, data->player.plane_y);
-	const int wall_top = round(((double)data->player.plane_y / 2.0) - (wall_height / 2.0));
-	const int wall_bottom = wall_top + wall_height;
-	draw_ceiling_slice(data, slice_col, wall_top);
-	draw_wall_slice(data, slice_col, wall_bottom, wall_top, color);
-	draw_floor_slice(data, slice_col, wall_bottom);
+	int height = round((GRID_SIZE / closest_wall) * dist_to_plane);
+	return (min_i(height, max_height));
+}
+
+static t_dimentions get_dimentions(double closest_wall, t_player player)
+{
+	const double dist_to_plane = (player.plane_x / 2.0) / tan(degree_to_radians(player.FOV / 2.0));
+	t_dimentions dimentions;
+
+	dimentions.height = get_height(closest_wall, dist_to_plane, player.plane_y);
+	dimentions.top = round(((double)player.plane_y / 2.0) - (dimentions.height / 2.0));
+	dimentions.bottom = dimentions.top + dimentions.height;
+
+	return (dimentions);
+}
+
+t_collider get_obj_type(t_map worldmap, t_position pos)
+{
+	t_grid_position grid_pos = to_grid_position(worldmap, pos);
+
+	return (worldmap.matrix[grid_pos.y][grid_pos.x]);
+}
+
+void draw_slice(t_data *data, int slice_col, t_ray ray)
+{
+	const t_dimentions wall_dimentions = get_dimentions(ray.distance, data->player);
+	t_collider obj_type = get_obj_type(data->worldMap, ray.pos);
+	int color = YELLOW;
+	if(obj_type == wall)
+	{
+		if(ray.light)
+			color = RED;
+		else
+			color = DARK_RED;
+	}
+	else if(obj_type == object)
+	{
+		if(ray.light)
+			color = GREEN;
+		else
+			color = DARK_GREEN;
+	}
+	draw_ceiling_slice(data, slice_col, wall_dimentions.top);
+	draw_wall_slice(data, slice_col, wall_dimentions.bottom, wall_dimentions.top, color);
+	draw_floor_slice(data, slice_col, wall_dimentions.bottom);
 }

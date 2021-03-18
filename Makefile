@@ -35,7 +35,7 @@ TEST_FILES= 								\
 	test/test_player_backward_move.c		\
 	test/test_wall_distance.c				\
 	test/test_intersection.c				\
-	test/test_find_closer_wall.c
+	test/test_find_closest_wall.c
 
 all: $(NAME)
 

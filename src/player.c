@@ -11,13 +11,12 @@ static t_bool hit_wall(t_map worldMap, t_position new_pos)
 		return (TRUE);
 	return (FALSE);
 }
+
 int draw_player(t_data *data)
 {
-	draw_square(&data->map,
-				data->player.size,
-				(data->player.position.x - data->player.size / 2) / 7,
-				(data->player.position.y - data->player.size / 2) / 7,
-				YELLOW);
+	t_position new_pos = {.x = data->player.position.x / 8, .y = data->player.position.y / 8};
+	draw_square(&data->map, 5, new_pos.x - 2.5, new_pos.y - 2.5, YELLOW);
+
 	return (1);
 }
 
