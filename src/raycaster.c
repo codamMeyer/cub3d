@@ -9,7 +9,23 @@
 #include <raycaster.h>
 #include <render.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <utils.h>
+
+t_texture *load_texture(t_data *data, char *filename)
+{
+	t_texture *res;
+	int bit_per_pixel = 0;
+	int size_line = 0;
+	int endian = 0;
+
+	res = calloc(sizeof(t_texture), 1);
+	res->ptr = mlx_xpm_file_to_image(data->mlx, filename, &(res->width), &(res->height));
+	if(!res->ptr)
+		return (res);
+	res->data = mlx_get_data_addr(res->ptr, &bit_per_pixel, &size_line, &endian);
+	return (res);
+}
 
 double get_wall_distance(t_position ray_coord, t_position player_coord)
 {
@@ -46,7 +62,6 @@ void find_closest_wall(t_position h_intersection,
 	}
 }
 
-
 void rayCasting(t_data *data)
 {
 	const double ray_increment = (double)data->player.FOV / (double)data->player.plane_x;
@@ -59,7 +74,7 @@ void rayCasting(t_data *data)
 		t_position v_intersection = find_vertical_line(data, ray.angle);
 
 		find_closest_wall(h_intersection, v_intersection, data->player, &ray);
-	
+
 		draw_slice(data, col, ray);
 		ray.angle -= ray_increment;
 	}
@@ -70,8 +85,8 @@ static int display(t_data *data)
 {
 	paint_background(screenWidth, screenHeight, data);
 	rayCasting(data);
-	draw_map_2d(data);
-	draw_player(data);
+	// draw_map_2d(data);
+	// draw_player(data);
 	return (1);
 }
 
@@ -88,8 +103,12 @@ void run()
 	data.worldMap.width = 25;
 	data.worldMap.matrix = init_matrix(data.worldMap.height, data.worldMap.width);
 
-	data.worldMap.matrix[3][3] = object;
-	data.worldMap.matrix[3][4] = object;
+	data.texture = load_texture(&data, "textures/tree_wall.xpm");
+	if(data.texture == NULL)
+	{
+		printf("NULL\n");
+		return;
+	}
 
 	init_player(&data);
 	mlx_hook(data.window, 2, 1L << 0, keypressed, &data);

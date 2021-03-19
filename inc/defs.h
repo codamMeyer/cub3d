@@ -21,11 +21,13 @@
 
 typedef int t_bool;
 
-typedef struct s_color
+typedef struct s_texture
 {
-	int light;
-	int shadow;
-} t_color;
+	int width;
+	int height;
+	void *ptr;
+	char *data;
+} t_texture;
 
 typedef enum e_collider
 {
@@ -97,6 +99,7 @@ typedef struct s_data
 	t_img map;
 	t_map worldMap;
 	t_player player;
+	t_texture *texture;
 } t_data;
 
 #endif

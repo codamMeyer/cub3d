@@ -2,9 +2,26 @@
 #include <map.h>
 #include <math.h>
 #include <math_utils.h>
+#include <mlx.h>
 #include <render.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <utils.h>
+
+void get_pixel_color(t_texture *texture, int x, int y, unsigned char *result)
+{
+	int index;
+	int i;
+
+	if(x >= texture->width || y >= texture->height)
+		return;
+	if(x < 0 || y < 0)
+		return;
+	index = (x + y * texture->width) * 4;
+	i = -1;
+	while(++i < 4)
+		result[i] = texture->data[index + i];
+}
 
 static void draw_ceiling_slice(t_data *data, int slice_col, int wall_top)
 {
@@ -16,12 +33,24 @@ static void draw_ceiling_slice(t_data *data, int slice_col, int wall_top)
 	}
 }
 
-static void draw_wall_slice(t_data *data, int slice_col, int wall_bottom, int wall_top, int color)
+static void
+draw_wall_slice(t_data *data, int slice_col, t_dimentions wall_dimentions, int color, t_ray ray)
 {
-	int i = wall_top;
-	while(i <= wall_bottom)
+	int i = wall_dimentions.top;
+	// unsigned char test[5];
+	unsigned char *addr = (unsigned char *)&color;
+	while(i <= wall_dimentions.bottom)
 	{
 
+		const double ratio = data->texture->height / wall_dimentions.height;
+		int wall_pixel = i - wall_dimentions.top;
+		// printf("wall height: %d | i: %d  | slice_col: %d\n", wall_dimentions.height, i, slice_col);
+		if(ray.light)
+			get_pixel_color(
+				data->texture, (int)ray.pos.x % data->texture->width, wall_pixel * ratio, addr);
+		else
+			get_pixel_color(
+				data->texture, (int)ray.pos.y % data->texture->width, wall_pixel * ratio, addr);
 		my_mlx_pixel_put(&data->map, slice_col, i, color);
 		++i;
 	}
@@ -67,21 +96,12 @@ void draw_slice(t_data *data, int slice_col, t_ray ray)
 	const t_dimentions wall_dimentions = get_dimentions(ray.distance, data->player);
 	t_collider obj_type = get_obj_type(data->worldMap, ray.pos);
 	int color = YELLOW;
+
 	if(obj_type == wall)
-	{
-		if(ray.light)
-			color = RED;
-		else
-			color = DARK_RED;
-	}
+		color = wall;
 	else if(obj_type == object)
-	{
-		if(ray.light)
-			color = GREEN;
-		else
-			color = DARK_GREEN;
-	}
+		color = RED;
 	draw_ceiling_slice(data, slice_col, wall_dimentions.top);
-	draw_wall_slice(data, slice_col, wall_dimentions.bottom, wall_dimentions.top, color);
+	draw_wall_slice(data, slice_col, wall_dimentions, color, ray);
 	draw_floor_slice(data, slice_col, wall_dimentions.bottom);
 }

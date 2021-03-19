@@ -1,6 +1,6 @@
 #ifndef MAP_H
 #define MAP_H
-#define GRID_SIZE 32
+#define GRID_SIZE 64
 #include "defs.h"
 
 int draw_map_2d(t_data *data);
