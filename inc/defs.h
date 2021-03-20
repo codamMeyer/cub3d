@@ -14,8 +14,10 @@
 #define DARK_GREEN 0xaa005500
 #define BLUE 0xFF7580FF
 #define WHITE 0x00FFFFFF
-#define BLACK 0x00000000
+#define BLACK 0xFF000000
 #define DARK_BLUE 0x00233f58
+#define DARK_BROWN 0x002C1F0E
+#define SKY_COLOR 0x0013180F
 
 #define PI 3.14159265358979323846
 
@@ -23,6 +25,7 @@ typedef int t_bool;
 
 typedef struct s_texture
 {
+	t_bool initialized;
 	int width;
 	int height;
 	void *ptr;
@@ -36,6 +39,12 @@ typedef enum e_collider
 	object
 } t_collider;
 
+typedef enum e_orientation
+{
+	VERTICAL,
+	HORIZONTAL
+} t_orientation;
+
 typedef struct s_position
 {
 	double x;
@@ -48,12 +57,18 @@ typedef struct s_grid_position
 	int y;
 } t_grid_position;
 
+typedef struct s_texture_position
+{
+	int x;
+	int y;
+} t_texture_position;
+
 typedef struct s_ray
 {
 	t_position pos;
 	double distance;
 	double angle;
-	t_bool light;
+	t_orientation orientation;
 } t_ray;
 
 typedef struct s_dimentions
@@ -99,7 +114,7 @@ typedef struct s_data
 	t_img map;
 	t_map worldMap;
 	t_player player;
-	t_texture *texture;
+	t_texture texture;
 } t_data;
 
 #endif

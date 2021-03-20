@@ -12,19 +12,19 @@
 #include <stdlib.h>
 #include <utils.h>
 
-t_texture *load_texture(t_data *data, char *filename)
+t_texture load_texture(t_data *data, char *filename)
 {
-	t_texture *res;
+	t_texture texture;
 	int bit_per_pixel = 0;
 	int size_line = 0;
 	int endian = 0;
-
-	res = calloc(sizeof(t_texture), 1);
-	res->ptr = mlx_xpm_file_to_image(data->mlx, filename, &(res->width), &(res->height));
-	if(!res->ptr)
-		return (res);
-	res->data = mlx_get_data_addr(res->ptr, &bit_per_pixel, &size_line, &endian);
-	return (res);
+	texture.initialized = FALSE;
+	texture.ptr = mlx_xpm_file_to_image(data->mlx, filename, &(texture.width), &(texture.height));
+	if(!texture.ptr)
+		return (texture);
+	texture.data = mlx_get_data_addr(texture.ptr, &bit_per_pixel, &size_line, &endian);
+	texture.initialized = TRUE;
+	return (texture);
 }
 
 double get_wall_distance(t_position ray_coord, t_position player_coord)
@@ -52,13 +52,13 @@ void find_closest_wall(t_position h_intersection,
 	{
 		ray->pos = v_intersection;
 		ray->distance = fix_fisheye_effect(v_dist, angle);
-		ray->light = FALSE;
+		ray->orientation = VERTICAL;
 	}
 	else
 	{
 		ray->pos = h_intersection;
 		ray->distance = fix_fisheye_effect(h_dist, angle);
-		ray->light = TRUE;
+		ray->orientation = HORIZONTAL;
 	}
 }
 
@@ -104,7 +104,7 @@ void run()
 	data.worldMap.matrix = init_matrix(data.worldMap.height, data.worldMap.width);
 
 	data.texture = load_texture(&data, "textures/tree_wall.xpm");
-	if(data.texture == NULL)
+	if(!data.texture.initialized)
 	{
 		printf("NULL\n");
 		return;
