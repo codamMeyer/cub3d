@@ -114,7 +114,7 @@ typedef struct s_data
 	t_img map;
 	t_map worldMap;
 	t_player player;
-	t_texture texture;
+	t_texture texture[5];
 } t_data;
 
 #endif

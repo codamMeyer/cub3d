@@ -62,6 +62,30 @@ void find_closest_wall(t_position h_intersection,
 	}
 }
 
+void find_closest_sprite(t_position h_intersection,
+						 t_position v_intersection,
+						 t_player player,
+						 t_ray *ray)
+{
+	const double v_dist = get_wall_distance(v_intersection, player.position);
+	const double h_dist = get_wall_distance(h_intersection, player.position);
+
+	const double angle = fix_angle(player.angle - ray->angle);
+
+	if(h_dist < v_dist)
+	{
+		ray->pos = h_intersection;
+		ray->distance = fix_fisheye_effect(h_dist, angle);
+		ray->orientation = HORIZONTAL;
+	}
+	else
+	{
+		ray->pos = v_intersection;
+		ray->distance = fix_fisheye_effect(v_dist, angle);
+		ray->orientation = VERTICAL;
+	}
+}
+
 void rayCasting(t_data *data)
 {
 	const double ray_increment = (double)data->player.FOV / (double)data->player.plane_x;
@@ -70,11 +94,17 @@ void rayCasting(t_data *data)
 	for(int col = 0; col < data->player.plane_x; col++)
 	{
 		ray.angle = fix_angle(ray.angle);
-		t_position h_intersection = find_horizontal_line(data, ray.angle);
-		t_position v_intersection = find_vertical_line(data, ray.angle);
+		t_position h_intersection = find_wall_horizontal_line(data, ray.angle);
+		t_position v_intersection = find_wall_vertical_line(data, ray.angle);
 
 		find_closest_wall(h_intersection, v_intersection, data->player, &ray);
 
+		draw_slice(data, col, ray);
+
+		t_position h_sprite = find_sprite_horizontal_line(data, ray.angle);
+		t_position v_sprite = find_sprite_vertical_line(data, ray.angle);
+
+		find_closest_sprite(h_sprite, v_sprite, data->player, &ray);
 		draw_slice(data, col, ray);
 		ray.angle -= ray_increment;
 	}
@@ -83,7 +113,7 @@ void rayCasting(t_data *data)
 
 static int display(t_data *data)
 {
-	paint_background(screenWidth, screenHeight, data);
+	// paint_background(screenWidth, screenHeight, data);
 	rayCasting(data);
 	// draw_map_2d(data);
 	// draw_player(data);
@@ -103,13 +133,14 @@ void run()
 	data.worldMap.width = 25;
 	data.worldMap.matrix = init_matrix(data.worldMap.height, data.worldMap.width);
 
-	data.texture = load_texture(&data, "textures/tree_wall.xpm");
-	if(!data.texture.initialized)
+	data.texture[wall] = load_texture(&data, "textures/tree_wall.xpm");
+	data.texture[object] = load_texture(&data, "textures/tree_snow1.xpm");
+
+	if(!data.texture[wall].initialized || !data.texture[object].initialized)
 	{
 		printf("NULL\n");
 		return;
 	}
-
 	init_player(&data);
 	mlx_hook(data.window, 2, 1L << 0, keypressed, &data);
 	mlx_loop_hook(data.mlx, display, &data);

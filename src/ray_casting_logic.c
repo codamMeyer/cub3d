@@ -6,7 +6,7 @@
 #include <render.h>
 #include <stdio.h>
 
-static t_bool hit_obstacle(t_map worldMap, t_position pos)
+static t_bool hit_wall(t_map worldMap, t_position pos)
 {
 	t_grid_position grid_pos = to_grid_position(worldMap, pos);
 	if(grid_pos.x == INVALID || grid_pos.y == INVALID)
@@ -16,7 +16,24 @@ static t_bool hit_obstacle(t_map worldMap, t_position pos)
 	grid_pos.x = min_i(grid_pos.x, worldMap.width - 1);
 	grid_pos.y = min_i(grid_pos.y, worldMap.height - 1);
 
-	return (worldMap.matrix[grid_pos.y][grid_pos.x]);
+	if(worldMap.matrix[grid_pos.y][grid_pos.x] == wall)
+		return (TRUE);
+	return (FALSE);
+}
+
+static t_bool hit_sprite(t_map worldMap, t_position pos)
+{
+	t_grid_position grid_pos = to_grid_position(worldMap, pos);
+	if(grid_pos.x == INVALID || grid_pos.y == INVALID)
+		return (INVALID);
+	grid_pos.x = max_i(grid_pos.x, 0);
+	grid_pos.y = max_i(grid_pos.y, 0);
+	grid_pos.x = min_i(grid_pos.x, worldMap.width - 1);
+	grid_pos.y = min_i(grid_pos.y, worldMap.height - 1);
+
+	if(worldMap.matrix[grid_pos.y][grid_pos.x] == object)
+		return (TRUE);
+	return (FALSE);
 }
 
 static t_position keep_inside_map(t_map worldMap, t_position pos)
@@ -59,16 +76,29 @@ static double get_x_increment_for_horizontal_detection(double ray_angle, double 
 }
 
 static t_position
-find_obstacle(t_data *data, t_map worldMap, double x_increment, double y_increment, t_position ray)
+find_wall(t_data *data, t_map worldMap, double x_increment, double y_increment, t_position ray)
 {
 	(void)data;
-	while(!hit_obstacle(worldMap, ray))
+	while(!hit_wall(worldMap, ray))
 	{
 		ray.x += x_increment;
 		ray.y += y_increment;
 		ray = keep_inside_map(worldMap, ray);
 	}
 
+	return (ray);
+}
+
+static t_position
+find_sprite(t_data *data, t_map worldMap, double x_increment, double y_increment, t_position ray)
+{
+	(void)data;
+	while(!hit_sprite(worldMap, ray))
+	{
+		ray.x += x_increment;
+		ray.y += y_increment;
+		// ray = keep_inside_map(worldMap, ray);
+	}
 	return (ray);
 }
 
@@ -133,7 +163,7 @@ get_first_horizontal_intersection(t_player player, double ray_angle, double tan_
 	return (ray);
 }
 
-t_position find_vertical_line(t_data *data, double ray_angle)
+t_position find_wall_vertical_line(t_data *data, double ray_angle)
 {
 	t_position ray;
 	if(is_straight_up_or_down(&ray, ray_angle))
@@ -142,10 +172,10 @@ t_position find_vertical_line(t_data *data, double ray_angle)
 	double x_increment = get_x_increment_for_vertical_detection(ray_angle);
 	double y_increment = get_y_increment_for_vertical_detection(ray_angle, tan_angle);
 	ray = get_first_vertical_intersection(data->player, ray_angle, tan_angle);
-	return (find_obstacle(data, data->worldMap, x_increment, y_increment, ray));
+	return (find_wall(data, data->worldMap, x_increment, y_increment, ray));
 }
 
-t_position find_horizontal_line(t_data *data, double ray_angle)
+t_position find_wall_horizontal_line(t_data *data, double ray_angle)
 {
 	t_position ray;
 	if(is_straight_left_or_right(&ray, ray_angle))
@@ -154,5 +184,29 @@ t_position find_horizontal_line(t_data *data, double ray_angle)
 	double y_increment = get_y_increment_for_horizontal_detection(ray_angle);
 	double x_increment = get_x_increment_for_horizontal_detection(ray_angle, tan_angle);
 	ray = get_first_horizontal_intersection(data->player, ray_angle, tan_angle);
-	return (find_obstacle(data, data->worldMap, x_increment, y_increment, ray));
+	return (find_wall(data, data->worldMap, x_increment, y_increment, ray));
+}
+
+t_position find_sprite_horizontal_line(t_data *data, double ray_angle)
+{
+	t_position ray;
+	if(is_straight_left_or_right(&ray, ray_angle))
+		return (ray);
+	double tan_angle = tan(degree_to_radians(ray_angle));
+	double y_increment = get_y_increment_for_horizontal_detection(ray_angle);
+	double x_increment = get_x_increment_for_horizontal_detection(ray_angle, tan_angle);
+	ray = get_first_horizontal_intersection(data->player, ray_angle, tan_angle);
+	return (find_sprite(data, data->worldMap, x_increment, y_increment, ray));
+}
+
+t_position find_sprite_vertical_line(t_data *data, double ray_angle)
+{
+	t_position ray;
+	if(is_straight_up_or_down(&ray, ray_angle))
+		return (ray);
+	double tan_angle = tan(degree_to_radians(ray_angle));
+	double x_increment = get_x_increment_for_vertical_detection(ray_angle);
+	double y_increment = get_y_increment_for_vertical_detection(ray_angle, tan_angle);
+	ray = get_first_vertical_intersection(data->player, ray_angle, tan_angle);
+	return (find_sprite(data, data->worldMap, x_increment, y_increment, ray));
 }
