@@ -18,6 +18,8 @@
   - [📐 STEP 4: Get distance from walls](#-step-4-get-distance-from-walls)
   - [🐟 STEP 5: Fix fishbowl effect](#-step-5-fix-fishbowl-effect)
   - [🖍️ STEP 6: Drawing walls](#️-step-6-drawing-walls)
+  - [🧱 STEP 7: Texture mapped walls](#-step-7-texture-mapped-walls)
+      - [What's an XPM file?](#whats-an-xpm-file)
 - [📚 Reference](#-reference)
 
 
@@ -280,9 +282,83 @@ Since the center of the projection plane is defined to be at 100. The middle of 
 
 
 ![figure 19](./images/figure19.png)
+## 🧱 STEP 7: Texture mapped walls
+To make the walls more attractive, the walls can be painted with texture (bitmap) using a technique known as texture mapping. (Texture mapping in general refers to a technique of painting a bitmap/texture onto a surface.) For the cube world, we use bitmaps that have the size of 64 by 64 pixels. This size is chosen because 64 by 64 is also the size of the cube facets that we are using in our world. It is possible to use different size bitmaps, but using the same size simplifies the texture mapping process.
 
+If we are to map a texture onto an arbitrary polygon, the texture mapping process will be complicated. Fortunately, on the ray-casting world that we are creating, texture mapping is just a matter of scaling a slice (a column) of bitmap, see figure bellow.
+![figure 20](./images/figure20.png)
+When the ray is looking for the wall intersection, the offset (position of the ray relative to the grid) can be found easily. This offset can then be used to determine which column of the bitmap is to be drawn as the wall slice. The following figure illustrates the process of finding the offset.
+
+![figure 21](./images/figure21.png)
+
+For this example, we'll use xpm files.
+#### What's an XPM file?
+
+
+XPM
+
+The XPM format is an array of strings composed of six different sections as follows:
+
+```C
+static char* <variable_name>[] = {
+<Values>
+<Colors>
+<Pixels>
+<Extensions>
+};
+```
+
+This is a black-and-white image in the first (1989) XPM format.
+
+```C
+#define XFACE_format 1
+#define XFACE_width 48
+#define XFACE_height 48
+#define XFACE_ncolors 2
+#define XFACE_chars_per_pixel 1
+static char *XFACE_colors[] = {
+"a", "#ffffff",
+"b", "#000000"
+};
+static char *XFACE_pixels[] = {
+"abaabaababaaabaabababaabaabaababaabaaababaabaaab",
+// and so on for 48 rows with 48 pixels
+```
+
+The values section contains the width, height, number of colors, and number of characters per pixel.
+
+![figure 22](./images/figure22.png)
+
+
+When we open that kind of file we can use functions such as:
+
+```C
+void	*mlx_xpm_file_to_image(t_xvar *xvar, char *filename, int *width, int *height)
+```
+It will place it in a linear memory block, with the symbols alreary translated to it'c corresponding color code and now we can use the offset to access the exact collumn of pixels that we want to render.
+
+```C
+int get_pixel_color(const t_texture *texture, int x, int y)
+{
+	const int bytes_per_pixel = 4;
+	unsigned char *color_address;
+	int color;
+	int index;
+	int i;
+	color_address = (unsigned char *)&color;
+	index = (x + y * texture->width) * bytes_per_pixel;
+	i = 0;
+	while(i < bytes_per_pixel)
+	{
+		color_address[i] = texture->data[index + i];
+		++i;
+	}
+	return (color);
+}
+```
 
 # 📚 Reference
+
 
 - [Ray-Casting Tutorial For Game Development And Other Purposes by F. Permadi](https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/)
 
