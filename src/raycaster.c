@@ -3,6 +3,7 @@
 #include <mlx.h>
 #include <player.h>
 #include <raycaster.h>
+#include <sprite.h>
 #include <stdio.h>
 #include <wall_detection.h>
 
@@ -21,15 +22,16 @@ t_texture load_texture(t_data *data, char *filename)
 	return (texture);
 }
 
-
 void ray_casting(t_data *data)
 {
 	const double ray_increment = (double)data->player.FOV / (double)data->player.plane_x;
 	t_ray ray;
 	ray.angle = data->player.angle + (data->player.FOV / 2);
+
 	for(int col = 0; col < data->player.plane_x; col++)
 	{
 		find_and_draw_walls(col, data, &ray);
+		find_sprites(data, ray.angle);
 		ray.angle -= ray_increment;
 	}
 	mlx_put_image_to_window(data->mlx, data->window, data->map.img, 0, 0);
@@ -37,7 +39,6 @@ void ray_casting(t_data *data)
 
 static int display(t_data *data)
 {
-	// paint_background(screenWidth, screenHeight, data);
 	ray_casting(data);
 	// draw_map_2d(data);
 	// draw_player(data);
@@ -56,11 +57,10 @@ void run()
 	data.worldMap.height = 25;
 	data.worldMap.width = 25;
 	data.worldMap.matrix = init_matrix(data.worldMap.height, data.worldMap.width);
+	data.texture[WALL] = load_texture(&data, "textures/tree_wall.xpm");
+	data.texture[SPRITE] = load_texture(&data, "textures/tree_snow1.xpm");
 
-	data.texture[wall] = load_texture(&data, "textures/tree_wall.xpm");
-	data.texture[object] = load_texture(&data, "textures/tree_snow1.xpm");
-
-	if(!data.texture[wall].initialized || !data.texture[object].initialized)
+	if(!data.texture[WALL].initialized || !data.texture[SPRITE].initialized)
 	{
 		printf("NULL\n");
 		return;

@@ -24,7 +24,8 @@ double max_d(double a, double b)
 t_grid_position to_grid_position(t_map worldMap, t_position pos)
 {
 	t_grid_position grid_pos = {.x = pos.x / GRID_SIZE, .y = pos.y / GRID_SIZE};
-	if(grid_pos.x >= worldMap.width || grid_pos.y >= worldMap.height)
+	if(grid_pos.x >= worldMap.width || grid_pos.y >= worldMap.height || grid_pos.x < 0 ||
+	   grid_pos.y < 0)
 	{
 		grid_pos.x = INVALID;
 		grid_pos.y = INVALID;

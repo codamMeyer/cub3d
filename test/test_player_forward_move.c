@@ -1,14 +1,30 @@
 #include "ctest.h"
+
 #include <inc/defs.h>
 #include <inc/map.h>
 #include <inc/player.h>
+#include <inc/ray_casting_logic.h>
 #include <inc/raycaster.h>
 #include <inc/utils.h>
 #include <math.h>
-#include <stdio.h>
 #include <math_utils.h>
-#include <inc/ray_casting_logic.h>
+#include <stdio.h>
 
+static int **init_map(int height, int width)
+{
+	int i, j;
+	int **map = malloc_matrix(height, width);
+
+	for(i = 0; i < height; i++)
+		for(j = 0; j < width; j++)
+		{
+			if(i == 0 || j == 0 || i == height - 1 || j == width - 1)
+				map[i][j] = 1;
+			else
+				map[i][j] = 0;
+		}
+	return (map);
+}
 static void draw_map(t_data game, int expected_x, int expected_y)
 {
 	printf("\n");
@@ -47,7 +63,7 @@ CTEST_SETUP(player_forward_move)
 	data->game.player.color = BLUE;
 	data->game.worldMap.height = 5;
 	data->game.worldMap.width = 7;
-	data->game.worldMap.matrix = init_matrix(data->game.worldMap.height, data->game.worldMap.width);
+	data->game.worldMap.matrix = init_map(data->game.worldMap.height, data->game.worldMap.width);
 	data->game.worldMap.matrix[2][3] = 1;
 }
 

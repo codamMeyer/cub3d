@@ -34,9 +34,9 @@ typedef struct s_texture
 
 typedef enum e_collider
 {
-	empty,
-	wall,
-	object
+	EMPTY,
+	WALL,
+	SPRITE
 } t_collider;
 
 typedef enum e_orientation
@@ -116,6 +116,5 @@ typedef struct s_data
 	t_player player;
 	t_texture texture[5];
 } t_data;
-
 
 #endif

@@ -1,13 +1,30 @@
 #include "ctest.h"
+
 #include <inc/defs.h>
 #include <inc/map.h>
 #include <inc/ray_casting_logic.h>
 #include <inc/raycaster.h>
 #include <inc/utils.h>
+#include <inc/wall_detection.h>
 #include <math.h>
 #include <math_utils.h>
 #include <stdio.h>
 
+static int **init_map(int height, int width)
+{
+	int i, j;
+	int **map = malloc_matrix(height, width);
+
+	for(i = 0; i < height; i++)
+		for(j = 0; j < width; j++)
+		{
+			if(i == 0 || j == 0 || i == height - 1 || j == width - 1)
+				map[i][j] = 1;
+			else
+				map[i][j] = 0;
+		}
+	return (map);
+}
 static void draw_map(t_data game, int expected_x, int expected_y)
 {
 	printf("\n");
@@ -46,7 +63,7 @@ CTEST_SETUP(horizontal_lines)
 	data->game.player.color = BLUE;
 	data->game.worldMap.height = 5;
 	data->game.worldMap.width = 7;
-	data->game.worldMap.matrix = init_matrix(data->game.worldMap.height, data->game.worldMap.width);
+	data->game.worldMap.matrix = init_map(data->game.worldMap.height, data->game.worldMap.width);
 }
 
 CTEST_TEARDOWN(horizontal_lines)
@@ -67,7 +84,7 @@ CTEST2(horizontal_lines, player_facing_90_degrees)
 
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
 	ray_angle = fix_angle(ray_angle);
-	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
+	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
 
 	t_grid_position ray_grid_position = to_grid_position(data->game.worldMap, ray_position);
 
@@ -86,7 +103,7 @@ CTEST2(horizontal_lines, player_facing_60_degrees)
 
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
 	ray_angle = fix_angle(ray_angle);
-	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
+	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
 
 	t_grid_position ray_grid_position = to_grid_position(data->game.worldMap, ray_position);
 
@@ -106,7 +123,7 @@ CTEST2(horizontal_lines, player_facing_0_degrees)
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
 	ray_angle = fix_angle(ray_angle);
 
-	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
+	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
 
 	t_grid_position ray_grid_position = to_grid_position(data->game.worldMap, ray_position);
 
@@ -127,7 +144,7 @@ CTEST2(horizontal_lines, player_facing_30_degrees)
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
 	ray_angle = fix_angle(ray_angle);
 
-	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
+	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
 
 	ASSERT_EQUAL(expected_x, ray_position.x);
 	ASSERT_EQUAL(expected_y, ray_position.y);
@@ -146,7 +163,7 @@ CTEST2(horizontal_lines, player_facing_300_degrees)
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
 	ray_angle = fix_angle(ray_angle);
 
-	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
+	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
 
 	t_grid_position ray_grid_position = to_grid_position(data->game.worldMap, ray_position);
 
@@ -167,7 +184,7 @@ CTEST2(horizontal_lines, player_facing_270_degrees)
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
 	ray_angle = fix_angle(ray_angle);
 
-	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
+	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
 
 	t_grid_position ray_grid_position = to_grid_position(data->game.worldMap, ray_position);
 
@@ -188,7 +205,7 @@ CTEST2(horizontal_lines, player_facing_210_degrees)
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
 	ray_angle = fix_angle(ray_angle);
 
-	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
+	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
 
 	ASSERT_EQUAL(expected_x, ray_position.x);
 	ASSERT_EQUAL(expected_y, ray_position.y);
@@ -207,7 +224,7 @@ CTEST2(horizontal_lines, player_facing_180_degrees)
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
 	ray_angle = fix_angle(ray_angle);
 
-	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
+	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
 
 	t_grid_position ray_grid_position = to_grid_position(data->game.worldMap, ray_position);
 
@@ -228,7 +245,7 @@ CTEST2(horizontal_lines, player_facing_140_degrees)
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
 	ray_angle = fix_angle(ray_angle);
 
-	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
+	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
 
 	t_grid_position ray_grid_position = to_grid_position(data->game.worldMap, ray_position);
 
@@ -249,7 +266,7 @@ CTEST2(horizontal_lines, player_facing_120_degrees)
 	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
 	ray_angle = fix_angle(ray_angle);
 
-	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
+	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
 
 	t_grid_position ray_grid_position = to_grid_position(data->game.worldMap, ray_position);
 

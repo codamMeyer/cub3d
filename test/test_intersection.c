@@ -1,13 +1,30 @@
 #include "ctest.h"
+
 #include <inc/defs.h>
 #include <inc/map.h>
+#include <inc/ray_casting_logic.h>
 #include <inc/raycaster.h>
 #include <inc/utils.h>
+#include <inc/wall_detection.h>
 #include <math.h>
 #include <math_utils.h>
 #include <stdio.h>
-#include <inc/ray_casting_logic.h>
 
+static int **init_map(int height, int width)
+{
+	int i, j;
+	int **map = malloc_matrix(height, width);
+
+	for(i = 0; i < height; i++)
+		for(j = 0; j < width; j++)
+		{
+			if(i == 0 || j == 0 || i == height - 1 || j == width - 1)
+				map[i][j] = 1;
+			else
+				map[i][j] = 0;
+		}
+	return (map);
+}
 static void draw_map(t_data game, int expected_x, int expected_y)
 {
 	printf("\n");
@@ -46,7 +63,7 @@ CTEST_SETUP(intersection)
 	data->game.player.color = BLUE;
 	data->game.worldMap.height = 10;
 	data->game.worldMap.width = 10;
-	data->game.worldMap.matrix = init_matrix(data->game.worldMap.height, data->game.worldMap.width);
+	data->game.worldMap.matrix = init_map(data->game.worldMap.height, data->game.worldMap.width);
 	data->game.worldMap.matrix[3][3] = 1;
 }
 
@@ -67,7 +84,7 @@ CTEST2(intersection, ray_angle_321_horizontal_detection)
 	draw_map(data->game, expected_x, expected_y);
 
 	double ray_angle = 321;
-	t_position ray_position = find_horizontal_line(&(data->game), ray_angle);
+	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
 
 	t_grid_position ray_grid_position = to_grid_position(data->game.worldMap, ray_position);
 
@@ -87,7 +104,7 @@ CTEST2(intersection, ray_angle_321_vertical_detection)
 	draw_map(data->game, expected_x, expected_y);
 
 	double ray_angle = 321;
-	t_position ray_position = find_vertical_line(&(data->game), ray_angle);
+	t_position ray_position = find_wall_vertical_line(&(data->game), ray_angle);
 
 	t_grid_position ray_grid_position = to_grid_position(data->game.worldMap, ray_position);
 

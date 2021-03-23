@@ -39,6 +39,8 @@ union ctest_run_func_union {
     ctest_unary_run_func unary;
 };
 
+
+
 #define CTEST_IMPL_PRAGMA(x) _Pragma (#x)
 
 #if defined(__GNUC__)

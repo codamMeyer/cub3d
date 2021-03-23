@@ -8,7 +8,7 @@ static double fix_fisheye_effect(double closest_wall, double ray_angle)
 	return (closest_wall * cos(degree_to_radians(ray_angle)));
 }
 
-static double get_wall_distance(t_position ray_coord, t_position player_coord)
+double get_wall_distance(t_position ray_coord, t_position player_coord)
 {
 	const double x_diff = (player_coord.x - ray_coord.x) * (player_coord.x - ray_coord.x);
 	const double y_diff = (player_coord.y - ray_coord.y) * (player_coord.y - ray_coord.y);

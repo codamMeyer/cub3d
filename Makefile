@@ -15,7 +15,8 @@ SRC_FILES=						\
 	src/direction.c  			\
 	src/ray_casting_logic.c		\
 	src/render.c				\
-	src/wall_detection.c
+	src/wall_detection.c		\
+	src/sprite.c
 
 INC_FILES=						\
 	inc/raycaster.h  			\
@@ -27,7 +28,8 @@ INC_FILES=						\
 	inc/direction.h  			\
 	inc/ray_casting_logic.h		\
 	inc/render.h				\
-	inc/wall_detection.h
+	inc/wall_detection.h		\
+	inc/sprite.h
 
 TEST_FILES= 								\
 	test/main.c 							\
@@ -38,7 +40,7 @@ TEST_FILES= 								\
 	test/test_wall_distance.c				\
 	test/test_intersection.c				\
 	test/test_find_closest_wall.c			\
-	test/test_find_grid_center_position.c
+	test/test_find_sprite.c
 
 all: $(NAME)
 
@@ -46,7 +48,7 @@ $(NAME): $(INC_FILES) $(SRC_FILES)
 	$(CC) $(CFLAGS) $(INC_PATH) $(SRC_FILES) src/main.c $(LDFLAGS) -o $(NAME)
 
 test: $(INC_FILES) $(SRC_FILES) $(TEST_FILES)
-	$(CC) $(TEST_CFLAGS) $(INC_PATH) $(SRC_FILES) $(TEST_FILES) $(LDFLAGS) -o tester
+	$(CC) -D GRID_SIZE=32 $(TEST_CFLAGS) $(INC_PATH) $(SRC_FILES) $(TEST_FILES) $(LDFLAGS) -o tester
 
 clean:
 	rm -f $(SRC_OBJ)
