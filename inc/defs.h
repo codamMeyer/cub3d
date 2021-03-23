@@ -117,4 +117,5 @@ typedef struct s_data
 	t_texture texture[5];
 } t_data;
 
+
 #endif

@@ -14,7 +14,8 @@ SRC_FILES=						\
 	src/math_utils.c  			\
 	src/direction.c  			\
 	src/ray_casting_logic.c		\
-	src/render.c
+	src/render.c				\
+	src/wall_detection.c
 
 INC_FILES=						\
 	inc/raycaster.h  			\
@@ -25,7 +26,8 @@ INC_FILES=						\
 	inc/math_utils.h 			\
 	inc/direction.h  			\
 	inc/ray_casting_logic.h		\
-	inc/render.h
+	inc/render.h				\
+	inc/wall_detection.h
 
 TEST_FILES= 								\
 	test/main.c 							\
@@ -35,7 +37,8 @@ TEST_FILES= 								\
 	test/test_player_backward_move.c		\
 	test/test_wall_distance.c				\
 	test/test_intersection.c				\
-	test/test_find_closest_wall.c
+	test/test_find_closest_wall.c			\
+	test/test_find_grid_center_position.c
 
 all: $(NAME)
 

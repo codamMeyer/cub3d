@@ -1,16 +1,10 @@
-#include <direction.h>
 #include <keyboard.h>
 #include <map.h>
-#include <math.h>
-#include <math_utils.h>
 #include <mlx.h>
 #include <player.h>
-#include <ray_casting_logic.h>
 #include <raycaster.h>
-#include <render.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <utils.h>
+#include <wall_detection.h>
 
 t_texture load_texture(t_data *data, char *filename)
 {
@@ -27,85 +21,15 @@ t_texture load_texture(t_data *data, char *filename)
 	return (texture);
 }
 
-double get_wall_distance(t_position ray_coord, t_position player_coord)
-{
-	const double x_diff = (player_coord.x - ray_coord.x) * (player_coord.x - ray_coord.x);
-	const double y_diff = (player_coord.y - ray_coord.y) * (player_coord.y - ray_coord.y);
-	return (sqrt(x_diff + y_diff));
-}
 
-static double fix_fisheye_effect(double closest_wall, double ray_angle)
-{
-	return (closest_wall * cos(degree_to_radians(ray_angle)));
-}
-
-void find_closest_wall(t_position h_intersection,
-					   t_position v_intersection,
-					   t_player player,
-					   t_ray *ray)
-{
-	const double v_dist = get_wall_distance(v_intersection, player.position);
-	const double h_dist = get_wall_distance(h_intersection, player.position);
-	const double angle = fix_angle(player.angle - ray->angle);
-
-	if(v_dist < h_dist)
-	{
-		ray->pos = v_intersection;
-		ray->distance = fix_fisheye_effect(v_dist, angle);
-		ray->orientation = VERTICAL;
-	}
-	else
-	{
-		ray->pos = h_intersection;
-		ray->distance = fix_fisheye_effect(h_dist, angle);
-		ray->orientation = HORIZONTAL;
-	}
-}
-
-void find_closest_sprite(t_position h_intersection,
-						 t_position v_intersection,
-						 t_player player,
-						 t_ray *ray)
-{
-	const double v_dist = get_wall_distance(v_intersection, player.position);
-	const double h_dist = get_wall_distance(h_intersection, player.position);
-
-	const double angle = fix_angle(player.angle - ray->angle);
-
-	if(h_dist < v_dist)
-	{
-		ray->pos = h_intersection;
-		ray->distance = fix_fisheye_effect(h_dist, angle);
-		ray->orientation = HORIZONTAL;
-	}
-	else
-	{
-		ray->pos = v_intersection;
-		ray->distance = fix_fisheye_effect(v_dist, angle);
-		ray->orientation = VERTICAL;
-	}
-}
-
-void rayCasting(t_data *data)
+void ray_casting(t_data *data)
 {
 	const double ray_increment = (double)data->player.FOV / (double)data->player.plane_x;
 	t_ray ray;
 	ray.angle = data->player.angle + (data->player.FOV / 2);
 	for(int col = 0; col < data->player.plane_x; col++)
 	{
-		ray.angle = fix_angle(ray.angle);
-		t_position h_intersection = find_wall_horizontal_line(data, ray.angle);
-		t_position v_intersection = find_wall_vertical_line(data, ray.angle);
-
-		find_closest_wall(h_intersection, v_intersection, data->player, &ray);
-
-		draw_slice(data, col, ray);
-
-		t_position h_sprite = find_sprite_horizontal_line(data, ray.angle);
-		t_position v_sprite = find_sprite_vertical_line(data, ray.angle);
-
-		find_closest_sprite(h_sprite, v_sprite, data->player, &ray);
-		draw_slice(data, col, ray);
+		find_and_draw_walls(col, data, &ray);
 		ray.angle -= ray_increment;
 	}
 	mlx_put_image_to_window(data->mlx, data->window, data->map.img, 0, 0);
@@ -114,7 +38,7 @@ void rayCasting(t_data *data)
 static int display(t_data *data)
 {
 	// paint_background(screenWidth, screenHeight, data);
-	rayCasting(data);
+	ray_casting(data);
 	// draw_map_2d(data);
 	// draw_player(data);
 	return (1);

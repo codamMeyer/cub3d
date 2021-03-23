@@ -52,3 +52,22 @@ double fix_angle(double angle)
 		angle += 360;
 	return angle;
 }
+
+t_position get_grid_center(t_grid_position grid_pos)
+{
+
+	const t_position pos = {.x = (grid_pos.x + 1) * GRID_SIZE, .y = (grid_pos.y + 1) * GRID_SIZE};
+	const double half_grid = GRID_SIZE / 2;
+	const t_position center = {.x = pos.x - half_grid, .y = pos.y - half_grid};
+
+	return (center);
+}
+
+t_position get_grid_center_offset(t_grid_position grid_pos)
+{
+	const t_position pos = {.x = (grid_pos.x + 1) * GRID_SIZE, .y = (grid_pos.y + 1) * GRID_SIZE};
+	const t_position center = get_grid_center(grid_pos);
+	const t_position offset = {.x = center.x - pos.x, .y = center.y - pos.y};
+
+	return (offset);
+}
