@@ -9,8 +9,8 @@
 static t_bool hit_wall(t_map worldMap, t_position pos)
 {
 	t_grid_position grid_pos = to_grid_position(worldMap, pos);
-	if(grid_pos.x == INVALID || grid_pos.y == INVALID)
-		return (1);
+	if(!is_valid_grid_position(worldMap, grid_pos))
+		return (INVALID);
 	grid_pos.x = max_i(grid_pos.x, 0);
 	grid_pos.y = max_i(grid_pos.y, 0);
 	grid_pos.x = min_i(grid_pos.x, worldMap.width - 1);

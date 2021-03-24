@@ -1,5 +1,6 @@
 #include <keyboard.h>
 #include <map.h>
+#include <math_utils.h>
 #include <mlx.h>
 #include <player.h>
 #include <raycaster.h>
@@ -27,13 +28,35 @@ void ray_casting(t_data *data)
 	const double ray_increment = (double)data->player.FOV / (double)data->player.plane_x;
 	t_ray ray;
 	ray.angle = data->player.angle + (data->player.FOV / 2);
+	t_sprite sprites[10];
 
+	t_sprite sprite;
+	int i = 0;
 	for(int col = 0; col < data->player.plane_x; col++)
 	{
 		find_and_draw_walls(col, data, &ray);
-		find_sprites(data, ray.angle);
+
+		sprite = find_sprites(data, ray.angle);
+		if(is_valid_grid_position(data->worldMap, sprite.grid_pos))
+		{
+			if(i > 0)
+			{
+				if(sprite.grid_pos.x != sprites[i - 1].grid_pos.x ||
+				   sprite.grid_pos.y != sprites[i - 1].grid_pos.y)
+				{
+					sprites[i] = sprite;
+					++i;
+				}
+			}
+			else
+			{
+				sprites[i] = sprite;
+				i++;
+			}
+		}
 		ray.angle -= ray_increment;
 	}
+	draw_sprites(data, &sprites[0], i);
 	mlx_put_image_to_window(data->mlx, data->window, data->map.img, 0, 0);
 }
 

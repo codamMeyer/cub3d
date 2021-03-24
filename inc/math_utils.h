@@ -13,4 +13,6 @@ double abs_value(double value);
 double fix_angle(double angle);
 t_position get_grid_center(t_grid_position grid_pos);
 t_position get_grid_center_offset(t_grid_position grid_pos);
+t_bool is_valid_grid_position(t_map worldmap, t_grid_position position);
+
 #endif

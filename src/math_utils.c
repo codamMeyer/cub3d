@@ -72,3 +72,9 @@ t_position get_grid_center_offset(t_grid_position grid_pos)
 
 	return (offset);
 }
+
+t_bool is_valid_grid_position(t_map worldmap, t_grid_position position)
+{
+	return ((position.x > 0 && position.x < worldmap.width) &&
+			(position.y > 0 && position.y < worldmap.height));
+}

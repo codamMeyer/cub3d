@@ -112,74 +112,8 @@ t_collider get_collider_type(t_map worldmap, t_position pos)
 void draw_slice(t_data *data, int slice_col, t_ray *ray)
 {
 	t_dimentions dimentions = get_dimentions(ray->distance, data->player);
-	t_collider collider_type = get_collider_type(data->worldMap, ray->pos);
-
-	if((int)collider_type != INVALID)
-	{
-		if(collider_type == WALL)
-		{
-			draw_ceiling_slice(data, slice_col, dimentions.top, dimentions.height);
-			draw_floor_slice(data, slice_col, dimentions.bottom, dimentions.height);
-			draw_wall_slice(data, slice_col, dimentions, ray, WALL);
-		}
-		// else
-		// {
-		// 	draw_sprite_slice(data, slice_col, dimentions, ray, object);
-		// }
-	}
+	draw_ceiling_slice(data, slice_col, dimentions.top, dimentions.height);
+	draw_floor_slice(data, slice_col, dimentions.bottom, dimentions.height);
+	draw_wall_slice(data, slice_col, dimentions, ray, WALL);
 }
 
-
-
-
-// static t_position get_sprite_transform_value(t_map worldmap, t_player *player, t_ray *ray)
-// {
-
-// 	double dir_x = cos(degree_to_radians(player->angle));
-// 	double dir_y = sin(degree_to_radians(player->angle));
-// 	t_position sprite_pos;
-
-// 	t_grid_position grid_pos = to_grid_position(worldmap, ray->pos);
-
-// 	t_position center = get_grid_center(grid_pos);
-
-// 	sprite_pos.x = center.x - player->position.x;
-// 	sprite_pos.y = center.y - player->position.y;
-// 	// sprite_pos.x = ray->pos.x - player->position.x;
-// 	// sprite_pos.y = ray->pos.y - player->position.y;
-
-// 	double inv_det = 1.0 / (player->plane_x * dir_y - dir_x * player->plane_y);
-
-// 	t_position transform;
-// 	transform.x = inv_det * ((dir_y * sprite_pos.x) - (dir_x * sprite_pos.y));
-
-// 	transform.y = inv_det * (player->plane_y * sprite_pos.x + player->plane_x * sprite_pos.y);
-
-// 	return (transform);
-// }
-
-// static void
-// draw_sprite_slice(t_data *data, int slice_col, t_dimentions sprite_dimentions, t_ray ray, int type)
-// {
-// 	int sprite_index;
-// 	int color;
-// 	t_texture_position texture_pos;
-
-// 	t_position transform = get_sprite_transform_value(data->worldMap, &data->player, &ray);
-
-// 	sprite_dimentions.height = abs_value(floor(screenHeight / transform.y));
-
-// 	sprite_dimentions.top = screenHeight / 2 - sprite_dimentions.height / 2;
-// 	sprite_dimentions.bottom = screenHeight / 2 + sprite_dimentions.height / 2;
-
-// 	sprite_index = sprite_dimentions.top;
-// 	while(sprite_index <= sprite_dimentions.bottom)
-// 	{
-// 		texture_pos =
-// 			get_texture_position(&data->texture[type], &ray, sprite_dimentions, sprite_index);
-// 		color = get_pixel_color(&data->texture[type], texture_pos.x, texture_pos.y);
-// 		if((unsigned int)color != 0xff000000)
-// 			my_mlx_pixel_put(&data->map, slice_col, sprite_index, color);
-// 		++sprite_index;
-// 	}
-// }

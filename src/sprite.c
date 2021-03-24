@@ -1,13 +1,15 @@
 #include <math.h>
 #include <math_utils.h>
 #include <ray_casting_logic.h>
+#include <render.h>
 #include <sprite.h>
 #include <stdio.h>
+#include <utils.h>
 
 static t_bool hit_sprite(t_map worldMap, t_position pos)
 {
 	t_grid_position grid_pos = to_grid_position(worldMap, pos);
-	if(grid_pos.x == INVALID || grid_pos.y == INVALID)
+	if(!is_valid_grid_position(worldMap, grid_pos))
 		return (INVALID);
 	grid_pos.x = max_i(grid_pos.x, 0);
 	grid_pos.y = max_i(grid_pos.y, 0);
@@ -31,8 +33,6 @@ static t_sprite find_sprite(t_map worldMap, double x_increment, double y_increme
 	}
 	sprite.grid_pos = to_grid_position(worldMap, ray);
 	sprite.center = get_grid_center(sprite.grid_pos);
-	if(sprite.grid_pos.y > worldMap.height || sprite.grid_pos.x > worldMap.width)
-		printf("aaaaaaaaaaaaa");
 	return (sprite);
 }
 
@@ -78,12 +78,13 @@ double get_sprite_distance(t_position sprite_center, t_position player_coord)
 	return (sqrt(x_diff + y_diff));
 }
 
-t_sprite find_closest_sprite(t_sprite horizontal, t_sprite vertical, t_player player)
+t_sprite
+find_closest_sprite(t_map worldmap, t_sprite horizontal, t_sprite vertical, t_player player)
 {
-	if(horizontal.center.x > 0 || horizontal.center.y > 0)
+	if(is_valid_grid_position(worldmap, horizontal.grid_pos))
 	{
 		const double h_dist = get_sprite_distance(horizontal.center, player.position);
-		if(vertical.center.x > 0 || vertical.center.y > 0)
+		if(is_valid_grid_position(worldmap, vertical.grid_pos))
 		{
 			const double v_dist = get_sprite_distance(vertical.center, player.position);
 			if(h_dist < v_dist)
@@ -96,27 +97,96 @@ t_sprite find_closest_sprite(t_sprite horizontal, t_sprite vertical, t_player pl
 		return (vertical);
 }
 
-void find_sprites(t_data *data, double ray_angle)
+static t_position get_sprite_transform_value(t_player *player, t_position pos)
+{
+
+	double dir_x = cos(degree_to_radians(player->angle));
+	double dir_y = sin(degree_to_radians(player->angle));
+	t_position sprite_pos;
+
+	sprite_pos.x = pos.x - player->position.x;
+	sprite_pos.y = pos.y - player->position.y;
+
+	double inv_det = 1.0 / (player->plane_x * dir_y - dir_x * player->plane_y);
+
+	t_position transform;
+	transform.x = inv_det * ((dir_y * sprite_pos.x) - (dir_x * sprite_pos.y));
+
+	transform.y = inv_det * (-player->plane_y * sprite_pos.x + player->plane_x * sprite_pos.y);
+
+	return (transform);
+}
+
+static void draw_sprite(t_data *data, t_sprite sprite)
+{
+	int color;
+	t_dimentions sprite_dimentions;
+	t_texture_position texture_pos;
+
+	t_position transform = get_sprite_transform_value(&data->player, sprite.center);
+
+	int sprite_screen_x = ((double)screenWidth / 2.0) * (1.0 + transform.x / transform.y);
+
+	sprite_dimentions.height = abs_value(floor((double)screenHeight / transform.y));
+	sprite_dimentions.top = (double)screenHeight / 2.0 - (double)sprite_dimentions.height / 2.0;
+	sprite_dimentions.bottom = (double)screenHeight / 2.0 + (double)sprite_dimentions.height / 2.0;
+	sprite_dimentions.width = abs_value(floor((double)screenHeight / transform.y));
+
+	int start_x = -sprite_dimentions.width / 2 + sprite_screen_x;
+	int end_x = sprite_dimentions.width / 2 + sprite_screen_x;
+
+	int x = start_x;
+	int y;
+	sprite_dimentions.top = sprite_dimentions.top < 0 ? 0 : sprite_dimentions.top;
+	while(x < end_x)
+	{
+		if(transform.y > 0 && x > 0 && x < screenWidth)
+		{
+			y = sprite_dimentions.top;
+			while(y < sprite_dimentions.bottom)
+			{
+				texture_pos.x =
+					((float)(x - start_x) / (float)(end_x - start_x)) * data->texture[SPRITE].width;
+				texture_pos.y = (float)(y - sprite_dimentions.top) /
+								(float)(sprite_dimentions.bottom - sprite_dimentions.top) *
+								data->texture[SPRITE].height;
+
+				if(y < 0 || y >= screenHeight || x < 0 || x >= screenWidth)
+					return;
+				if(texture_pos.x < 0 || texture_pos.y < 0)
+					return;
+				if(texture_pos.x >= data->texture[SPRITE].width ||
+				   texture_pos.y >= data->texture[SPRITE].height)
+					return;
+				color = get_pixel_color(&data->texture[SPRITE], texture_pos.x, texture_pos.y);
+				if((unsigned int)color != 0xff000000)
+					my_mlx_pixel_put(&data->map, x, y, color);
+				++y;
+			}
+		}
+		++x;
+	}
+}
+
+void draw_sprites(t_data *data, t_sprite *sprites, int size)
+{
+	int i = 0;
+	while(i < size)
+	{
+		draw_sprite(data, sprites[i]);
+		++i;
+	}
+}
+
+t_sprite find_sprites(t_data *data, double ray_angle)
 {
 	t_sprite hor;
 	t_sprite ver;
-	t_sprite closest;
 
 	hor = find_sprite_horizontal_line(data, ray_angle);
 	ver = find_sprite_vertical_line(data, ray_angle);
-
-	if((hor.center.x > 0 && hor.center.y > 0) || (ver.center.x > 0 && ver.center.y > 0))
-	{
-		closest = find_closest_sprite(hor, ver, data->player);
-		printf("%.2f (%d, %d) | center (%.2f, %.2f)\n",
-			   ray_angle,
-			   closest.grid_pos.x,
-			   closest.grid_pos.y,
-			   closest.center.x,
-			   closest.center.y);
-	}
-	else
-	{
-		printf("no sprite\n");
-	}
+	// t_sprite closest = find_closest_sprite(data->worldMap, hor, ver, data->player);
+	// if(is_valid_grid_position(data->worldMap, closest.grid_pos))
+	// 	printf("found sprite at (%d, %d)\n", closest.grid_pos.x, closest.grid_pos.y);
+	return (find_closest_sprite(data->worldMap, hor, ver, data->player));
 }
