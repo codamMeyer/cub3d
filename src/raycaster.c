@@ -71,10 +71,13 @@ static int display(t_data *data)
 void run()
 {
 	t_data data;
+	data.screenHeight = 700;
+	data.screenWidth = 920;
 
 	data.mlx = mlx_init();
-	data.window = mlx_new_window(data.mlx, screenWidth, screenHeight, "*** Raycaster ***");
-	data.map.img = mlx_new_image(data.mlx, screenWidth, screenHeight);
+	data.window =
+		mlx_new_window(data.mlx, data.screenWidth, data.screenHeight, "*** Raycaster ***");
+	data.map.img = mlx_new_image(data.mlx, data.screenWidth, data.screenHeight);
 	data.map.addr = mlx_get_data_addr(
 		data.map.img, &data.map.bits_per_pixel, &data.map.line_length, &data.map.endian);
 	data.worldMap.height = 25;

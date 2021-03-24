@@ -16,7 +16,9 @@ SRC_FILES=						\
 	src/ray_casting_logic.c		\
 	src/render.c				\
 	src/wall_detection.c		\
-	src/sprite.c
+	src/sprite.c				\
+	src/get_next_line_utils.c	\
+	src/get_next_line.c
 
 INC_FILES=						\
 	inc/raycaster.h  			\
@@ -29,7 +31,8 @@ INC_FILES=						\
 	inc/ray_casting_logic.h		\
 	inc/render.h				\
 	inc/wall_detection.h		\
-	inc/sprite.h
+	inc/sprite.h				\
+	inc/get_next_line.h
 
 TEST_FILES= 								\
 	test/main.c 							\

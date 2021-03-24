@@ -125,12 +125,12 @@ static void draw_sprite(t_data *data, t_sprite sprite)
 
 	t_position transform = get_sprite_transform_value(&data->player, sprite.center);
 
-	int sprite_screen_x = ((double)screenWidth / 2.0) * (1.0 + transform.x / transform.y);
+	int sprite_screen_x = ((double)data->screenWidth / 2.0) * (1.0 + transform.x / transform.y);
 
-	sprite_dimentions.height = abs_value(floor((double)screenHeight / transform.y));
-	sprite_dimentions.top = (double)screenHeight / 2.0 - (double)sprite_dimentions.height / 2.0;
-	sprite_dimentions.bottom = (double)screenHeight / 2.0 + (double)sprite_dimentions.height / 2.0;
-	sprite_dimentions.width = abs_value(floor((double)screenHeight / transform.y));
+	sprite_dimentions.height = abs_value(floor((double)data->screenHeight / transform.y));
+	sprite_dimentions.top = (double)data->screenHeight / 2.0 - (double)sprite_dimentions.height / 2.0;
+	sprite_dimentions.bottom = (double)data->screenHeight / 2.0 + (double)sprite_dimentions.height / 2.0;
+	sprite_dimentions.width = abs_value(floor((double)data->screenHeight / transform.y));
 
 	int start_x = -sprite_dimentions.width / 2 + sprite_screen_x;
 	int end_x = sprite_dimentions.width / 2 + sprite_screen_x;
@@ -140,7 +140,7 @@ static void draw_sprite(t_data *data, t_sprite sprite)
 	sprite_dimentions.top = sprite_dimentions.top < 0 ? 0 : sprite_dimentions.top;
 	while(x < end_x)
 	{
-		if(transform.y > 0 && x > 0 && x < screenWidth)
+		if(transform.y > 0 && x > 0 && x < data->screenWidth)
 		{
 			y = sprite_dimentions.top;
 			while(y < sprite_dimentions.bottom)
@@ -151,7 +151,7 @@ static void draw_sprite(t_data *data, t_sprite sprite)
 								(float)(sprite_dimentions.bottom - sprite_dimentions.top) *
 								data->texture[SPRITE].height;
 
-				if(y < 0 || y >= screenHeight || x < 0 || x >= screenWidth)
+				if(y < 0 || y >= data->screenHeight || x < 0 || x >= data->screenWidth)
 					return;
 				if(texture_pos.x < 0 || texture_pos.y < 0)
 					return;

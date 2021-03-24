@@ -29,7 +29,7 @@ void init_player(t_data *data)
 	data->player.plane_x = 920;
 	data->player.plane_y = 700;
 	data->player.angle = 270;
-	data->player.speed = 5;
+	data->player.speed = 10;
 	data->player.color = BLUE;
 }
 
@@ -65,12 +65,12 @@ void turn_counterclockwise(t_player *player)
 {
 	if(player->angle >= 360)
 		player->angle = 0;
-	player->angle += 1.0;
+	player->angle += 2.0;
 }
 
 void turn_clockwise(t_player *player)
 {
 	if(player->angle <= 0)
 		player->angle = 360;
-	player->angle -= 1.0;
+	player->angle -= 2.0;
 }

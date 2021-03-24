@@ -1,8 +1,6 @@
 #ifndef DEFS_H
 #define DEFS_H
 
-#define screenWidth 920
-#define screenHeight 700
 #define INVALID -1
 #define TRUE 1
 #define FALSE 0
@@ -112,6 +110,8 @@ typedef struct s_data
 {
 	void *mlx;
 	void *window;
+	int screenWidth;
+	int screenHeight;
 	t_img map;
 	t_map worldMap;
 	t_player player;
