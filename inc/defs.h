@@ -23,6 +23,7 @@ typedef int t_bool;
 
 typedef struct s_texture
 {
+	char *filename;
 	t_bool initialized;
 	int width;
 	int height;
@@ -30,12 +31,28 @@ typedef struct s_texture
 	char *data;
 } t_texture;
 
+typedef struct s_window
+{
+	int width;
+	int height;
+} t_window;
+
 typedef enum e_collider
 {
 	EMPTY,
 	WALL,
 	SPRITE
 } t_collider;
+
+typedef enum e_texture
+{
+	INVAL = -1,
+	NO = 0,
+	SO = 1,
+	WE = 2,
+	EA = 3,
+	S = 4,
+} t_texture_enum;
 
 typedef enum e_orientation
 {

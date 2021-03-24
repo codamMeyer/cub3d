@@ -2,8 +2,8 @@ NAME=raycaster
 CC=clang
 CFLAGS= -ggdb3 -Wall -Wextra -Werror -fsanitize=address -fsanitize=leak
 TEST_CFLAGS= -ggdb3 -Wall -Wextra -Werror #-fsanitize=address -fsanitize=leak
-INC_PATH=-I./mlx_linux -I./inc -I./
-LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz
+INC_PATH=-I./mlx_linux -I./inc -I./ 
+LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz  -L./libft -lft
 
 SRC_FILES=						\
 	src/raycaster.c 			\
@@ -18,7 +18,8 @@ SRC_FILES=						\
 	src/wall_detection.c		\
 	src/sprite.c				\
 	src/get_next_line_utils.c	\
-	src/get_next_line.c
+	src/get_next_line.c			\
+	src/parser.c
 
 INC_FILES=						\
 	inc/raycaster.h  			\
@@ -32,7 +33,9 @@ INC_FILES=						\
 	inc/render.h				\
 	inc/wall_detection.h		\
 	inc/sprite.h				\
-	inc/get_next_line.h
+	inc/get_next_line.h			\
+	inc/parser.h
+
 
 TEST_FILES= 								\
 	test/main.c 							\
@@ -43,22 +46,30 @@ TEST_FILES= 								\
 	test/test_wall_distance.c				\
 	test/test_intersection.c				\
 	test/test_find_closest_wall.c			\
-	test/test_find_sprite.c
+	test/test_find_sprite.c					\
+	test/test_parser.c
 
-all: $(NAME)
+all: libft $(NAME)
 
 $(NAME): $(INC_FILES) $(SRC_FILES)
-	$(CC) $(CFLAGS) $(INC_PATH) $(SRC_FILES) src/main.c $(LDFLAGS) -o $(NAME)
+		@cp ./libft/libft.a .
+		$(CC) $(CFLAGS) $(INC_PATH) $(SRC_FILES) src/main.c $(LDFLAGS) -o $(NAME)
 
 test: $(INC_FILES) $(SRC_FILES) $(TEST_FILES)
 	$(CC) -D GRID_SIZE=32 $(TEST_CFLAGS) $(INC_PATH) $(SRC_FILES) $(TEST_FILES) $(LDFLAGS) -o tester
 
 clean:
+	$(MAKE) clean -C ./libft
 	rm -f $(SRC_OBJ)
 
 re: fclean all
 
+
+libft:
+	$(MAKE) bonus -C ./libft
+
 fclean: clean
+	$(MAKE) fclean -C ./libft
 	rm -f $(NAME)
 
-.PHONY: all clean fclean re test
+.PHONY: all clean fclean re test libft
