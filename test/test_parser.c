@@ -118,36 +118,72 @@ CTEST(get_textures, test_correct_file)
 	ASSERT_STR("./textures/S.xpm", &(textures[S].filename[0]));
 }
 
-// CTEST2(get_textures, test_correct_file_with_empty_lines)
-// {
-// 	char *filename = "./maps/textures_empty_lines.cub";
-// 	const int fd = open(filename, O_RDONLY);
+CTEST(get_colors, correct_file)
+{
+	char *filename = "./maps/colors.cub";
+	const int fd = open(filename, O_RDONLY);
+	t_color floor = 0;
+	t_color celing = 0;
+	char *line = NULL;
 
-// 	ASSERT_TRUE(get_textures(fd, data->actual_textures));
+	if(get_next_line(fd, &line))
+	{
+		ASSERT_TRUE(get_color(line, &floor));
+		ASSERT_EQUAL(floor, 0xFFFFFFFF);
+		free(line);
+	}
 
-// 	for(int i = 0; i < 5; ++i)
-// 		ASSERT_STR(data->expected_textures[i].filename, data->actual_textures[i].filename);
-// }
+	if(get_next_line(fd, &line))
+	{
+		ASSERT_TRUE(get_color(line, &celing));
+		ASSERT_EQUAL(celing, 0xFFFF0037);
+		free(line);
+	}
 
-// CTEST2(get_textures, test_wrong_num_of_textures)
-// {
-// 	char *filename = "./maps/textures_wrong_num.cub";
-// 	const int fd = open(filename, O_RDONLY);
+	if(get_next_line(fd, &line))
+	{
+		ASSERT_FALSE(get_color(line, &floor));
+		free(line);
+	}
 
-// 	ASSERT_FALSE(get_textures(fd, data->actual_textures));
-// }
+	if(get_next_line(fd, &line))
+	{
+		ASSERT_FALSE(get_color(line, &celing));
+		free(line);
+	}
+}
 
-// CTEST(get_colors, correct_file)
-// {
-// 	char *filename = "./maps/colors.cub";
-// 	const int fd = open(filename, O_RDONLY);
-// 	t_color floor = 0;
-// 	t_color celing = 0;
+CTEST(get_all, correct_file)
+{
+	char *filename = "./maps/test_all.cub";
 
-// 	ASSERT_TRUE(get_surface_color(fd, &floor, 'F'));
-// 	ASSERT_TRUE(get_surface_color(fd, &celing, 'C'));
-// 	ASSERT_EQUAL(floor, 0xFFFFFFFF);
-// 	ASSERT_EQUAL(celing, 0xFFFF0037);
-// 	ASSERT_FALSE(get_surface_color(fd, &floor, 'F'));
-// 	ASSERT_FALSE(get_surface_color(fd, &celing, 'C'));
-// }
+	t_window window;
+	t_texture textures[5] = {};
+	t_color floor = 0;
+	t_color ceiling = 0;
+
+	ASSERT_TRUE(parse_input(filename, &window, textures, &floor, &ceiling));
+
+	ASSERT_EQUAL(800, window.width);
+	ASSERT_EQUAL(600, window.height);
+	ASSERT_STR("./textures/NO.xpm", &(textures[NO].filename[0]));
+	ASSERT_STR("./textures/SO.xpm", &(textures[SO].filename[0]));
+	ASSERT_STR("./textures/WE.xpm", &(textures[WE].filename[0]));
+	ASSERT_STR("./textures/EA.xpm", &(textures[EA].filename[0]));
+	ASSERT_STR("./textures/S.xpm", &(textures[S].filename[0]));
+
+	ASSERT_EQUAL(floor, 0xFFF6D05F);
+	ASSERT_EQUAL(ceiling, 0xFFBF616A);
+}
+
+CTEST(get_all, wrong_resolution)
+{
+	char *filename = "./maps/test_all_wrong.cub";
+
+	t_window window;
+	t_texture textures[5] = {};
+	t_color floor = 0;
+	t_color ceiling = 0;
+
+	ASSERT_FALSE(parse_input(filename, &window, textures, &floor, &ceiling));
+}

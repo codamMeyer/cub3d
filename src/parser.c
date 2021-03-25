@@ -36,14 +36,13 @@ static t_bool check_color_range(int colors[])
 	return (TRUE);
 }
 
-static t_bool get_color(const char *color_string, t_color *color)
+t_bool get_color(const char *line, t_color *color)
 {
 	unsigned char *address = (unsigned char *)color;
 	char **split = NULL;
 	int colors[3];
 	t_bool ret = TRUE;
-
-	split = ft_split(color_string, ',');
+	split = ft_split(&line[1], ',');
 	colors[0] = ft_atoi(split[2]);
 	colors[1] = ft_atoi(split[1]);
 	colors[2] = ft_atoi(split[0]);
@@ -55,26 +54,6 @@ static t_bool get_color(const char *color_string, t_color *color)
 	address[2] = colors[2];
 	address[3] = 0xff;
 	free_split(split);
-	return (ret);
-}
-
-t_bool get_surface_color(const int fd, t_color *color_ptr, char identifier)
-{
-	char *line = NULL;
-	char **split = NULL;
-	t_bool ret = FALSE;
-
-	if(get_next_line(fd, &line) && (line[0] == identifier))
-	{
-		split = ft_split(line, ' ');
-		if(num_of_strings(split) == 2)
-		{
-			if(get_color(split[1], color_ptr))
-				ret = TRUE;
-		}
-	}
-	free_split(split);
-	free(line);
 	return (ret);
 }
 
@@ -124,22 +103,6 @@ t_bool is_texture(const char *line)
 	return (FALSE);
 }
 
-// t_bool get_textures(const int fd, t_texture textures[])
-// {
-// 	int i = 0;
-// 	int ret;
-
-// 	while(i < 5)
-// 	{
-// 		ret = get_texture(fd, textures);
-// 		if(ret == INVALID)
-// 			return (FALSE);
-// 		if(ret)
-// 			i++;
-// 	}
-// 	return (TRUE);
-// }
-
 t_bool get_resolution(const char *line, t_window *window)
 {
 	char **split = NULL;
@@ -157,28 +120,35 @@ t_bool get_resolution(const char *line, t_window *window)
 	return (ret);
 }
 
-t_bool parse_input(const char *filename)
+t_bool parse_input(const char *filename,
+				   t_window *window,
+				   t_texture textures[],
+				   t_color *floor,
+				   t_color *ceiling)
 {
 	const int fd = open(filename, O_RDONLY);
-	t_window window;
-	t_texture textures[5] = {};
 	char *line;
+	t_bool ret = TRUE;
 
 	if(fd < 0)
 		return (FALSE);
 	while(get_next_line(fd, &line))
 	{
 		if(line[0] == 'R')
-		{
-			get_resolution(line, &window); // check return
-			free(line);
-		}
-		if(is_texture(line))
-		{
-			get_texture(line, textures); // check return
-			free(line);
-		}
+			ret = get_resolution(line, window); // check return
+		else if(is_texture(line))
+			ret = get_texture(line, textures); // check return
+		else if(line[0] == 'F')
+			ret = get_color(line, floor); // check return
+		else if(line[0] == 'C')
+			ret = get_color(line, ceiling); // check return
+
+		if(ret == FALSE)
+			break;
+		free(line);
 	}
+
 	free(line);
-	return (TRUE);
+	close(fd);
+	return (ret);
 }
