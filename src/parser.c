@@ -2,6 +2,8 @@
 #include <fcntl.h>
 #include <get_next_line.h>
 #include <libft/libft.h>
+#include <map.h>
+#include <math_utils.h>
 #include <parser.h>
 #include <stdio.h>
 
@@ -69,7 +71,7 @@ t_texture_enum texture_to_enum(char *texture_type)
 		return (EA);
 	else if(ft_strncmp("S", texture_type, 1) == 0)
 		return (S);
-	return (INVAL);
+	return (INVALID_TEXTURE);
 }
 
 t_bool get_texture(const char *line, t_texture textures[])
@@ -79,7 +81,7 @@ t_bool get_texture(const char *line, t_texture textures[])
 	t_bool ret = FALSE;
 	split = ft_split(line, ' ');
 	text_index = texture_to_enum(split[0]);
-	if(num_of_strings(split) == 2 && text_index != INVAL)
+	if(num_of_strings(split) == 2 && text_index != INVALID_TEXTURE)
 	{
 		ft_strcpy(&(textures[text_index].filename[0]), split[1]);
 		ret = TRUE;
@@ -120,29 +122,162 @@ t_bool get_resolution(const char *line, t_window *window)
 	return (ret);
 }
 
+t_bool check_file_extension(const char *filename)
+{
+	const int len = ft_strlen(filename);
+
+	if(ft_strncmp(&filename[len - 4], ".cub", 4) == 0)
+		return (TRUE);
+	return (FALSE);
+}
+
+static t_bool is_map(const char *line)
+{
+	return (line[0] != '\0' && line[0] != 'R' && line[0] != 'F' && line[0] != 'C' &&
+			!is_texture(line));
+}
+
+t_bool find_first_line_of_map(const int fd, char **line)
+{
+	while(get_next_line(fd, line))
+	{
+		if(is_map(*line))
+			return (TRUE);
+		free(*line);
+	}
+	return (FALSE);
+}
+
+t_bool get_map_dimentions(const int fd, char **line, t_map *map)
+{
+	int bytes_read;
+	while(TRUE)
+	{
+		++(map->height);
+		map->width = max_d(map->width, ft_strlen(*line));
+		free(*line);
+		bytes_read = get_next_line(fd, line);
+		if(bytes_read < 0)
+			break;
+		if(bytes_read == 0)
+		{
+			if(ft_strlen(*line) > 0)
+			{
+				map->width = max_d(map->width, ft_strlen(*line));
+				++(map->height);
+			}
+			free(*line);
+			return (TRUE);
+		}
+	}
+	return (FALSE);
+}
+
+t_bool init_map_matrix(const char *filename, t_map *map)
+{
+	const int fd = open(filename, O_RDONLY);
+	char *line;
+	int i;
+	int j;
+	int bytes_read;
+
+	if(fd < 0)
+		return (FALSE);
+	if(!find_first_line_of_map(fd, &line))
+	{
+		free(line);
+		return (FALSE);
+	}
+	map->matrix = malloc_matrix(map->height, map->width);
+	i = 0;
+	while(TRUE)
+	{
+		j = 0;
+		while(j < map->width)
+		{
+			if(j >= ft_strlen(line))
+				map->matrix[i][j] = 1;
+			else if(line[j] == ' ' || line[j] == '1')
+				map->matrix[i][j] = 1;
+			else
+				map->matrix[i][j] = 0;
+			j++;
+		}
+		i++;
+		free(line);
+		bytes_read = get_next_line(fd, &line);
+		if(bytes_read < 0)
+			return (FALSE);
+		if(i == map->height)
+			break;
+	}
+
+	i = 0;
+	while(i < map->height)
+	{
+		j = 0;
+		while(j < map->width)
+		{
+			if((i == 0 || i == map->height - 1) && map->matrix[i][j] != 1)
+				return (FALSE);
+			if((j == 0 || j == map->width - 1) && map->matrix[i][j] != 1)
+				return (FALSE);
+			j++;
+		}
+		i++;
+		free(line);
+		bytes_read = get_next_line(fd, &line);
+		if(bytes_read < 0)
+			return (FALSE);
+		if(i == map->height)
+			break;
+	}
+	// free matrix if goes wrong
+	return (TRUE);
+}
+
+t_bool parse_map(const char *filename, t_map *map)
+{
+	const int fd = open(filename, O_RDONLY);
+	char *line = NULL;
+
+	map->height = 0;
+	map->width = 0;
+	if(fd < 0)
+		return (FALSE);
+	if(!find_first_line_of_map(fd, &line))
+	{
+		free(line);
+		return (FALSE);
+	}
+	return (get_map_dimentions(fd, &line, map));
+}
+
 t_bool parse_input(const char *filename,
 				   t_window *window,
 				   t_texture textures[],
 				   t_color *floor,
-				   t_color *ceiling)
+				   t_color *ceiling,
+				   t_map *map)
 {
 	const int fd = open(filename, O_RDONLY);
 	char *line;
-	t_bool ret = TRUE;
-
+	t_bool ret = FALSE;
+	(void)map;
+	if(!check_file_extension(filename))
+		return (ret);
 	if(fd < 0)
-		return (FALSE);
+		return (ret);
 	while(get_next_line(fd, &line))
 	{
 		if(line[0] == 'R')
-			ret = get_resolution(line, window); // check return
+			ret = get_resolution(line, window);
 		else if(is_texture(line))
-			ret = get_texture(line, textures); // check return
+			ret = get_texture(line, textures);
 		else if(line[0] == 'F')
-			ret = get_color(line, floor); // check return
+			ret = get_color(line, floor);
 		else if(line[0] == 'C')
-			ret = get_color(line, ceiling); // check return
-
+			ret = get_color(line, ceiling);
 		if(ret == FALSE)
 			break;
 		free(line);

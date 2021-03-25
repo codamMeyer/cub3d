@@ -48,7 +48,7 @@ typedef unsigned int t_color;
 
 typedef enum e_texture
 {
-	INVAL = -1,
+	INVALID_TEXTURE = -1,
 	NO = 0,
 	SO = 1,
 	WE = 2,

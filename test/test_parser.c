@@ -94,7 +94,7 @@ CTEST(get_textures_indexing_value, all)
 	ASSERT_EQUAL(WE, texture_to_enum("WE"));
 	ASSERT_EQUAL(EA, texture_to_enum("EA"));
 	ASSERT_EQUAL(S, texture_to_enum("S"));
-	ASSERT_EQUAL(INVAL, texture_to_enum("A"));
+	ASSERT_EQUAL(INVALID_TEXTURE, texture_to_enum("A"));
 }
 
 CTEST(get_textures, test_correct_file)
@@ -151,6 +151,12 @@ CTEST(get_colors, correct_file)
 		ASSERT_FALSE(get_color(line, &celing));
 		free(line);
 	}
+	if(get_next_line(fd, &line))
+	{
+		ASSERT_TRUE(get_color(line, &floor));
+		ASSERT_EQUAL(floor, 0xFF1ED760);
+		free(line);
+	}
 }
 
 CTEST(get_all, correct_file)
@@ -161,8 +167,8 @@ CTEST(get_all, correct_file)
 	t_texture textures[5] = {};
 	t_color floor = 0;
 	t_color ceiling = 0;
-
-	ASSERT_TRUE(parse_input(filename, &window, textures, &floor, &ceiling));
+	t_map map;
+	ASSERT_TRUE(parse_input(filename, &window, textures, &floor, &ceiling, &map));
 
 	ASSERT_EQUAL(800, window.width);
 	ASSERT_EQUAL(600, window.height);
@@ -184,6 +190,123 @@ CTEST(get_all, wrong_resolution)
 	t_texture textures[5] = {};
 	t_color floor = 0;
 	t_color ceiling = 0;
+	t_map map;
+	ASSERT_FALSE(parse_input(filename, &window, textures, &floor, &ceiling, &map));
+}
 
-	ASSERT_FALSE(parse_input(filename, &window, textures, &floor, &ceiling));
+CTEST(check_file_extension, with_parser)
+{
+	t_window window;
+	t_texture textures[5] = {};
+	t_color floor = 0;
+	t_color ceiling = 0;
+	t_map map;
+	ASSERT_TRUE(check_file_extension("map.cub"));
+	ASSERT_FALSE(check_file_extension("map.txt"));
+	ASSERT_FALSE(parse_input("map.txt", &window, textures, &floor, &ceiling, &map));
+}
+
+CTEST(parse_map, whole_map)
+{
+	t_map map;
+	ASSERT_TRUE(parse_map("./maps/map.cub", &map));
+
+	ASSERT_EQUAL(map.width, 5);
+	ASSERT_EQUAL(map.height, 8);
+}
+
+CTEST(parse_map, no_map)
+{
+	t_map map;
+	ASSERT_FALSE(parse_map("./maps/colors.cub", &map));
+}
+
+CTEST(parse_map, map_with_spaces)
+{
+	t_map map;
+	ASSERT_TRUE(parse_map("./maps/map_with_spaces.cub", &map));
+
+	ASSERT_EQUAL(map.width, 12);
+	ASSERT_EQUAL(map.height, 8);
+}
+
+CTEST(parse_map, matrix)
+{
+	t_map map;
+	ASSERT_TRUE(parse_map("./maps/map_with_spaces.cub", &map));
+	ASSERT_TRUE(init_map_matrix("./maps/map_with_spaces.cub", &map));
+	ASSERT_EQUAL(map.width, 12);
+	ASSERT_EQUAL(map.height, 8);
+
+	printf("\n");
+	for(int i = 0; i < map.height; i++)
+	{
+		for(int j = 0; j < map.width; j++)
+		{
+			printf("%d", map.matrix[i][j]);
+		}
+		printf("\n");
+	}
+	printf("\n");
+}
+
+CTEST(parse_map, invalid_matrix)
+{
+	t_map map;
+	ASSERT_TRUE(parse_map("./maps/wrong_map.cub", &map));
+	ASSERT_FALSE(init_map_matrix("./maps/wrong_map.cub", &map));
+	ASSERT_EQUAL(map.width, 12);
+	ASSERT_EQUAL(map.height, 8);
+
+	printf("\n");
+	for(int i = 0; i < map.height; i++)
+	{
+		for(int j = 0; j < map.width; j++)
+		{
+			printf("%d", map.matrix[i][j]);
+		}
+		printf("\n");
+	}
+	printf("\n");
+}
+
+CTEST(parse_map, invalid_matrix_empty_line)
+{
+	t_map map;
+	ASSERT_TRUE(parse_map("./maps/invalid_map.cub", &map));
+	ASSERT_FALSE(init_map_matrix("./maps/invalid_map.cub", &map));
+	ASSERT_EQUAL(map.width, 12);
+	ASSERT_EQUAL(map.height, 9);
+
+	printf("\n");
+	for(int i = 0; i < map.height; i++)
+	{
+		for(int j = 0; j < map.width; j++)
+		{
+			printf("%d", map.matrix[i][j]);
+		}
+		printf("\n");
+	}
+	printf("\n");
+}
+
+
+CTEST(parse_map, matrix_line_of_spaces)
+{
+	t_map map;
+	ASSERT_TRUE(parse_map("./maps/weird_map.cub", &map));
+	ASSERT_FALSE(init_map_matrix("./maps/weird_map.cub", &map));
+	ASSERT_EQUAL(map.width, 12);
+	ASSERT_EQUAL(map.height, 9);
+
+	printf("\n");
+	for(int i = 0; i < map.height; i++)
+	{
+		for(int j = 0; j < map.width; j++)
+		{
+			printf("%d", map.matrix[i][j]);
+		}
+		printf("\n");
+	}
+	printf("\n");
 }
