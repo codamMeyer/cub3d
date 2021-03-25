@@ -2,7 +2,7 @@
 #define PARSER_H
 #include <defs.h>
 
-t_bool get_surface_color(const int fd, int *surface);
+t_bool get_surface_color(const int fd, t_color *color_ptr, char identifier);
 t_bool get_texture(const int fd, t_texture textures[]);
 t_bool get_textures(const int fd, t_texture textures[]);
 t_bool get_resolution(const int fd, t_window *window);

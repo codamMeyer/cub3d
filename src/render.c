@@ -8,11 +8,11 @@
 #include <stdlib.h>
 #include <utils.h>
 
-int get_pixel_color(const t_texture *texture, int x, int y)
+t_color get_pixel_color(const t_texture *texture, int x, int y)
 {
 	const int bytes_per_pixel = 4;
 	unsigned char *color_address;
-	int color;
+	t_color color;
 	int index;
 	int i;
 	color = BLACK;
@@ -61,7 +61,7 @@ static void
 draw_wall_slice(t_data *data, int slice_col, t_dimentions wall_dimentions, t_ray *ray, int type)
 {
 	int wall_index = wall_dimentions.top;
-	int color;
+	t_color color;
 	t_texture_position texture_pos;
 	while(wall_index <= wall_dimentions.bottom)
 	{

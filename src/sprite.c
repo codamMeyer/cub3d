@@ -119,7 +119,7 @@ static t_position get_sprite_transform_value(t_player *player, t_position pos)
 
 static void draw_sprite(t_data *data, t_sprite sprite)
 {
-	int color;
+	t_color color;
 	t_dimentions sprite_dimentions;
 	t_texture_position texture_pos;
 

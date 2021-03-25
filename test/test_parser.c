@@ -129,9 +129,13 @@ CTEST(get_colors, correct_file)
 {
 	char *filename = "./maps/colors.cub";
 	const int fd = open(filename, O_RDONLY);
-	int floor = 0;
-	int celing = 0;
+	t_color floor = 0;
+	t_color celing = 0;
 
-	get_surface_color(fd, &floor);
-	get_surface_color(fd, &celing);
+	ASSERT_TRUE(get_surface_color(fd, &floor, 'F'));
+	ASSERT_TRUE(get_surface_color(fd, &celing, 'C'));
+	ASSERT_EQUAL(floor, 0xFFFFFFFF);
+	ASSERT_EQUAL(celing, 0xFFFF0037);
+	ASSERT_FALSE(get_surface_color(fd, &floor, 'F'));
+	ASSERT_FALSE(get_surface_color(fd, &celing, 'C'));
 }

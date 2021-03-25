@@ -23,35 +23,58 @@ static void free_split(char **split)
 	free(split);
 }
 
-static t_bool get_color(char *color_string, int *surface)
+static t_bool check_color_range(int colors[])
 {
-	unsigned char *address = (unsigned char *)&(surface);
-	(void)address;
-	char **split = NULL;
-	split = ft_split(color_string, ',');
-	printf("\n%d", ft_atoi(split[0]));
-	printf("%d", ft_atoi(split[1]));
-	printf("%d\n", ft_atoi(split[2]));
-	free(color_string);
+	int i = 0;
+	while(i < 3)
+	{
+		if(colors[i] < 0 || colors[i] > 255)
+			return (FALSE);
+		++i;
+	}
 	return (TRUE);
 }
 
-t_bool get_surface_color(const int fd, int *surface)
+static t_bool get_color(const char *color_string, t_color *color)
+{
+	unsigned char *address = (unsigned char *)color;
+	char **split = NULL;
+	int colors[3];
+	t_bool ret = TRUE;
+
+	split = ft_split(color_string, ',');
+	colors[0] = ft_atoi(split[2]);
+	colors[1] = ft_atoi(split[1]);
+	colors[2] = ft_atoi(split[0]);
+
+	if(!check_color_range(colors))
+		ret = FALSE;
+	address[0] = colors[0];
+	address[1] = colors[1];
+	address[2] = colors[2];
+	address[3] = 0xff;
+	free_split(split);
+	return (ret);
+}
+
+t_bool get_surface_color(const int fd, t_color *color_ptr, char identifier)
 {
 	char *line = NULL;
 	char **split = NULL;
+	t_bool ret = FALSE;
 
-	if(get_next_line(fd, &line) && ft_strlen(line) > 3 && (line[0] == 'F' || line[0] == 'C'))
+	if(get_next_line(fd, &line) && (line[0] == identifier))
 	{
 		split = ft_split(line, ' ');
-		free(line);
-		if(get_color(split[1], surface))
-			return (TRUE);
-		else
-			return (FALSE);
+		if(num_of_strings(split) == 2)
+		{
+			if(get_color(split[1], color_ptr))
+				ret = TRUE;
+		}
 	}
+	free_split(split);
 	free(line);
-	return (FALSE);
+	return (ret);
 }
 
 t_texture_enum texture_to_enum(char *texture_type)

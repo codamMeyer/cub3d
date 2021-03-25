@@ -3,7 +3,7 @@
 #include <mlx.h>
 #include <utils.h>
 
-void my_mlx_pixel_put(t_img *data, int x, int y, int color)
+void my_mlx_pixel_put(t_img *data, int x, int y, t_color color)
 {
 	char *dst;
 

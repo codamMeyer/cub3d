@@ -44,6 +44,8 @@ typedef enum e_collider
 	SPRITE
 } t_collider;
 
+typedef unsigned int t_color;
+
 typedef enum e_texture
 {
 	INVAL = -1,
