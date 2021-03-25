@@ -1,4 +1,5 @@
 #include <defs.h>
+#include <fcntl.h>
 #include <get_next_line.h>
 #include <libft/libft.h>
 #include <parser.h>
@@ -92,75 +93,92 @@ t_texture_enum texture_to_enum(char *texture_type)
 	return (INVAL);
 }
 
-t_bool get_texture(const int fd, t_texture textures[])
+t_bool get_texture(const char *line, t_texture textures[])
 {
-	char *line = NULL;
 	char **split = NULL;
 	t_texture_enum text_index;
-
-	if(get_next_line(fd, &line) && ft_strlen(line) > 3)
+	t_bool ret = FALSE;
+	split = ft_split(line, ' ');
+	text_index = texture_to_enum(split[0]);
+	if(num_of_strings(split) == 2 && text_index != INVAL)
 	{
-		split = ft_split(line, ' ');
-		text_index = texture_to_enum(split[0]);
-		if(num_of_strings(split) != 2 || text_index == INVAL)
-		{
-			free(line);
-			free_split(split);
-			if(text_index == INVAL)
-				return (INVALID);
-			return (FALSE);
-		}
-		textures[text_index].filename = split[1];
-		return (TRUE);
+		ft_strcpy(&(textures[text_index].filename[0]), split[1]);
+		ret = TRUE;
 	}
-	free(line);
+	free_split(split);
+	return (ret);
+}
+
+t_bool is_texture(const char *line)
+{
+	if(ft_strncmp("NO", line, 2) == 0)
+		return (TRUE);
+	else if(ft_strncmp("SO", line, 2) == 0)
+		return (TRUE);
+	else if(ft_strncmp("WE", line, 2) == 0)
+		return (TRUE);
+	else if(ft_strncmp("EA", line, 2) == 0)
+		return (TRUE);
+	else if(ft_strncmp("S", line, 1) == 0)
+		return (TRUE);
 	return (FALSE);
 }
 
-t_bool get_textures(const int fd, t_texture textures[])
-{
-	int i = 0;
-	int ret;
+// t_bool get_textures(const int fd, t_texture textures[])
+// {
+// 	int i = 0;
+// 	int ret;
 
-	while(i < 5)
-	{
-		ret = get_texture(fd, textures);
-		if(ret == INVALID)
-			return (FALSE);
-		if(ret)
-			i++;
-	}
-	return (TRUE);
-}
+// 	while(i < 5)
+// 	{
+// 		ret = get_texture(fd, textures);
+// 		if(ret == INVALID)
+// 			return (FALSE);
+// 		if(ret)
+// 			i++;
+// 	}
+// 	return (TRUE);
+// }
 
-t_bool get_resolution(const int fd, t_window *window)
+t_bool get_resolution(const char *line, t_window *window)
 {
-	char *line = NULL;
 	char **split = NULL;
+	t_bool ret = FALSE;
 
-	if(get_next_line(fd, &line) > 0 && *line == 'R')
+	split = ft_split(line, ' ');
+	if(num_of_strings(split) == 3)
 	{
-		split = ft_split(line, ' ');
-		if(num_of_strings(split) != 3)
-		{
-			free(line);
-			free_split(split);
-			return (FALSE);
-		}
 		window->width = ft_atoi(split[1]);
 		window->height = ft_atoi(split[2]);
-		free_split(split);
-		free(line);
-		if(window->width <= 0 || window->height <= 0)
-			return (FALSE);
-		return (TRUE);
+		if(window->width > 0 && window->height > 0)
+			ret = TRUE;
 	}
-	free(line);
-	return (FALSE);
+	free_split(split);
+	return (ret);
 }
 
-t_bool parse_imput(const char *filename)
+t_bool parse_input(const char *filename)
 {
-	(void)filename;
+	const int fd = open(filename, O_RDONLY);
+	t_window window;
+	t_texture textures[5] = {};
+	char *line;
+
+	if(fd < 0)
+		return (FALSE);
+	while(get_next_line(fd, &line))
+	{
+		if(line[0] == 'R')
+		{
+			get_resolution(line, &window); // check return
+			free(line);
+		}
+		if(is_texture(line))
+		{
+			get_texture(line, textures); // check return
+			free(line);
+		}
+	}
+	free(line);
 	return (TRUE);
 }

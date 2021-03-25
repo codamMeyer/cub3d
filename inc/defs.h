@@ -23,7 +23,7 @@ typedef int t_bool;
 
 typedef struct s_texture
 {
-	char *filename;
+	char filename[200];
 	t_bool initialized;
 	int width;
 	int height;
