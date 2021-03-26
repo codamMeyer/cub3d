@@ -72,6 +72,7 @@ static int display(t_data *data)
 
 static t_bool load_textures(t_data *data)
 {
+	// data->textures[NO] = load_texture(data, "./textures/tree_wall.xpm");
 	data->textures[NO] = load_texture(data, data->textures[NO].filename);
 	data->textures[SO] = load_texture(data, data->textures[SO].filename);
 	data->textures[WE] = load_texture(data, data->textures[WE].filename);
@@ -85,25 +86,43 @@ static t_bool load_textures(t_data *data)
 	return (TRUE);
 }
 
+void close_window(t_data *data)
+{
+	free_matrix(data->worldMap.matrix, data->worldMap.height);
+	mlx_destroy_window(data->mlx, data->window);
+	exit(0);
+}
+
+void update_screen_resolution(t_data *data)
+{
+	int width;
+	int height;
+	mlx_get_screen_size(data->mlx, &width, &height);
+
+	data->resolution.width = min_i(data->resolution.width, width);
+	data->resolution.height = min_i(data->resolution.height, height);
+	data->player.plane_x = data->resolution.width;
+	data->player.plane_y = data->resolution.height;
+}
+
 t_bool run(const char *filename)
 {
 	t_data data;
+
 	init_player(&data);
 	if(!parse_input(filename, &data))
 		return (FALSE);
 	data.mlx = mlx_init();
+	update_screen_resolution(&data);
 	data.window = mlx_new_window(
 		data.mlx, data.resolution.width, data.resolution.height, "*** Raycaster ***");
 	data.map.img = mlx_new_image(data.mlx, data.resolution.width, data.resolution.height);
 	data.map.addr = mlx_get_data_addr(
 		data.map.img, &data.map.bits_per_pixel, &data.map.line_length, &data.map.endian);
+
 	if(!load_textures(&data))
 	{
-		free(data.window);
-		free(data.mlx);
-		free(data.map.addr);
-		free(data.map.img);
-		free_matrix(data.worldMap.matrix, data.worldMap.height);
+		close_window(&data);
 		return (FALSE);
 	}
 	mlx_hook(data.window, 2, 1L << 0, keypressed, &data);

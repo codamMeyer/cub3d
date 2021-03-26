@@ -31,6 +31,34 @@ void init_player(t_data *data)
 	data->player.color = BLUE;
 }
 
+t_bool move_left(t_player *player, t_data *data)
+{
+	t_position new_pos = player->position;
+	new_pos.x += floor(cos(degree_to_radians(player->angle + 90)) * player->speed);
+	new_pos.y -= floor(sin(degree_to_radians(player->angle + 90)) * player->speed);
+	if(!hit_wall(data->worldMap, new_pos))
+	{
+		player->position.y = new_pos.y;
+		player->position.x = new_pos.x;
+		return (TRUE);
+	}
+	return (FALSE);
+}
+
+t_bool move_right(t_player *player, t_data *data)
+{
+	t_position new_pos = player->position;
+	new_pos.x += floor(cos(degree_to_radians(player->angle - 90)) * player->speed);
+	new_pos.y -= floor(sin(degree_to_radians(player->angle - 90)) * player->speed);
+	if(!hit_wall(data->worldMap, new_pos))
+	{
+		player->position.y = new_pos.y;
+		player->position.x = new_pos.x;
+		return (TRUE);
+	}
+	return (FALSE);
+}
+
 t_bool move_forward(t_player *player, t_data *data)
 {
 	t_position new_pos = player->position;
