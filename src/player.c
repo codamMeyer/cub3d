@@ -22,13 +22,11 @@ int draw_player(t_data *data)
 
 void init_player(t_data *data)
 {
-	data->player.position.x = GRID_SIZE + 30;
-	data->player.position.y = GRID_SIZE + 20;
+	data->player.angle = INVALID_ORIENTATION;
 	data->player.size = 5;
 	data->player.FOV = 60;
-	data->player.plane_x = 920;
-	data->player.plane_y = 700;
-	data->player.angle = 270;
+	data->player.plane_x = data->resolution.width;
+	data->player.plane_y = data->resolution.height;
 	data->player.speed = 10;
 	data->player.color = BLUE;
 }

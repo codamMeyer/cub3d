@@ -45,6 +45,8 @@ t_bool get_color(const char *line, t_color *color)
 	int colors[3];
 	t_bool ret = TRUE;
 	split = ft_split(&line[1], ',');
+	if(!split)
+		return (FALSE);
 	colors[0] = ft_atoi(split[2]);
 	colors[1] = ft_atoi(split[1]);
 	colors[2] = ft_atoi(split[0]);
@@ -70,7 +72,7 @@ t_texture_enum texture_to_enum(char *texture_type)
 	else if(ft_strncmp("EA", texture_type, 2) == 0)
 		return (EA);
 	else if(ft_strncmp("S", texture_type, 1) == 0)
-		return (S);
+		return (SP);
 	return (INVALID_TEXTURE);
 }
 
@@ -84,6 +86,7 @@ t_bool get_texture(const char *line, t_texture textures[])
 	if(num_of_strings(split) == 2 && text_index != INVALID_TEXTURE)
 	{
 		ft_strcpy(&(textures[text_index].filename[0]), split[1]);
+
 		ret = TRUE;
 	}
 	free_split(split);
@@ -173,13 +176,130 @@ t_bool get_map_dimentions(const int fd, char **line, t_map *map)
 	return (FALSE);
 }
 
-t_bool init_map_matrix(const char *filename, t_map *map)
+t_bool is_player_orientation(char c)
 {
-	const int fd = open(filename, O_RDONLY);
-	char *line;
+	return (c == 'N' || c == 'S' || c == 'W' || c == 'E');
+}
+
+t_player_orientation get_orientation(char c)
+{
+	if(c == 'N')
+		return (N);
+	else if(c == 'S')
+		return (S);
+	else if(c == 'W')
+		return (W);
+	else if(c == 'E')
+		return (E);
+	return (INVALID_ORIENTATION);
+}
+
+t_bool is_wall(char **line, int i)
+{
+	const int line_len = ft_strlen(*line);
+	const char cur_char = (*line)[i];
+
+	return (i >= line_len || cur_char == ' ' || cur_char == '1');
+}
+t_bool is_sprite(char cur)
+{
+	return (cur == '2');
+}
+t_bool populate_map(const int fd, t_map *map, char **line)
+{
 	int i;
 	int j;
 	int bytes_read;
+	char cur_char;
+
+	i = 0;
+	while(TRUE)
+	{
+		j = 0;
+		cur_char = (*line)[j];
+		while(j < map->width)
+		{
+			if(is_wall(line, j))
+				map->matrix[i][j] = WALL;
+			else if(is_player_orientation(cur_char))
+				map->matrix[i][j] = get_orientation(cur_char);
+			else if(is_sprite(cur_char))
+				map->matrix[i][j] = SPRITE;
+			else
+				map->matrix[i][j] = EMPTY;
+			j++;
+			cur_char = (*line)[j];
+		}
+		i++;
+		free(*line);
+		bytes_read = get_next_line(fd, line);
+		if(bytes_read < 0)
+		{
+			free_matrix(map->matrix, map->height);
+			return (FALSE);
+		}
+		if(i == map->height)
+			break;
+	}
+	free(*line);
+	return (TRUE);
+}
+
+t_bool get_player_init_pos(int **matrix, int row, int col, t_player *player)
+{
+
+	t_grid_position pos;
+
+	pos.x = col;
+	pos.y = row;
+	if(player->angle != (int)INVALID_ORIENTATION)
+		return (FALSE);
+	player->angle = (int)matrix[row][col];
+	player->position = get_grid_center(pos);
+	matrix[row][col] = 0;
+	return (TRUE);
+}
+
+t_bool check_map_content(t_map *map, t_player *player)
+{
+	int i;
+	int j;
+	t_bool ret;
+
+	ret = TRUE;
+	i = 0;
+	while(i < map->height)
+	{
+		j = 0;
+		while(j < map->width)
+		{
+			if((i == 0 || i == map->height - 1) && map->matrix[i][j] != 1)
+				ret = FALSE;
+			else if((j == 0 || j == map->width - 1) && map->matrix[i][j] != 1)
+				ret = FALSE;
+			else if(map->matrix[i][j] > 2 || map->matrix[i][j] < 0)
+				ret = get_player_init_pos(map->matrix, i, j, player);
+			if(ret == FALSE)
+			{
+				free_matrix(map->matrix, map->height);
+				return (FALSE);
+			}
+			j++;
+		}
+		i++;
+	}
+	if(player->angle == (int)INVALID_ORIENTATION)
+	{
+		free_matrix(map->matrix, map->height);
+		return (FALSE);
+	}
+	return (TRUE);
+}
+
+t_bool init_map_matrix(const int fd, t_map *map, t_player *player)
+{
+
+	char *line;
 
 	if(fd < 0)
 		return (FALSE);
@@ -189,62 +309,21 @@ t_bool init_map_matrix(const char *filename, t_map *map)
 		return (FALSE);
 	}
 	map->matrix = malloc_matrix(map->height, map->width);
-	i = 0;
-	while(TRUE)
-	{
-		j = 0;
-		while(j < map->width)
-		{
-			if(j >= ft_strlen(line))
-				map->matrix[i][j] = 1;
-			else if(line[j] == ' ' || line[j] == '1')
-				map->matrix[i][j] = 1;
-			else
-				map->matrix[i][j] = 0;
-			j++;
-		}
-		i++;
-		free(line);
-		bytes_read = get_next_line(fd, &line);
-		if(bytes_read < 0)
-			return (FALSE);
-		if(i == map->height)
-			break;
-	}
-
-	i = 0;
-	while(i < map->height)
-	{
-		j = 0;
-		while(j < map->width)
-		{
-			if((i == 0 || i == map->height - 1) && map->matrix[i][j] != 1)
-				return (FALSE);
-			if((j == 0 || j == map->width - 1) && map->matrix[i][j] != 1)
-				return (FALSE);
-			j++;
-		}
-		i++;
-		free(line);
-		bytes_read = get_next_line(fd, &line);
-		if(bytes_read < 0)
-			return (FALSE);
-		if(i == map->height)
-			break;
-	}
-	// free matrix if goes wrong
+	if(!map->matrix)
+		return (FALSE);
+	if(!populate_map(fd, map, &line))
+		return (FALSE);
+	if(!check_map_content(map, player))
+		return (FALSE);
 	return (TRUE);
 }
 
-t_bool parse_map(const char *filename, t_map *map)
+t_bool parse_map(const int fd, t_map *map)
 {
-	const int fd = open(filename, O_RDONLY);
 	char *line = NULL;
 
 	map->height = 0;
 	map->width = 0;
-	if(fd < 0)
-		return (FALSE);
 	if(!find_first_line_of_map(fd, &line))
 	{
 		free(line);
@@ -253,21 +332,14 @@ t_bool parse_map(const char *filename, t_map *map)
 	return (get_map_dimentions(fd, &line, map));
 }
 
-t_bool parse_input(const char *filename,
-				   t_window *window,
-				   t_texture textures[],
-				   t_color *floor,
-				   t_color *ceiling,
-				   t_map *map)
+static t_bool get_header_information(const int fd,
+									 t_window *window,
+									 t_texture textures[],
+									 t_color *floor,
+									 t_color *ceiling)
 {
-	const int fd = open(filename, O_RDONLY);
 	char *line;
 	t_bool ret = FALSE;
-	(void)map;
-	if(!check_file_extension(filename))
-		return (ret);
-	if(fd < 0)
-		return (ret);
 	while(get_next_line(fd, &line))
 	{
 		if(line[0] == 'R')
@@ -282,8 +354,31 @@ t_bool parse_input(const char *filename,
 			break;
 		free(line);
 	}
-
 	free(line);
-	close(fd);
+	return (ret);
+}
+
+t_bool parse_input(const char *filename, t_data *data)
+{
+	const int fd1 = open(filename, O_RDONLY);
+	const int fd2 = open(filename, O_RDONLY);
+	const int fd3 = open(filename, O_RDONLY);
+	t_bool ret;
+
+	ret = TRUE;
+	if(!check_file_extension(filename))
+		ret = FALSE;
+	else if(fd1 < 0 || fd2 < 0 || fd3 < 0)
+		ret = FALSE;
+	else if(!get_header_information(
+				fd1, &data->resolution, data->textures, &data->floor, &data->ceiling))
+		ret = FALSE;
+	else if(!parse_map(fd2, &data->worldMap))
+		ret = FALSE;
+	else if(!init_map_matrix(fd3, &data->worldMap, &data->player))
+		ret = FALSE;
+	close(fd1);
+	close(fd2);
+	close(fd3);
 	return (ret);
 }

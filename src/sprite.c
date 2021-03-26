@@ -125,12 +125,15 @@ static void draw_sprite(t_data *data, t_sprite sprite)
 
 	t_position transform = get_sprite_transform_value(&data->player, sprite.center);
 
-	int sprite_screen_x = ((double)data->screenWidth / 2.0) * (1.0 + transform.x / transform.y);
+	int sprite_screen_x =
+		((double)data->resolution.width / 2.0) * (1.0 + transform.x / transform.y);
 
-	sprite_dimentions.height = abs_value(floor((double)data->screenHeight / transform.y));
-	sprite_dimentions.top = (double)data->screenHeight / 2.0 - (double)sprite_dimentions.height / 2.0;
-	sprite_dimentions.bottom = (double)data->screenHeight / 2.0 + (double)sprite_dimentions.height / 2.0;
-	sprite_dimentions.width = abs_value(floor((double)data->screenHeight / transform.y));
+	sprite_dimentions.height = abs_value(floor((double)data->resolution.height / transform.y));
+	sprite_dimentions.top =
+		(double)data->resolution.height / 2.0 - (double)sprite_dimentions.height / 2.0;
+	sprite_dimentions.bottom =
+		(double)data->resolution.height / 2.0 + (double)sprite_dimentions.height / 2.0;
+	sprite_dimentions.width = abs_value(floor((double)data->resolution.height / transform.y));
 
 	int start_x = -sprite_dimentions.width / 2 + sprite_screen_x;
 	int end_x = sprite_dimentions.width / 2 + sprite_screen_x;
@@ -140,25 +143,24 @@ static void draw_sprite(t_data *data, t_sprite sprite)
 	sprite_dimentions.top = sprite_dimentions.top < 0 ? 0 : sprite_dimentions.top;
 	while(x < end_x)
 	{
-		if(transform.y > 0 && x > 0 && x < data->screenWidth)
+		if(transform.y > 0 && x > 0 && x < data->resolution.width)
 		{
 			y = sprite_dimentions.top;
 			while(y < sprite_dimentions.bottom)
 			{
 				texture_pos.x =
-					((float)(x - start_x) / (float)(end_x - start_x)) * data->texture[SPRITE].width;
+					((float)(x - start_x) / (float)(end_x - start_x)) * data->textures[SP].width;
 				texture_pos.y = (float)(y - sprite_dimentions.top) /
 								(float)(sprite_dimentions.bottom - sprite_dimentions.top) *
-								data->texture[SPRITE].height;
-
-				if(y < 0 || y >= data->screenHeight || x < 0 || x >= data->screenWidth)
+								data->textures[SP].height;
+				if(y < 0 || y >= data->resolution.height || x < 0 || x >= data->resolution.width)
 					return;
 				if(texture_pos.x < 0 || texture_pos.y < 0)
 					return;
-				if(texture_pos.x >= data->texture[SPRITE].width ||
-				   texture_pos.y >= data->texture[SPRITE].height)
+				if(texture_pos.x >= data->textures[SP].width ||
+				   texture_pos.y >= data->textures[SP].height)
 					return;
-				color = get_pixel_color(&data->texture[SPRITE], texture_pos.x, texture_pos.y);
+				color = get_pixel_color(&data->textures[SP], texture_pos.x, texture_pos.y);
 				if((unsigned int)color != 0xff000000)
 					my_mlx_pixel_put(&data->map, x, y, color);
 				++y;

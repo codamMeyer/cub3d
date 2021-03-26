@@ -16,15 +16,15 @@ static void close_window(t_data *data)
 
 int keypressed(int keycode, t_data *data)
 {
-	if (keycode == ESC)
+	if(keycode == ESC)
 		close_window(data);
-	else if (keycode == UP)
+	else if(keycode == UP)
 		move_forward(&data->player, data);
-	else if (keycode == DOWN)
+	else if(keycode == DOWN)
 		move_backward(&data->player, data);
-	else if (keycode == LEFT)
+	else if(keycode == LEFT)
 		turn_counterclockwise(&data->player);
-	else if (keycode == RIGHT)
+	else if(keycode == RIGHT)
 		turn_clockwise(&data->player);
 	return (0);
 }

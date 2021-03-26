@@ -1,6 +1,8 @@
 #include <raycaster.h>
 
-int main()
+int main(int argc, char *argv[])
 {
-	run();
+	if (argc < 2 || argc > 3)
+		return (FALSE);
+	run(argv[1]);
 }

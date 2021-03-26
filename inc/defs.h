@@ -46,6 +46,15 @@ typedef enum e_collider
 
 typedef unsigned int t_color;
 
+// typedef struct s_color_rgb
+// {
+// 	unsigned char blue;
+// 	unsigned char green;
+// 	unsigned char red;
+// 	unsigned char oppacity;
+
+// } t_color_rgb;
+
 typedef enum e_texture
 {
 	INVALID_TEXTURE = -1,
@@ -53,8 +62,17 @@ typedef enum e_texture
 	SO = 1,
 	WE = 2,
 	EA = 3,
-	S = 4,
+	SP = 4,
 } t_texture_enum;
+
+typedef enum e_player_orientation
+{
+	INVALID_ORIENTATION = -1,
+	N = 90,
+	S = 270,
+	W = 180,
+	E = 0,
+} t_player_orientation;
 
 typedef enum e_orientation
 {
@@ -129,12 +147,13 @@ typedef struct s_data
 {
 	void *mlx;
 	void *window;
-	int screenWidth;
-	int screenHeight;
+	t_window resolution;
 	t_img map;
 	t_map worldMap;
 	t_player player;
-	t_texture texture[5];
+	t_texture textures[5];
+	t_color floor;
+	t_color ceiling;
 } t_data;
 
 #endif

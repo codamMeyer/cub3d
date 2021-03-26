@@ -2,7 +2,7 @@ NAME=raycaster
 CC=clang
 CFLAGS= -ggdb3 -Wall -Wextra -Werror -fsanitize=address -fsanitize=leak
 TEST_CFLAGS= -ggdb3 -Wall -Wextra -Werror #-fsanitize=address -fsanitize=leak
-INC_PATH=-I./mlx_linux -I./inc -I./ 
+INC_PATH=-I./mlx_linux -I./inc -I./ -I./libft
 LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz  -L./libft -lft
 
 SRC_FILES=						\

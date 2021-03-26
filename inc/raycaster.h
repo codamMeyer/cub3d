@@ -3,6 +3,6 @@
 #include <defs.h>
 
 
-void run();
+t_bool run(const char *filename);
 
 #endif

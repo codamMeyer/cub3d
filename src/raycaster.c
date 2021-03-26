@@ -1,7 +1,9 @@
 #include <keyboard.h>
+#include <libft.h>
 #include <map.h>
 #include <math_utils.h>
 #include <mlx.h>
+#include <parser.h>
 #include <player.h>
 #include <raycaster.h>
 #include <sprite.h>
@@ -68,31 +70,44 @@ static int display(t_data *data)
 	return (1);
 }
 
-void run()
+static t_bool load_textures(t_data *data)
+{
+	data->textures[NO] = load_texture(data, data->textures[NO].filename);
+	data->textures[SO] = load_texture(data, data->textures[SO].filename);
+	data->textures[WE] = load_texture(data, data->textures[WE].filename);
+	data->textures[EA] = load_texture(data, data->textures[EA].filename);
+	data->textures[SP] = load_texture(data, data->textures[SP].filename);
+
+	if(!data->textures[NO].initialized || !data->textures[SO].initialized ||
+	   !data->textures[WE].initialized || !data->textures[EA].initialized ||
+	   !data->textures[SP].initialized)
+		return (FALSE);
+	return (TRUE);
+}
+
+t_bool run(const char *filename)
 {
 	t_data data;
-	data.screenHeight = 700;
-	data.screenWidth = 920;
-
+	init_player(&data);
+	if(!parse_input(filename, &data))
+		return (FALSE);
 	data.mlx = mlx_init();
-	data.window =
-		mlx_new_window(data.mlx, data.screenWidth, data.screenHeight, "*** Raycaster ***");
-	data.map.img = mlx_new_image(data.mlx, data.screenWidth, data.screenHeight);
+	data.window = mlx_new_window(
+		data.mlx, data.resolution.width, data.resolution.height, "*** Raycaster ***");
+	data.map.img = mlx_new_image(data.mlx, data.resolution.width, data.resolution.height);
 	data.map.addr = mlx_get_data_addr(
 		data.map.img, &data.map.bits_per_pixel, &data.map.line_length, &data.map.endian);
-	data.worldMap.height = 25;
-	data.worldMap.width = 25;
-	data.worldMap.matrix = init_matrix(data.worldMap.height, data.worldMap.width);
-	data.texture[WALL] = load_texture(&data, "textures/tree_wall.xpm");
-	data.texture[SPRITE] = load_texture(&data, "textures/tree_snow1.xpm");
-
-	if(!data.texture[WALL].initialized || !data.texture[SPRITE].initialized)
+	if(!load_textures(&data))
 	{
-		printf("NULL\n");
-		return;
+		free(data.window);
+		free(data.mlx);
+		free(data.map.addr);
+		free(data.map.img);
+		free_matrix(data.worldMap.matrix, data.worldMap.height);
+		return (FALSE);
 	}
-	init_player(&data);
 	mlx_hook(data.window, 2, 1L << 0, keypressed, &data);
 	mlx_loop_hook(data.mlx, display, &data);
 	mlx_loop(data.mlx);
+	return (TRUE);
 }
