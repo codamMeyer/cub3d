@@ -1,4 +1,5 @@
 #include <defs.h>
+#include <direction.h>
 #include <map.h>
 #include <math.h>
 #include <math_utils.h>
@@ -57,16 +58,20 @@ static t_texture_position get_texture_position(const t_texture *texture,
 	return (pos);
 }
 
-static void
-draw_wall_slice(t_data *data, int slice_col, t_dimentions wall_dimentions, t_ray *ray, int type)
+static void draw_wall_slice(t_data *data,
+							int slice_col,
+							t_dimentions wall_dimentions,
+							t_ray *ray,
+							t_texture_enum texture)
 {
 	int wall_index = wall_dimentions.top;
 	t_color color;
 	t_texture_position texture_pos;
 	while(wall_index <= wall_dimentions.bottom)
 	{
-		texture_pos = get_texture_position(&data->textures[type], ray, wall_dimentions, wall_index);
-		color = get_pixel_color(&data->textures[type], texture_pos.x, texture_pos.y);
+		texture_pos =
+			get_texture_position(&data->textures[texture], ray, wall_dimentions, wall_index);
+		color = get_pixel_color(&data->textures[texture], texture_pos.x, texture_pos.y);
 		if((unsigned int)color != 0xff000000)
 			my_mlx_pixel_put(&data->map, slice_col, wall_index, color);
 		++wall_index;
@@ -114,5 +119,13 @@ void draw_slice(t_data *data, int slice_col, t_ray *ray)
 	t_dimentions dimentions = get_dimentions(ray->distance, data->player);
 	draw_ceiling_slice(data, slice_col, dimentions.top, dimentions.height);
 	draw_floor_slice(data, slice_col, dimentions.bottom, dimentions.height);
-	draw_wall_slice(data, slice_col, dimentions, ray, NO);
+
+	if(is_facing_north(ray->angle) && ray->orientation == HORIZONTAL)
+		draw_wall_slice(data, slice_col, dimentions, ray, SO);
+	else if(is_facing_south(ray->angle) && ray->orientation == HORIZONTAL)
+		draw_wall_slice(data, slice_col, dimentions, ray, NO);
+	else if(is_facing_west(ray->angle) && ray->orientation == VERTICAL)
+		draw_wall_slice(data, slice_col, dimentions, ray, EA);
+	else if(is_facing_east(ray->angle) && ray->orientation == VERTICAL)
+		draw_wall_slice(data, slice_col, dimentions, ray, WE);
 }

@@ -225,8 +225,10 @@ t_bool populate_map(const int fd, t_map *map, char **line)
 				map->matrix[i][j] = get_orientation(cur_char);
 			else if(is_sprite(cur_char))
 				map->matrix[i][j] = SPRITE;
-			else
+			else if(cur_char == '0')
 				map->matrix[i][j] = EMPTY;
+			else
+				map->matrix[i][j] = INVALID;
 			j++;
 			cur_char = (*line)[j];
 		}
@@ -254,6 +256,7 @@ t_bool get_player_init_pos(int **matrix, int row, int col, t_player *player)
 	pos.y = row;
 	if(player->angle != (int)INVALID_ORIENTATION)
 		return (FALSE);
+
 	player->angle = (int)matrix[row][col];
 	player->position = get_grid_center(pos);
 	matrix[row][col] = 0;
@@ -273,7 +276,9 @@ t_bool check_map_content(t_map *map, t_player *player)
 		j = 0;
 		while(j < map->width)
 		{
-			if((i == 0 || i == map->height - 1) && map->matrix[i][j] != 1)
+			if(map->matrix[i][j] == INVALID)
+				ret = FALSE;
+			else if((i == 0 || i == map->height - 1) && map->matrix[i][j] != 1)
 				ret = FALSE;
 			else if((j == 0 || j == map->width - 1) && map->matrix[i][j] != 1)
 				ret = FALSE;
