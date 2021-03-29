@@ -2,7 +2,7 @@
 #define RAYTRACER_H
 #include <defs.h>
 
-t_bool run(const char *filename);
+t_status run(const char *filename);
 void close_window(t_data *data);
 
 #endif

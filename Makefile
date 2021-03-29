@@ -19,7 +19,8 @@ SRC_FILES=						\
 	src/sprite.c				\
 	src/get_next_line_utils.c	\
 	src/get_next_line.c			\
-	src/parser.c
+	src/parser.c				\
+	src/errors.c
 
 INC_FILES=						\
 	inc/raycaster.h  			\
@@ -34,7 +35,8 @@ INC_FILES=						\
 	inc/wall_detection.h		\
 	inc/sprite.h				\
 	inc/get_next_line.h			\
-	inc/parser.h
+	inc/parser.h				\
+	inc/errors.h
 
 
 TEST_FILES= 								\
