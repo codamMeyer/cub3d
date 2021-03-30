@@ -5,39 +5,46 @@ TEST_CFLAGS= -ggdb3 -Wall -Wextra -Werror #-fsanitize=address -fsanitize=leak
 INC_PATH=-I./mlx_linux -I./inc -I./ -I./libft
 LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz  -L./libft -lft
 
-SRC_FILES=						\
-	src/raycaster.c 			\
-	src/keyboard.c				\
-	src/map.c	    			\
-	src/player.c				\
-	src/utils.c  				\
-	src/math_utils.c  			\
-	src/direction.c  			\
-	src/ray_casting_logic.c		\
-	src/render.c				\
-	src/wall_detection.c		\
-	src/sprite.c				\
-	src/get_next_line_utils.c	\
-	src/get_next_line.c			\
-	src/parser.c				\
-	src/errors.c
+SRC_FILES=									\
+	src/game/raycaster.c 					\
+	src/game/ray_casting_logic.c			\
+	src/game/render.c						\
+	src/game/wall_detection.c				\
+	src/game/sprite.c						\
+	src/game/player.c						\
+	src/utils/keyboard.c					\
+	src/utils/map_utils.c	    			\
+	src/utils/utils.c  						\
+	src/utils/math_utils.c  				\
+	src/utils/direction.c  					\
+	src/utils/errors.c						\
+	src/gnl/get_next_line_utils.c			\
+	src/gnl/get_next_line.c					\
+	src/parser/parser.c						\
+	src/parser/utils_parser.c				\
+	src/parser/texture_parser.c				\
+	src/parser/map_parser.c					\
+	
 
-INC_FILES=						\
-	inc/raycaster.h  			\
-	inc/keyboard.h	 			\
-	inc/map.h	     			\
-	inc/player.h	 			\
-	inc/utils.h  	 			\
-	inc/math_utils.h 			\
-	inc/direction.h  			\
-	inc/ray_casting_logic.h		\
-	inc/render.h				\
-	inc/wall_detection.h		\
-	inc/sprite.h				\
-	inc/get_next_line.h			\
-	inc/parser.h				\
-	inc/errors.h
-
+INC_FILES=									\
+	inc/game/raycaster.h 					\
+	inc/game/ray_casting_logic.h			\
+	inc/game/render.h						\
+	inc/game/wall_detection.h				\
+	inc/game/sprite.h						\
+	inc/game/player.h						\
+	inc/utils/keyboard.h					\
+	inc/utils/map_utils.h	    			\
+	inc/utils/utils.h  						\
+	inc/utils/math_utils.h  				\
+	inc/utils/direction.h  					\
+	inc/utils/errors.h						\
+	inc/utils/defs.h						\
+	inc/gnl/get_next_line.h					\
+	inc/parser/parser.h						\
+	inc/parser/utils_parser.h				\
+	inc/parser/texture_parser.h				\
+	inc/parser/map_parser.h					\
 
 TEST_FILES= 								\
 	test/main.c 							\

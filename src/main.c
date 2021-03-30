@@ -1,6 +1,5 @@
-#include <errors.h>
-#include <raycaster.h>
-#include <stdio.h>
+#include <utils/errors.h>
+#include <game/raycaster.h>
 
 int main(int argc, char *argv[])
 {
