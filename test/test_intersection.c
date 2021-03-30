@@ -1,14 +1,14 @@
 #include "ctest.h"
 
-#include <inc/defs.h>
-#include <inc/map.h>
-#include <inc/ray_casting_logic.h>
-#include <inc/raycaster.h>
-#include <inc/utils.h>
-#include <inc/wall_detection.h>
+#include <inc/game/ray_casting_logic.h>
+#include <inc/game/raycaster.h>
+#include <inc/utils/utils.h>
+#include <inc/utils/defs.h>
+#include <inc/utils/map_utils.h>
+#include <inc/game/wall_detection.h>
 #include <math.h>
-#include <math_utils.h>
 #include <stdio.h>
+#include <utils/math_utils.h>
 
 static int **init_map(int height, int width)
 {
