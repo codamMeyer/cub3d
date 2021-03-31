@@ -7,7 +7,7 @@
 void close_window(t_data *data)
 {
 	free_matrix(data->worldMap.matrix, data->worldMap.height);
-	mlx_destroy_window(data->mlx, data->window);
+	mlx_destroy_window(data->img.mlx, data->img.window);
 	exit(0);
 }
 

@@ -37,7 +37,7 @@ static void draw_ceiling_slice(t_data *data, int slice_col, int wall_top, int wa
 	int i = 0;
 	while(i < wall_top + (wall_height / 2))
 	{
-		my_mlx_pixel_put(&data->map, slice_col, i, data->ceiling);
+		my_mlx_pixel_put(&data->img, slice_col, i, data->ceiling);
 		++i;
 	}
 }
@@ -72,8 +72,8 @@ static void draw_wall_slice(t_data *data,
 		texture_pos =
 			get_texture_position(&data->textures[texture], ray, wall_dimentions, wall_index);
 		color = get_pixel_color(&data->textures[texture], texture_pos.x, texture_pos.y);
-		if((unsigned int)color != 0xff000000)
-			my_mlx_pixel_put(&data->map, slice_col, wall_index, color);
+		if((unsigned int)color != BLACK)
+			my_mlx_pixel_put(&data->img, slice_col, wall_index, color);
 		++wall_index;
 	}
 }
@@ -81,9 +81,9 @@ static void draw_wall_slice(t_data *data,
 static void draw_floor_slice(t_data *data, int slice_col, int wall_bottom, int wall_height)
 {
 	int i = wall_bottom - (wall_height / 2);
-	while(i < data->player.plane_y)
+	while(i < data->screen.height)
 	{
-		my_mlx_pixel_put(&data->map, slice_col, i, data->floor);
+		my_mlx_pixel_put(&data->img, slice_col, i, data->floor);
 		++i;
 	}
 }
@@ -94,29 +94,29 @@ static int get_height(double closest_wall, double dist_to_plane, int max_height)
 	return (min_i(height, max_height));
 }
 
-static t_dimentions get_dimentions(double closest_wall, t_player player)
+static t_dimentions get_dimentions(double closest_wall, t_player player, t_window screen)
 {
-	const double dist_to_plane = (player.plane_x / 2.0) / tan(degree_to_radians(player.FOV / 2.0));
+	const double dist_to_plane = (screen.width / 2.0) / tan(degree_to_radians(player.FOV / 2.0));
 	t_dimentions dimentions;
 
-	dimentions.height = get_height(closest_wall, dist_to_plane, player.plane_y);
-	dimentions.top = round(((double)player.plane_y / 2.0) - (dimentions.height / 2.0));
+	dimentions.height = get_height(closest_wall, dist_to_plane, screen.height);
+	dimentions.top = round(((double)screen.height / 2.0) - (dimentions.height / 2.0));
 	dimentions.bottom = dimentions.top + dimentions.height;
 
 	return (dimentions);
 }
 
-t_collider get_collider_type(t_map worldmap, t_position pos)
-{
-	t_grid_position grid_pos = to_grid_position(worldmap, pos);
-	if(grid_pos.x == INVALID || grid_pos.y == INVALID)
-		return (INVALID);
-	return (worldmap.matrix[grid_pos.y][grid_pos.x]);
-}
+// static t_collider get_collider_type(t_map worldmap, t_position pos)
+// {
+// 	t_grid_position grid_pos = to_grid_position(worldmap, pos);
+// 	if(grid_pos.x == INVALID || grid_pos.y == INVALID)
+// 		return (INVALID);
+// 	return (worldmap.matrix[grid_pos.y][grid_pos.x]);
+// }
 
 void draw_slice(t_data *data, int slice_col, t_ray *ray)
 {
-	t_dimentions dimentions = get_dimentions(ray->distance, data->player);
+	t_dimentions dimentions = get_dimentions(ray->distance, data->player, data->screen);
 	draw_ceiling_slice(data, slice_col, dimentions.top, dimentions.height);
 	draw_floor_slice(data, slice_col, dimentions.bottom, dimentions.height);
 

@@ -117,7 +117,7 @@ t_status parse_input(const char *filename, t_data *data)
 	else if((ret = check_file_extension(filename)))
 		return (ret);
 	else if((ret = get_header_information(
-				 fd1, &data->resolution, data->textures, &data->floor, &data->ceiling)))
+				 fd1, &data->screen, data->textures, &data->floor, &data->ceiling)))
 		return (ret);
 	else if((ret = parse_map(fd2, &data->worldMap)))
 		return (ret);

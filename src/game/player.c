@@ -1,8 +1,6 @@
 #include <game/player.h>
 #include <math.h>
 #include <utils/math_utils.h>
-// #include <game/raycaster.h>
-// #include <utils/utils.h>
 
 static t_bool hit_wall(t_map worldMap, t_position new_pos)
 {
@@ -12,23 +10,13 @@ static t_bool hit_wall(t_map worldMap, t_position new_pos)
 	return (FALSE);
 }
 
-// int draw_player(t_data *data)
-// {
-// 	t_position new_pos = {.x = data->player.position.x / 8, .y = data->player.position.y / 8};
-// 	draw_square(&data->map, 5, new_pos.x - 2.5, new_pos.y - 2.5, YELLOW);
-
-// 	return (1);
-// }
-
 void init_player(t_data *data)
 {
 	data->player.angle = INVALID_ORIENTATION;
-	data->player.size = 5;
 	data->player.FOV = 60;
-	data->player.plane_x = data->resolution.width;
-	data->player.plane_y = data->resolution.height;
+	data->screen.width = data->screen.width;
+	data->screen.height = data->screen.height;
 	data->player.speed = 10;
-	data->player.color = BLUE;
 }
 
 t_bool move_left(t_player *player, t_data *data)

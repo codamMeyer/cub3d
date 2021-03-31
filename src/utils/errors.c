@@ -1,6 +1,6 @@
-#include <utils/errors.h>
 #include <libft.h>
 #include <unistd.h>
+#include <utils/errors.h>
 
 void print_error_message(t_status status)
 {
@@ -18,6 +18,7 @@ void print_error_message(t_status status)
 		"Error while loading texture\n"
 		"Malloc error\n",
 		"Usage: ./raycaster <map_path> [--save]\n",
+		"Error while initializing window\n",
 	};
 	const int len = ft_strlen(status_message[status]);
 	const char *error = "Error\n";

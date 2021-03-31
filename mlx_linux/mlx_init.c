@@ -47,7 +47,6 @@ void	*mlx_init()
 	return (xvar);
 }
 
-
 /*
 ** pshm_format of -1 :	Not XYBitmap|XYPixmap|ZPixmap
 ** alpha libX need a check of the DISPLAY env var, or shm is allowed

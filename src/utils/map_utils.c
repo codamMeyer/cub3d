@@ -49,7 +49,7 @@ void free_matrix(int **map, int height)
 // 				color = WHITE;
 // 			else
 // 				color = BLACK;
-// 			draw_square(&data->map, grid_size, x, y, color);
+// 			draw_square(&data->img, grid_size, x, y, color);
 // 			x += grid_size;
 // 		}
 // 		x = 0;

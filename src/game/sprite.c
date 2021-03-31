@@ -97,7 +97,7 @@ find_closest_sprite(t_map worldmap, t_sprite horizontal, t_sprite vertical, t_pl
 		return (vertical);
 }
 
-static t_position get_sprite_transform_value(t_player *player, t_position pos)
+static t_position get_sprite_transform_value(t_player *player, t_position pos, t_window screen)
 {
 
 	double dir_x = cos(degree_to_radians(player->angle));
@@ -107,12 +107,12 @@ static t_position get_sprite_transform_value(t_player *player, t_position pos)
 	sprite_pos.x = pos.x - player->position.x;
 	sprite_pos.y = pos.y - player->position.y;
 
-	double inv_det = 1.0 / (player->plane_x * dir_y - dir_x * player->plane_y);
+	double inv_det = 1.0 / (screen.width * dir_y - dir_x * screen.height);
 
 	t_position transform;
 	transform.x = inv_det * ((dir_y * sprite_pos.x) - (dir_x * sprite_pos.y));
 
-	transform.y = inv_det * (-player->plane_y * sprite_pos.x + player->plane_x * sprite_pos.y);
+	transform.y = inv_det * (-screen.height * sprite_pos.x + screen.width * sprite_pos.y);
 
 	return (transform);
 }
@@ -123,17 +123,16 @@ static void draw_sprite(t_data *data, t_sprite sprite)
 	t_dimentions sprite_dimentions;
 	t_texture_position texture_pos;
 
-	t_position transform = get_sprite_transform_value(&data->player, sprite.center);
+	t_position transform = get_sprite_transform_value(&data->player, sprite.center, data->screen);
 
-	int sprite_screen_x =
-		((double)data->resolution.width / 2.0) * (1.0 + transform.x / transform.y);
+	int sprite_screen_x = ((double)data->screen.width / 2.0) * (1.0 + transform.x / transform.y);
 
-	sprite_dimentions.height = abs_value(floor((double)data->resolution.height / transform.y));
+	sprite_dimentions.height = abs_value(floor((double)data->screen.height / transform.y));
 	sprite_dimentions.top =
-		(double)data->resolution.height / 2.0 - (double)sprite_dimentions.height / 2.0;
+		(double)data->screen.height / 2.0 - (double)sprite_dimentions.height / 2.0;
 	sprite_dimentions.bottom =
-		(double)data->resolution.height / 2.0 + (double)sprite_dimentions.height / 2.0;
-	sprite_dimentions.width = abs_value(floor((double)data->resolution.height / transform.y));
+		(double)data->screen.height / 2.0 + (double)sprite_dimentions.height / 2.0;
+	sprite_dimentions.width = abs_value(floor((double)data->screen.height / transform.y));
 
 	int start_x = -sprite_dimentions.width / 2 + sprite_screen_x;
 	int end_x = sprite_dimentions.width / 2 + sprite_screen_x;
@@ -143,7 +142,7 @@ static void draw_sprite(t_data *data, t_sprite sprite)
 	sprite_dimentions.top = sprite_dimentions.top < 0 ? 0 : sprite_dimentions.top;
 	while(x < end_x)
 	{
-		if(transform.y > 0 && x > 0 && x < data->resolution.width)
+		if(transform.y > 0 && x > 0 && x < data->screen.width)
 		{
 			y = sprite_dimentions.top;
 			while(y < sprite_dimentions.bottom)
@@ -153,7 +152,7 @@ static void draw_sprite(t_data *data, t_sprite sprite)
 				texture_pos.y = (float)(y - sprite_dimentions.top) /
 								(float)(sprite_dimentions.bottom - sprite_dimentions.top) *
 								data->textures[SP].height;
-				if(y < 0 || y >= data->resolution.height || x < 0 || x >= data->resolution.width)
+				if(y < 0 || y >= data->screen.height || x < 0 || x >= data->screen.width)
 					return;
 				if(texture_pos.x < 0 || texture_pos.y < 0)
 					return;
@@ -162,7 +161,7 @@ static void draw_sprite(t_data *data, t_sprite sprite)
 					return;
 				color = get_pixel_color(&data->textures[SP], texture_pos.x, texture_pos.y);
 				if((unsigned int)color != 0xff000000)
-					my_mlx_pixel_put(&data->map, x, y, color);
+					my_mlx_pixel_put(&data->img, x, y, color);
 				++y;
 			}
 		}

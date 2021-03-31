@@ -284,8 +284,8 @@ CTEST(get_all, correct_file)
 
 	ASSERT_EQUAL(parse_input(filename, &data), SUCCESS);
 
-	ASSERT_EQUAL(800, data.resolution.width);
-	ASSERT_EQUAL(600, data.resolution.height);
+	ASSERT_EQUAL(800, data.screen.width);
+	ASSERT_EQUAL(600, data.screen.height);
 	ASSERT_STR("./textures/NO.xpm", &(data.textures[NO].filename[0]));
 	ASSERT_STR("./textures/SO.xpm", &(data.textures[SO].filename[0]));
 	ASSERT_STR("./textures/WE.xpm", &(data.textures[WE].filename[0]));
