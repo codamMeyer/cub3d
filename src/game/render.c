@@ -46,9 +46,12 @@ static t_texture_position get_texture_position(const t_texture *texture,
 											   t_dimentions wall_dimentions,
 											   int wall_index)
 {
-	const double texture_to_wall_ratio = (double)texture->height / (double)wall_dimentions.height;
-	const int wall_pixel_position = (wall_index - wall_dimentions.top);
+	const double texture_to_wall_ratio =
+		(double)texture->height / (double)wall_dimentions.real_height;
+
+	const int wall_pixel_position = (wall_index - wall_dimentions.real_top);
 	t_texture_position pos;
+
 	pos.y = floor(wall_pixel_position * texture_to_wall_ratio);
 
 	if(ray->orientation == HORIZONTAL)
@@ -88,19 +91,16 @@ static void draw_floor_slice(t_data *data, int slice_col, int wall_bottom, int w
 	}
 }
 
-static int get_height(double closest_wall, double dist_to_plane, int max_height)
-{
-	int height = round((GRID_SIZE / closest_wall) * dist_to_plane);
-	return (min_i(height, max_height));
-}
 
-static t_dimentions get_dimentions(double closest_wall, t_player player, t_window screen)
+static t_dimentions get_dimentions(double dist_to_wall, t_player player, t_window screen)
 {
 	const double dist_to_plane = (screen.width / 2.0) / tan(degree_to_radians(player.FOV / 2.0));
 	t_dimentions dimentions;
 
-	dimentions.height = get_height(closest_wall, dist_to_plane, screen.height);
+	dimentions.real_height = round((GRID_SIZE / dist_to_wall) * dist_to_plane);
+	dimentions.height = min_i(dimentions.real_height, screen.height);
 	dimentions.top = round(((double)screen.height / 2.0) - (dimentions.height / 2.0));
+	dimentions.real_top = round(((double)screen.height / 2.0) - (dimentions.real_height / 2.0));
 	dimentions.bottom = dimentions.top + dimentions.height;
 
 	return (dimentions);

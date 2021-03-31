@@ -6,7 +6,7 @@ INC_PATH=-I./mlx_linux -I./inc -I./ -I./libft
 LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz  -L./libft -lft
 
 SRC_FILES=									\
-	src/game/raycaster.c 					\
+	src/game/game.c 						\
 	src/game/ray_casting_logic.c			\
 	src/game/render.c						\
 	src/game/wall_detection.c				\
@@ -27,7 +27,7 @@ SRC_FILES=									\
 	
 
 INC_FILES=									\
-	inc/game/raycaster.h 					\
+	inc/game/game.h 						\
 	inc/game/ray_casting_logic.h			\
 	inc/game/render.h						\
 	inc/game/wall_detection.h				\

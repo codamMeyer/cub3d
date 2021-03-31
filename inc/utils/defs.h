@@ -113,9 +113,11 @@ typedef struct s_ray
 
 typedef struct s_dimentions
 {
+	int real_height;
 	int height;
 	int width;
 	int top;
+	int real_top;
 	int bottom;
 } t_dimentions;
 

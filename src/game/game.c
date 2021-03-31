@@ -1,5 +1,5 @@
+#include <game/game.h>
 #include <game/player.h>
-#include <game/raycaster.h>
 #include <game/sprite.h>
 #include <game/wall_detection.h>
 #include <libft.h>
@@ -101,7 +101,8 @@ static t_bool init_window(t_data *data)
 		return (FALSE);
 
 	update_screen_resolution(data);
-	data->img.window = mlx_new_window(data->img.mlx, data->screen.width, data->screen.height, "CUB3D");
+	data->img.window =
+		mlx_new_window(data->img.mlx, data->screen.width, data->screen.height, "CUB3D");
 	if(!data->img.window)
 		return (FALSE);
 
@@ -109,7 +110,8 @@ static t_bool init_window(t_data *data)
 	if(!data->img.ptr)
 		return (FALSE);
 
-	data->img.addr = mlx_get_data_addr(data->img.ptr, &data->img.bits_per_pixel, &data->img.line_length, &data->img.endian);
+	data->img.addr = mlx_get_data_addr(
+		data->img.ptr, &data->img.bits_per_pixel, &data->img.line_length, &data->img.endian);
 	if(!data->img.addr)
 		return (FALSE);
 

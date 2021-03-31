@@ -1,10 +1,10 @@
+#include <game/game.h>
 #include <utils/errors.h>
-#include <game/raycaster.h>
 
 int main(int argc, char *argv[])
 {
 	t_status error;
-	
+
 	if(argc < 2 || argc > 3)
 	{
 		print_error_message(ARG_ERROR);
