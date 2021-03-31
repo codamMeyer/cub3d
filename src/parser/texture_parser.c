@@ -3,7 +3,7 @@
 #include <parser/utils_parser.h>
 #include <stdio.h>
 
-static t_texture_enum texture_to_enum(char *texture_type)
+t_texture_enum texture_to_enum(char *texture_type)
 {
 	if(ft_strncmp("NO", texture_type, 2) == 0)
 		return (NO);

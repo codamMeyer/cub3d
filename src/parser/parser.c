@@ -5,7 +5,6 @@
 #include <parser/parser.h>
 #include <parser/texture_parser.h>
 #include <parser/utils_parser.h>
-#include <stdio.h>
 #include <utils/map_utils.h>
 
 t_status get_resolution(const char *line, t_window *window)
@@ -47,7 +46,7 @@ static t_bool find_first_line_of_map(const int fd, char **line)
 	return (FALSE);
 }
 
-static t_status init_map_matrix(const int fd, t_map *map, t_player *player)
+t_status init_map_matrix(const int fd, t_map *map, t_player *player)
 {
 	char *line;
 	t_status ret;
@@ -65,7 +64,7 @@ static t_status init_map_matrix(const int fd, t_map *map, t_player *player)
 	return (SUCCESS);
 }
 
-static t_status parse_map(const int fd, t_map *map)
+t_status parse_map(const int fd, t_map *map)
 {
 	char *line = NULL;
 

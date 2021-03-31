@@ -2,6 +2,7 @@
 #include <libft.h>
 #include <parser/map_parser.h>
 #include <parser/utils_parser.h>
+#include <stdio.h>
 #include <utils/math_utils.h>
 
 static t_player_orientation get_orientation(char c)
