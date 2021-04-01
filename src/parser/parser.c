@@ -37,7 +37,7 @@ t_status check_file_extension(const char *filename)
 
 static t_bool find_first_line_of_map(const int fd, char **line)
 {
-	while(get_next_line(fd, line))
+	while(get_next_line(fd, line) > 0)
 	{
 		if(is_map(*line))
 			return (TRUE);
@@ -46,46 +46,60 @@ static t_bool find_first_line_of_map(const int fd, char **line)
 	return (FALSE);
 }
 
-t_status init_map_matrix(const int fd, t_map *map, t_player *player)
+t_status init_map_matrix(const char *filename, t_map *map, t_player *player)
 {
+	const int fd = open(filename, O_RDONLY);
 	char *line;
 	t_status ret;
 
 	if(fd < 0)
 		return (FILE_ERROR);
+	ret = SUCCESS;
 	find_first_line_of_map(fd, &line);
 	map->matrix = malloc_matrix(map->height, map->width);
 	if(!map->matrix)
-		return (MALLOC_ERROR);
-	else if((ret = populate_map(fd, map, &line)))
-		return (ret);
-	else if((ret = check_map_content(map, player)))
-		return (ret);
-	return (SUCCESS);
+		ret = MALLOC_ERROR;
+	if(ret == SUCCESS)
+		ret = populate_map(fd, map, &line);
+	if(ret == SUCCESS)
+		ret = check_map_content(map, player);
+	close(fd);
+	return (ret);
 }
 
-t_status parse_map(const int fd, t_map *map)
+t_status parse_map(const char *filename, t_map *map)
 {
-	char *line = NULL;
+	const int fd = open(filename, O_RDONLY);
+	char *line;
+	t_status ret;
 
+	if(fd < 0)
+		return (FILE_ERROR);
+	ret = SUCCESS;
 	map->height = 0;
 	map->width = 0;
 	if(!find_first_line_of_map(fd, &line))
 	{
 		free(line);
+		close(fd);
 		return (MISSING_MAP_ERROR);
 	}
-	return (get_map_dimentions(fd, &line, map));
+	ret = get_map_dimentions(fd, &line, map);
+	close(fd);
+	return (ret);
 }
 
-static t_status get_header_information(const int fd,
+static t_status get_header_information(const char *filename,
 									   t_window *window,
 									   t_texture textures[],
 									   t_color *floor,
 									   t_color *ceiling)
 {
+	const int fd = open(filename, O_RDONLY);
 	char *line;
 	t_status ret = SUCCESS;
+	if(fd < 0)
+		return (FILE_ERROR);
 	while(get_next_line(fd, &line))
 	{
 		if(line[0] == 'R')
@@ -101,30 +115,22 @@ static t_status get_header_information(const int fd,
 		free(line);
 	}
 	free(line);
+	close(fd);
 	return (ret);
 }
 
 t_status parse_input(const char *filename, t_data *data)
 {
-	const int fd1 = open(filename, O_RDONLY);
-	const int fd2 = open(filename, O_RDONLY);
-	const int fd3 = open(filename, O_RDONLY);
 	t_status ret;
-	ret = SUCCESS;
 
-	if(fd1 < 0 || fd2 < 0 || fd3 < 0)
-		return (FILE_ERROR);
-	else if((ret = check_file_extension(filename)))
-		return (ret);
-	else if((ret = get_header_information(
-				 fd1, &data->screen, data->textures, &data->floor, &data->ceiling)))
-		return (ret);
-	else if((ret = parse_map(fd2, &data->worldMap)))
-		return (ret);
-	else if((ret = init_map_matrix(fd3, &data->worldMap, &data->player)))
-		return (ret);
-	close(fd1);
-	close(fd2);
-	close(fd3);
+	ret = SUCCESS;
+	ret = check_file_extension(filename);
+	if(ret == SUCCESS)
+		ret = get_header_information(
+			filename, &data->screen, data->textures, &data->floor, &data->ceiling);
+	if(ret == SUCCESS)
+		ret = parse_map(filename, &data->worldMap);
+	if(ret == SUCCESS)
+		ret = init_map_matrix(filename, &data->worldMap, &data->player);
 	return (ret);
 }

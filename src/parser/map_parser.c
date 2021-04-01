@@ -76,14 +76,17 @@ t_status populate_map(const int fd, t_map *map, char **line)
 	int j;
 	int bytes_read;
 	char cur_char;
+	int line_len;
 
 	i = 0;
 	while(TRUE)
 	{
 		j = 0;
-		cur_char = (*line)[j];
-		while(j < map->width)
+
+		line_len = ft_strlen(*line);
+		while(j < line_len)
 		{
+			cur_char = (*line)[j];
 			if(is_wall(line, j))
 				map->matrix[i][j] = WALL;
 			else if(get_orientation(cur_char) != INVALID_ORIENTATION)
@@ -94,10 +97,17 @@ t_status populate_map(const int fd, t_map *map, char **line)
 				map->matrix[i][j] = EMPTY;
 			else
 				map->matrix[i][j] = INVALID;
-			j++;
-			cur_char = (*line)[j];
+			++j;
 		}
-		i++;
+		while(j < map->width)
+		{
+			if(line_len > 0)
+				map->matrix[i][j] = WALL;
+			else
+				map->matrix[i][j] = INVALID;
+			++j;
+		}
+		++i;
 		free(*line);
 		bytes_read = get_next_line(fd, line);
 		if(bytes_read < 0)
@@ -115,6 +125,9 @@ t_status populate_map(const int fd, t_map *map, char **line)
 t_status get_map_dimentions(const int fd, char **line, t_map *map)
 {
 	int bytes_read;
+	t_status ret;
+
+	ret = SUCCESS;
 	while(TRUE)
 	{
 		++(map->height);
@@ -122,7 +135,10 @@ t_status get_map_dimentions(const int fd, char **line, t_map *map)
 		free(*line);
 		bytes_read = get_next_line(fd, line);
 		if(bytes_read < 0)
-			return (MALLOC_ERROR);
+		{
+			ret = MALLOC_ERROR;
+			break;
+		}
 		if(bytes_read == 0)
 		{
 			if(ft_strlen(*line) > 0)
@@ -134,5 +150,5 @@ t_status get_map_dimentions(const int fd, char **line, t_map *map)
 			break;
 		}
 	}
-	return (SUCCESS);
+	return (ret);
 }

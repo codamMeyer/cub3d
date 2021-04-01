@@ -30,7 +30,7 @@ t_bool is_wall(char **line, int i)
 	const int line_len = ft_strlen(*line);
 	const char cur_char = (*line)[i];
 
-	return (line_len > 1 && (i >= line_len || cur_char == ' ' || cur_char == '1'));
+	return (line_len > 1 && (cur_char == ' ' || cur_char == '1'));
 }
 
 t_bool is_sprite(char cur)

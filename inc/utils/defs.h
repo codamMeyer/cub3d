@@ -157,6 +157,7 @@ typedef struct s_data
 	t_texture textures[5];
 	t_color floor;
 	t_color ceiling;
+	t_bool save;
 } t_data;
 
 #endif

@@ -24,6 +24,7 @@ SRC_FILES=									\
 	src/parser/utils_parser.c				\
 	src/parser/texture_parser.c				\
 	src/parser/map_parser.c					\
+	src/bmp/bmp.c
 	
 
 INC_FILES=									\
@@ -45,6 +46,8 @@ INC_FILES=									\
 	inc/parser/utils_parser.h				\
 	inc/parser/texture_parser.h				\
 	inc/parser/map_parser.h					\
+	inc/bmp/bmp.h
+
 
 TEST_FILES= 								\
 	test/main.c 							\
@@ -56,7 +59,7 @@ TEST_FILES= 								\
 	test/test_intersection.c				\
 	test/test_find_closest_wall.c			\
 	test/test_find_sprite.c					\
-	test/test_parser.c
+	test/test_parser.c						
 
 all: libft $(NAME)
 

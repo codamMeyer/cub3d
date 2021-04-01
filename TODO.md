@@ -5,7 +5,7 @@
  - [x] **Display different wall textures (the choice is yours) that vary depending on which side the wall is facing (North, South, East, West).**
  - [ ] **Your program must be able to display an item (sprite) instead of a wall.**
  - [x] **Your program must be able to set the floor and ceilling colors to two different ones.**
- - [ ] **save the first rendered image in bmp format when its second argument is "– –save".**
+ - [x] **save the first rendered image in bmp format when its second argument is "– –save".**
 
 ### **If no second argument is supllied, the program displays the image in a window and respects the following rules:**
  - [x] **The left and right arrow keys of the keyboard must allow you to look left and right in the maze.**

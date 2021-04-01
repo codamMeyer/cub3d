@@ -1,11 +1,11 @@
 #include "ctest.h"
 #include <game/sprite.h>
+#include <inc/game/game.h>
 #include <inc/game/player.h>
 #include <inc/game/ray_casting_logic.h>
-#include <inc/game/raycaster.h>
-#include <inc/utils/utils.h>
 #include <inc/utils/defs.h>
 #include <inc/utils/map_utils.h>
+#include <inc/utils/utils.h>
 #include <math.h>
 #include <stdio.h>
 #include <utils/math_utils.h>
@@ -54,12 +54,11 @@ CTEST_DATA(sprite_center_position)
 
 CTEST_SETUP(sprite_center_position)
 {
-	data->game.player.size = 5;
+
 	data->game.player.FOV = 60;
-	data->game.player.plane_x = 320;
-	data->game.player.plane_y = 200;
+
 	data->game.player.speed = 10;
-	data->game.player.color = BLUE;
+
 	data->game.worldMap.height = 5;
 	data->game.worldMap.width = 7;
 	data->game.worldMap.matrix = init_map(data->game.worldMap.height, data->game.worldMap.width);

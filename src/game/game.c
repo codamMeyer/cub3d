@@ -1,3 +1,4 @@
+#include <bmp/bmp.h>
 #include <game/game.h>
 #include <game/player.h>
 #include <game/sprite.h>
@@ -31,36 +32,37 @@ void ray_casting(t_data *data)
 {
 	const double ray_increment = (double)data->player.FOV / (double)data->screen.width;
 	t_ray ray;
-	ray.angle = data->player.angle + (data->player.FOV / 2);
-	t_sprite sprites[10];
 
-	t_sprite sprite;
-	int i = 0;
+	ray.angle = data->player.angle + (data->player.FOV / 2);
+	// t_sprite sprites[10];
+
+	// t_sprite sprite;
+	// int i = 0;
 	for(int col = 0; col < data->screen.width; col++)
 	{
 		find_and_draw_walls(col, data, &ray);
-
-		sprite = find_sprites(data, ray.angle);
-		if(is_valid_grid_position(data->worldMap, sprite.grid_pos))
-		{
-			if(i > 0)
-			{
-				if(sprite.grid_pos.x != sprites[i - 1].grid_pos.x ||
-				   sprite.grid_pos.y != sprites[i - 1].grid_pos.y)
-				{
-					sprites[i] = sprite;
-					++i;
-				}
-			}
-			else
-			{
-				sprites[i] = sprite;
-				i++;
-			}
-		}
+		// sprite = find_sprites(data, ray.angle);
+		// if(is_valid_grid_position(data->worldMap, sprite.grid_pos))
+		// {
+		// 	if(i > 0)
+		// 	{
+		// 		if(sprite.grid_pos.x != sprites[i - 1].grid_pos.x ||
+		// 		   sprite.grid_pos.y != sprites[i - 1].grid_pos.y)
+		// 		{
+		// 			sprites[i] = sprite;
+		// 			++i;
+		// 		}
+		// 	}
+		// 	else
+		// 	{
+		// 		sprites[i] = sprite;
+		// 		i++;
+		// 	}
+		// }
 		ray.angle -= ray_increment;
 	}
-	draw_sprites(data, &sprites[0], i);
+	// draw_sprites(data, &sprites[0], i);
+	save_image(data);
 	mlx_put_image_to_window(data->img.mlx, data->img.window, data->img.ptr, 0, 0);
 }
 
@@ -118,7 +120,7 @@ static t_bool init_window(t_data *data)
 	return (TRUE);
 }
 
-t_status run(const char *filename)
+t_status run(const char *filename, t_bool save)
 {
 	t_data data;
 	t_status ret;
@@ -126,15 +128,14 @@ t_status run(const char *filename)
 	init_player(&data);
 	if((ret = parse_input(filename, &data)))
 		return (ret);
-
 	if(!init_window(&data))
 		return (INIT_WINDOW_ERROR);
-
 	if(!load_textures(&data))
 	{
 		close_window(&data);
 		return (FALSE);
 	}
+	data.save = save;
 	mlx_hook(data.img.window, 2, 1L << 0, keypressed, &data);
 	mlx_loop_hook(data.img.mlx, display, &data);
 	mlx_loop(data.img.mlx);
