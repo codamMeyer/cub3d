@@ -1,0 +1,18 @@
+R 800 600
+NO ./textures/tree_wall.xpm
+SO ./textures/tree_wall.xpm
+WE ./textures/tree_wall.xpm
+EA ./textures/tree_wall.xpm
+S ./textures/tree_snow.xpm
+F 44,31,14
+C 19,24,15
+
+
+11111
+10001
+10001
+10001
+10001
+10001
+10001
+11111

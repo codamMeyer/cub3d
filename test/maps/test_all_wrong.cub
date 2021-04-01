@@ -1,0 +1,13 @@
+F 246,208,95
+
+SO ./textures/SO.xpm
+
+R 800 -20
+
+WE ./textures/WE.xpm
+EA ./textures/EA.xpm
+
+S ./textures/S.xpm
+NO ./textures/NO.xpm
+
+C 191,97,106

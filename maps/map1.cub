@@ -1,0 +1,17 @@
+R 920 700
+NO ./textures/tree_wall.xpm
+SO ./textures/tree_wall.xpm
+WE ./textures/tree_wall.xpm
+EA ./textures/tree_wall.xpm
+S ./textures/tree_wall.xpm
+F 44,31,14
+C 19,24,15
+
+111111111
+100000001
+100000001
+100000001
+1000N0001
+100000001
+100000001
+111111111

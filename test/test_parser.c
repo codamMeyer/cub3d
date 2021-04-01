@@ -20,7 +20,7 @@ CTEST_DATA(get_resolution)
 
 CTEST_SETUP(get_resolution)
 {
-	data->filename = "./maps/resolution.cub";
+	data->filename = "./test/maps/resolution.cub";
 	data->fd = open(data->filename, O_RDONLY);
 }
 
@@ -101,7 +101,7 @@ CTEST(get_textures_indexing_value, all)
 
 CTEST(get_textures, test_correct_file)
 {
-	const char *filename = "./maps/textures.cub";
+	const char *filename = "./test/maps/textures.cub";
 	t_texture textures[5] = {};
 	const int fd = open(filename, O_RDONLY);
 	char *line;
@@ -122,7 +122,7 @@ CTEST(get_textures, test_correct_file)
 
 CTEST(get_colors, correct_file)
 {
-	char *filename = "./maps/colors.cub";
+	char *filename = "./test/maps/colors.cub";
 	const int fd = open(filename, O_RDONLY);
 	t_color floor = 0;
 	t_color celing = 0;
@@ -163,7 +163,7 @@ CTEST(get_colors, correct_file)
 
 CTEST(get_all, wrong_resolution)
 {
-	char *filename = "./maps/test_all_wrong.cub";
+	char *filename = "./test/maps/test_all_wrong.cub";
 	t_data data;
 	data.player.angle = (int)INVALID_ORIENTATION;
 	ASSERT_EQUAL(parse_input(filename, &data), RESOLUTION_ERROR);
@@ -181,7 +181,7 @@ CTEST(check_file_extension, with_parser)
 CTEST(parse_map, whole_map)
 {
 	t_map map;
-	ASSERT_EQUAL(parse_map("./maps/map.cub", &map), SUCCESS);
+	ASSERT_EQUAL(parse_map("./test/maps/map.cub", &map), SUCCESS);
 	ASSERT_EQUAL(map.width, 5);
 	ASSERT_EQUAL(map.height, 8);
 }
@@ -189,13 +189,13 @@ CTEST(parse_map, whole_map)
 CTEST(parse_map, no_map)
 {
 	t_map map;
-	ASSERT_EQUAL(parse_map("./maps/colors.cub", &map), MISSING_MAP_ERROR);
+	ASSERT_EQUAL(parse_map("./test/maps/colors.cub", &map), MISSING_MAP_ERROR);
 }
 
 CTEST(parse_map, map_with_spaces)
 {
 	t_map map;
-	ASSERT_EQUAL(parse_map("./maps/map_with_spaces.cub", &map), SUCCESS);
+	ASSERT_EQUAL(parse_map("./test/maps/map_with_spaces.cub", &map), SUCCESS);
 
 	ASSERT_EQUAL(map.width, 12);
 	ASSERT_EQUAL(map.height, 8);
@@ -206,8 +206,8 @@ CTEST(parse_map, matrix)
 	t_map map;
 	t_player player;
 	player.angle = (int)INVALID_ORIENTATION;
-	ASSERT_EQUAL(parse_map("./maps/map_with_spaces.cub", &map), SUCCESS);
-	ASSERT_EQUAL(init_map_matrix("./maps/map_with_spaces.cub", &map, &player), SUCCESS);
+	ASSERT_EQUAL(parse_map("./test/maps/map_with_spaces.cub", &map), SUCCESS);
+	ASSERT_EQUAL(init_map_matrix("./test/maps/map_with_spaces.cub", &map, &player), SUCCESS);
 	ASSERT_EQUAL(map.width, 12);
 	ASSERT_EQUAL(map.height, 8);
 	ASSERT_EQUAL(player.angle, N);
@@ -221,8 +221,9 @@ CTEST(parse_map, invalid_matrix)
 	t_map map;
 	t_player player;
 	player.angle = (int)INVALID_ORIENTATION;
-	ASSERT_EQUAL(parse_map("./maps/wrong_map.cub", &map), SUCCESS);
-	ASSERT_EQUAL(init_map_matrix("./maps/wrong_map.cub", &map, &player), MAP_NOT_SURROUNDED_ERROR);
+	ASSERT_EQUAL(parse_map("./test/maps/wrong_map.cub", &map), SUCCESS);
+	ASSERT_EQUAL(init_map_matrix("./test/maps/wrong_map.cub", &map, &player),
+				 MAP_NOT_SURROUNDED_ERROR);
 	ASSERT_EQUAL(map.width, 12);
 	ASSERT_EQUAL(map.height, 8);
 }
@@ -232,8 +233,8 @@ CTEST(parse_map, invalid_matrix_empty_line)
 	t_map map;
 	t_player player;
 	player.angle = (int)INVALID_ORIENTATION;
-	ASSERT_EQUAL(parse_map("./maps/invalid_map.cub", &map), SUCCESS);
-	ASSERT_EQUAL(init_map_matrix("./maps/invalid_map.cub", &map, &player), MAP_CONTENT_ERROR);
+	ASSERT_EQUAL(parse_map("./test/maps/invalid_map.cub", &map), SUCCESS);
+	ASSERT_EQUAL(init_map_matrix("./test/maps/invalid_map.cub", &map, &player), MAP_CONTENT_ERROR);
 	ASSERT_EQUAL(map.width, 12);
 	ASSERT_EQUAL(map.height, 9);
 }
@@ -243,8 +244,8 @@ CTEST(parse_map, matrix_line_of_spaces)
 	t_map map;
 	t_player player;
 	player.angle = (int)INVALID_ORIENTATION;
-	ASSERT_EQUAL(parse_map("./maps/weird_map.cub", &map), SUCCESS);
-	ASSERT_EQUAL(init_map_matrix("./maps/weird_map.cub", &map, &player), PLAYER_INIT_ERROR);
+	ASSERT_EQUAL(parse_map("./test/maps/weird_map.cub", &map), SUCCESS);
+	ASSERT_EQUAL(init_map_matrix("./test/maps/weird_map.cub", &map, &player), PLAYER_INIT_ERROR);
 	ASSERT_EQUAL(map.width, 12);
 	ASSERT_EQUAL(map.height, 9);
 }
@@ -256,8 +257,8 @@ CTEST(parse_map, get_player_position_incorrect)
 	player.angle = (int)INVALID_ORIENTATION;
 	player.angle = INVALID_ORIENTATION;
 
-	ASSERT_EQUAL(parse_map("./maps/weird_map.cub", &map), SUCCESS);
-	ASSERT_EQUAL(init_map_matrix("./maps/weird_map.cub", &map, &player), PLAYER_INIT_ERROR);
+	ASSERT_EQUAL(parse_map("./test/maps/weird_map.cub", &map), SUCCESS);
+	ASSERT_EQUAL(init_map_matrix("./test/maps/weird_map.cub", &map, &player), PLAYER_INIT_ERROR);
 	ASSERT_EQUAL(map.width, 12);
 	ASSERT_EQUAL(map.height, 9);
 }
@@ -269,16 +270,16 @@ CTEST(parse_map, wrong_chars_in_map)
 	player.angle = (int)INVALID_ORIENTATION;
 	player.angle = INVALID_ORIENTATION;
 
-	ASSERT_EQUAL(parse_map("./maps/map_with_wrong_chars.cub", &map), SUCCESS);
-	ASSERT_EQUAL(init_map_matrix("./maps/map_with_wrong_chars.cub", &map, &player), MAP_CONTENT_ERROR);
+	ASSERT_EQUAL(parse_map("./test/maps/map_with_wrong_chars.cub", &map), SUCCESS);
+	ASSERT_EQUAL(init_map_matrix("./test/maps/map_with_wrong_chars.cub", &map, &player),
+				 MAP_CONTENT_ERROR);
 	ASSERT_EQUAL(map.width, 17);
 	ASSERT_EQUAL(map.height, 8);
 }
 
-
 CTEST(get_all, correct_file)
 {
-	char *filename = "./maps/test_all.cub";
+	char *filename = "./test/maps/test_all.cub";
 
 	t_data data;
 	data.player.angle = (int)INVALID_ORIENTATION;
