@@ -11,7 +11,7 @@
  - [x] **The left and right arrow keys of the keyboard must allow you to look left and right in the maze.**
 - [x] **The W, A, S and D keys must allow you to move the point of view through the maze.**
 - [x] **Pressing ESC must close the window and quit the program cleanly.**
-- [ ] **Clicking on the red cross on the window’s frame must close the window and quit the program cleanly.**
+- [x] **Clicking on the red cross on the window’s frame must close the window and quit the program cleanly.**
 - [x] **If the declared screen size in the map is greater than the display resolution, the window size will be set depending to the current display resolution.**
 - [x] **The use of images of the minilibX is strongly recommended.**
 - [x] **Your program must take as a first argument a scene description file with the .cub extension.**
@@ -21,7 +21,7 @@
 - [x] **Except for the map content which always has to be the last, each type of element can be set in any order in the file.**
 - [x] **Except for the map, each type of information from an element can be separated by one or more space(s).**
 - [x] **The map must be parsed as it looks like in the file. Spaces are a valid part of the map, and is up to you to handle. You must be able to parse any kind of map, as long as it respects the maps rules.**
-- [ ] **If any misconfiguration of any kind is encountered in the file, the program
+- [x] **If any misconfiguration of any kind is encountered in the file, the program
 must exit properly and return "Error\n" followed by an explicit error message
 of your choice.**
 

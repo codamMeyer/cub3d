@@ -120,11 +120,17 @@ static t_bool init_window(t_data *data)
 	return (TRUE);
 }
 
+int red_cross(t_data *data)
+{
+	close_window(data);
+	return (1);
+}
+
 t_status run(const char *filename, t_bool save)
 {
 	t_data data;
 	t_status ret;
-
+	
 	init_player(&data);
 	if((ret = parse_input(filename, &data)))
 		return (ret);
@@ -136,8 +142,13 @@ t_status run(const char *filename, t_bool save)
 		return (FALSE);
 	}
 	data.save = save;
-	mlx_hook(data.img.window, 2, 1L << 0, keypressed, &data);
+	mlx_hook(data.img.window, KEY_PRESS_EVENT, KEY_PRESS_MASK, keypressed, &data);
+	mlx_hook(data.img.window, CLIENT_MESSAGE_EVENT, STRUCT_NOTIFY_MASK, red_cross, &data);
 	mlx_loop_hook(data.img.mlx, display, &data);
 	mlx_loop(data.img.mlx);
 	return (TRUE);
 }
+
+
+
+

@@ -7,6 +7,12 @@
 #define BLACK 0xff000000
 #define PI 3.14159265358979323846
 
+// X11 events
+#define KEY_PRESS_EVENT 2
+#define CLIENT_MESSAGE_EVENT 33
+#define KEY_PRESS_MASK (1L << 0)
+#define STRUCT_NOTIFY_MASK (1L << 17)
+
 typedef int t_bool;
 typedef unsigned int t_color;
 
