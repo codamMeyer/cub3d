@@ -84,7 +84,7 @@ t_status parse_map(const char *filename, t_map *map)
 		close(fd);
 		return (MISSING_MAP_ERROR);
 	}
-	ret = get_map_dimentions(fd, &line, map);
+	ret = get_map_dimensions(fd, &line, map);
 	close(fd);
 	return (ret);
 }

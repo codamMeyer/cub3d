@@ -24,8 +24,8 @@ static void	free_mem(char **splits, int i)
 
 static char	**split(char **splits, const char *str, int n_splits, char c)
 {
-	int i;
-	int cur_len;
+	int	i;
+	int	cur_len;
 
 	i = 0;
 	while (i < n_splits)
@@ -35,7 +35,7 @@ static char	**split(char **splits, const char *str, int n_splits, char c)
 			str++;
 		while (str[cur_len] != c && str[cur_len] != '\0')
 			cur_len++;
-		splits[i] = (char*)malloc(cur_len + 1 * sizeof(char));
+		splits[i] = (char *)malloc(cur_len + 1 * sizeof(char));
 		if (splits[i] == NULL)
 		{
 			free_mem(splits, i - 1);
@@ -53,8 +53,8 @@ static char	**split(char **splits, const char *str, int n_splits, char c)
 
 static int	num_of_splits(char const *str, char c)
 {
-	int i;
-	int num_of_splits;
+	int	i;
+	int	num_of_splits;
 
 	i = 0;
 	num_of_splits = 0;
@@ -69,7 +69,7 @@ static int	num_of_splits(char const *str, char c)
 	return (num_of_splits);
 }
 
-char		**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	char	**split_strs;
 	int		n_of_splits;
@@ -77,7 +77,7 @@ char		**ft_split(char const *s, char c)
 	if (s == NULL)
 		return (NULL);
 	n_of_splits = num_of_splits(s, c);
-	split_strs = (char**)malloc((n_of_splits + 1) * sizeof(char*));
+	split_strs = (char **)malloc((n_of_splits + 1) * sizeof(char *));
 	if (split_strs == NULL)
 		return (NULL);
 	if (n_of_splits == 0 || s[0] == '\0')

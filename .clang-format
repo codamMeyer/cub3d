@@ -117,9 +117,10 @@ SpacesInParentheses: false
 SpacesInSquareBrackets: false
 SpaceAfterTemplateKeyword: true
 SpaceBeforeInheritanceColon: true
-
+SpaceBeforeParens: true
 SortUsingDeclarations: true
 SortIncludes: true
+AllowAllArgumentsOnNextLine: false
 
 # Comments are for developers, they should arrange them
 ReflowComments: false

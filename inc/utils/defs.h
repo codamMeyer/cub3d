@@ -22,6 +22,8 @@ typedef struct s_texture
 	t_bool initialized;
 	int width;
 	int height;
+	int bit_per_pixel;
+	int line_size;
 	void *ptr;
 	char *data;
 } t_texture;
@@ -74,6 +76,7 @@ typedef enum e_texture
 	WE = 2,
 	EA = 3,
 	SP = 4,
+	SHADOW = 5,
 } t_texture_enum;
 
 typedef enum e_player_orientation
@@ -117,15 +120,16 @@ typedef struct s_ray
 	t_orientation orientation;
 } t_ray;
 
-typedef struct s_dimentions
+typedef struct s_dimensions
 {
 	int real_height;
 	int height;
+	int real_width;
 	int width;
 	int top;
 	int real_top;
 	int bottom;
-} t_dimentions;
+} t_dimensions;
 
 typedef struct s_img
 {
@@ -160,7 +164,7 @@ typedef struct s_data
 	t_img img;
 	t_map worldMap;
 	t_player player;
-	t_texture textures[5];
+	t_texture textures[6];
 	t_color floor;
 	t_color ceiling;
 	t_bool save;

@@ -122,7 +122,7 @@ t_status populate_map(const int fd, t_map *map, char **line)
 	return (SUCCESS);
 }
 
-t_status get_map_dimentions(const int fd, char **line, t_map *map)
+t_status get_map_dimensions(const int fd, char **line, t_map *map)
 {
 	int bytes_read;
 	t_status ret;

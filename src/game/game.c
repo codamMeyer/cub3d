@@ -15,15 +15,14 @@
 t_texture load_texture(t_data *data, char *filename)
 {
 	t_texture texture;
-	int bit_per_pixel = 0;
-	int size_line = 0;
 	int endian = 0;
 	texture.initialized = FALSE;
 	texture.ptr =
 		mlx_xpm_file_to_image(data->img.mlx, filename, &(texture.width), &(texture.height));
-	if(!texture.ptr)
+	if (!texture.ptr)
 		return (texture);
-	texture.data = mlx_get_data_addr(texture.ptr, &bit_per_pixel, &size_line, &endian);
+	texture.data =
+		mlx_get_data_addr(texture.ptr, &texture.bit_per_pixel, &texture.line_size, &endian);
 	texture.initialized = TRUE;
 	return (texture);
 }
@@ -34,34 +33,45 @@ void ray_casting(t_data *data)
 	t_ray ray;
 
 	ray.angle = data->player.angle + (data->player.FOV / 2);
-	// t_sprite sprites[10];
+	t_sprite sprites[10];
 
-	// t_sprite sprite;
-	// int i = 0;
-	for(int col = 0; col < data->screen.width; col++)
+	t_sprite sprite;
+	int i = 0;
+	sprites[0].center.x = -1;
+	sprites[0].center.y = -1;
+	sprites[0].grid_pos.y = -1;
+	sprites[0].grid_pos.y = -1;
+	for (int col = 0; col < data->screen.width; col++)
 	{
-		find_and_draw_walls(col, data, &ray);
-		// sprite = find_sprites(data, ray.angle);
-		// if(is_valid_grid_position(data->worldMap, sprite.grid_pos))
-		// {
-		// 	if(i > 0)
-		// 	{
-		// 		if(sprite.grid_pos.x != sprites[i - 1].grid_pos.x ||
-		// 		   sprite.grid_pos.y != sprites[i - 1].grid_pos.y)
-		// 		{
-		// 			sprites[i] = sprite;
-		// 			++i;
-		// 		}
-		// 	}
-		// 	else
-		// 	{
-		// 		sprites[i] = sprite;
-		// 		i++;
-		// 	}
-		// }
+		sprite = find_sprites(data, ray.angle);
+		if (is_valid_grid_position(data->worldMap, sprite.grid_pos))
+		{
+			if (i > 0)
+			{
+				if (sprite.grid_pos.x != sprites[i - 1].grid_pos.x ||
+					sprite.grid_pos.y != sprites[i - 1].grid_pos.y)
+				{
+					sprites[i] = sprite;
+					++i;
+				}
+			}
+			else
+			{
+				sprites[i] = sprite;
+				i++;
+			}
+		}
 		ray.angle -= ray_increment;
 	}
-	// draw_sprites(data, &sprites[0], i);
+	ray.angle = data->player.angle + (data->player.FOV / 2);
+	get_sprite_values(data, &sprites[0]);
+	for (int col = 0; col < data->screen.width; col++)
+	{
+		find_and_draw_walls(col, data, &ray);
+		draw_sprites_vertical_line(data, col, 400, sprites[0]);
+		ray.angle -= ray_increment;
+	}
+
 	save_image(data);
 	mlx_put_image_to_window(data->img.mlx, data->img.window, data->img.ptr, 0, 0);
 }
@@ -79,10 +89,11 @@ static t_bool load_textures(t_data *data)
 	data->textures[WE] = load_texture(data, data->textures[WE].filename);
 	data->textures[EA] = load_texture(data, data->textures[EA].filename);
 	data->textures[SP] = load_texture(data, data->textures[SP].filename);
+	data->textures[SHADOW] = load_texture(data, "./textures/tree_wall_shadow.xpm");
 
-	if(!data->textures[NO].initialized || !data->textures[SO].initialized ||
-	   !data->textures[WE].initialized || !data->textures[EA].initialized ||
-	   !data->textures[SP].initialized)
+	if (!data->textures[NO].initialized || !data->textures[SO].initialized ||
+		!data->textures[WE].initialized || !data->textures[EA].initialized ||
+		!data->textures[SP].initialized)
 		return (FALSE);
 	return (TRUE);
 }
@@ -99,22 +110,24 @@ static void update_screen_resolution(t_data *data)
 static t_bool init_window(t_data *data)
 {
 	data->img.mlx = mlx_init();
-	if(!data->img.mlx)
+	if (!data->img.mlx)
 		return (FALSE);
 
 	update_screen_resolution(data);
 	data->img.window =
 		mlx_new_window(data->img.mlx, data->screen.width, data->screen.height, "CUB3D");
-	if(!data->img.window)
+	if (!data->img.window)
 		return (FALSE);
 
 	data->img.ptr = mlx_new_image(data->img.mlx, data->screen.width, data->screen.height);
-	if(!data->img.ptr)
+	if (!data->img.ptr)
 		return (FALSE);
 
-	data->img.addr = mlx_get_data_addr(
-		data->img.ptr, &data->img.bits_per_pixel, &data->img.line_length, &data->img.endian);
-	if(!data->img.addr)
+	data->img.addr = mlx_get_data_addr(data->img.ptr,
+									   &data->img.bits_per_pixel,
+									   &data->img.line_length,
+									   &data->img.endian);
+	if (!data->img.addr)
 		return (FALSE);
 
 	return (TRUE);
@@ -130,13 +143,13 @@ t_status run(const char *filename, t_bool save)
 {
 	t_data data;
 	t_status ret;
-	
+
 	init_player(&data);
-	if((ret = parse_input(filename, &data)))
+	if ((ret = parse_input(filename, &data)))
 		return (ret);
-	if(!init_window(&data))
+	if (!init_window(&data))
 		return (INIT_WINDOW_ERROR);
-	if(!load_textures(&data))
+	if (!load_textures(&data))
 	{
 		close_window(&data);
 		return (FALSE);
@@ -148,7 +161,3 @@ t_status run(const char *filename, t_bool save)
 	mlx_loop(data.img.mlx);
 	return (TRUE);
 }
-
-
-
-

@@ -1,16 +1,16 @@
 #include <bmp/bmp.h>
 #include <game/game.h>
-#include <utils/errors.h>
-#include <stdio.h>
 #include <libft.h>
+#include <stdio.h>
+#include <utils/errors.h>
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
-	t_status error;
-	t_bool save;
+	t_status	error;
+	t_bool		save;
 
 	save = FALSE;
-	if(argc < 2 || argc > 3)
+	if (argc < 2 || argc > 3)
 	{
 		print_error_message(ARG_ERROR);
 		return (1);
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	if (argc == 3 && (ft_strncmp("--save", argv[2], 7) == 0))
 		save = TRUE;
 	error = run(argv[1], save);
-	if(error)
+	if (error)
 	{
 		print_error_message(error);
 		return (1);
