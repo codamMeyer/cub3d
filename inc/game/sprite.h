@@ -1,5 +1,6 @@
 #ifndef SPRITE_H
 #define SPRITE_H
+#include <libft.h>
 #include <utils/defs.h>
 
 typedef struct s_sprite
@@ -16,7 +17,7 @@ typedef struct s_sprite
 	t_dimensions dimensions;
 } t_sprite;
 
-t_sprite find_sprites(t_data *data, double ray_angle);
+void find_sprites(t_data *data, t_list **sprites, double ray_angle);
 t_sprite find_sprite_vertical_line(t_data *data, double ray_angle);
 t_sprite find_sprite_horizontal_line(t_data *data, double ray_angle);
 void draw_sprites(t_data *data, t_sprite *sprites, int size);

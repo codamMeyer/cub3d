@@ -182,12 +182,21 @@ void draw_sprites_vertical_line(t_data *data, int col, double dist_to_wall, t_sp
 	}
 }
 
-t_sprite find_sprites(t_data *data, double ray_angle)
+void find_sprites(t_data *data, t_list **sprites, double ray_angle)
 {
-	t_sprite hor;
-	t_sprite ver;
+	const t_sprite hor = find_sprite_horizontal_line(data, ray_angle);
+	const t_sprite ver = find_sprite_vertical_line(data, ray_angle);
+	const t_sprite closest = find_closest_sprite(data->worldMap, hor, ver, data->player);
 
-	hor = find_sprite_horizontal_line(data, ray_angle);
-	ver = find_sprite_vertical_line(data, ray_angle);
-	return (find_closest_sprite(data->worldMap, hor, ver, data->player));
+	if (is_valid_grid_position(data->worldMap, closest.grid_pos))
+	{
+		t_sprite *sprite = malloc(sizeof(t_sprite));
+		if (sprite)
+		{
+			sprite->center = closest.center;
+			sprite->grid_pos = closest.grid_pos;
+			t_list *new_element = ft_lstnew(sprite);
+			ft_lstadd_back(sprites, new_element);
+		}
+	}
 }

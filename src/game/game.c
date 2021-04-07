@@ -3,7 +3,7 @@
 #include <game/player.h>
 #include <game/sprite.h>
 #include <game/wall_detection.h>
-#include <libft.h>
+#include <libft/libft.h>
 #include <mlx.h>
 #include <parser/parser.h>
 #include <stdio.h>
@@ -27,48 +27,35 @@ t_texture load_texture(t_data *data, char *filename)
 	return (texture);
 }
 
+void find_and_draw_sprites(int col, t_data *data, t_ray *ray)
+{
+	t_list *sprites;
+
+	sprites = NULL;
+	find_sprites(data, &sprites, ray->angle);
+
+	t_list *cur;
+	cur = sprites;
+	while (cur != NULL)
+	{
+		get_sprite_values(data, cur->content);
+		draw_sprites_vertical_line(data, col, 400, *((t_sprite *)cur->content));
+		cur = cur->next;
+	}
+	ft_lstclear(&sprites, free);
+}
+
 void ray_casting(t_data *data)
 {
 	const double ray_increment = (double)data->player.FOV / (double)data->screen.width;
 	t_ray ray;
 
 	ray.angle = data->player.angle + (data->player.FOV / 2);
-	t_sprite sprites[10];
 
-	t_sprite sprite;
-	int i = 0;
-	sprites[0].center.x = -1;
-	sprites[0].center.y = -1;
-	sprites[0].grid_pos.y = -1;
-	sprites[0].grid_pos.y = -1;
 	for (int col = 0; col < data->screen.width; col++)
 	{
-		sprite = find_sprites(data, ray.angle);
-		if (is_valid_grid_position(data->worldMap, sprite.grid_pos))
-		{
-			if (i > 0)
-			{
-				if (sprite.grid_pos.x != sprites[i - 1].grid_pos.x ||
-					sprite.grid_pos.y != sprites[i - 1].grid_pos.y)
-				{
-					sprites[i] = sprite;
-					++i;
-				}
-			}
-			else
-			{
-				sprites[i] = sprite;
-				i++;
-			}
-		}
-		ray.angle -= ray_increment;
-	}
-	ray.angle = data->player.angle + (data->player.FOV / 2);
-	get_sprite_values(data, &sprites[0]);
-	for (int col = 0; col < data->screen.width; col++)
-	{
-		find_and_draw_walls(col, data, &ray);
-		draw_sprites_vertical_line(data, col, 400, sprites[0]);
+		find_and_draw_walls(col, data, &ray); // return dist
+		find_and_draw_sprites(col, data, &ray);
 		ray.angle -= ray_increment;
 	}
 
@@ -161,3 +148,38 @@ t_status run(const char *filename, t_bool save)
 	mlx_loop(data.img.mlx);
 	return (TRUE);
 }
+
+// t_sprite sprites[10];
+
+// t_bool found = FALSE;
+// t_sprite sprite;
+// int i = 0;
+// sprites[0].center.x = -1;
+// sprites[0].center.y = -1;
+// sprites[0].grid_pos.y = -1;
+// sprites[0].grid_pos.y = -1;
+// for (int col = 0; col < data->screen.width; col++)
+// {
+// 	sprite = find_sprites(data, ray.angle);
+// 	if (is_valid_grid_position(data->worldMap, sprite.grid_pos))
+// 	{
+// 		if (i > 0)
+// 		{
+// 			if (sprite.grid_pos.x != sprites[i - 1].grid_pos.x ||
+// 				sprite.grid_pos.y != sprites[i - 1].grid_pos.y)
+// 			{
+// 				sprites[i] = sprite;
+// 				++i;
+// 			}
+// 		}
+// 		else
+// 		{
+// 			sprites[i] = sprite;
+// 			i++;
+// 		}
+// 		found = TRUE;
+// 	}
+// 	ray.angle -= ray_increment;
+// }
+// ray.angle = data->player.angle + (data->player.FOV / 2);
+// get_sprite_values(data, &sprites[0]);
