@@ -121,7 +121,7 @@ void draw_slice(t_data *data, int slice_col, t_ray *ray)
 	draw_ceiling_slice(data, slice_col, dimensions.top, dimensions.height);
 	draw_floor_slice(data, slice_col, dimensions.bottom, dimensions.height);
 
-	if (ray->distance > 450)
+	if (ray->distance > 590)
 		draw_wall_slice(data, slice_col, dimensions, ray, SHADOW);
 	else if (is_facing_north(ray->angle) && ray->orientation == HORIZONTAL)
 		draw_wall_slice(data, slice_col, dimensions, ray, SO);

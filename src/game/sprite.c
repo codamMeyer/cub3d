@@ -106,39 +106,40 @@ static double radians_to_degrees(double radians)
 
 void get_sprite_values(t_data *data, t_sprite *sprite)
 {
-	t_position delta;
-	delta.x = sprite->center.x - data->player.position.x;
-	delta.y = sprite->center.y - data->player.position.y;
+	const t_position delta = {.x = sprite->center.x - data->player.position.x,
+							  .y = sprite->center.y - data->player.position.y};
+	//minus is necessary because the cartesian plan is inverted
+	const double sprite_angle = fix_angle(radians_to_degrees(atan2(-delta.y, delta.x)));
+
 	sprite->dist_to_sprite = get_sprite_distance(sprite->center, data->player.position);
+	const double sprite_to_player_angle = abs_value(sprite_angle - data->player.angle);
 
-	//minus is necessary because our cartesian plan is inverted
-	double sprite_angle = -radians_to_degrees(atan2(delta.y, delta.x));
+	// if (sprite->center.x > data->player.position.x)
+	// 	sprite_to_player_angle = sprite_angle - data->player.angle;
+	// else
+	// 	sprite_to_player_angle = data->player.angle - sprite_angle;
 
-	sprite_angle = fix_angle(sprite_angle);
-	if (sprite->center.x > data->player.position.x)
-		sprite_angle = sprite_angle - data->player.angle;
-	else
-		sprite_angle = data->player.angle - sprite_angle;
 	const double dist_to_plane =
 		((double)data->screen.width / 2.0) / tan(degree_to_radians((double)data->player.FOV / 2.0));
 
-	double corrected_dist = 0.0;
-	double sprite_screen_x = 0.0;
-	double sprite_dist_screen = dist_to_plane * tan(degree_to_radians(sprite_angle));
-	if (sprite->center.x < data->player.position.x || is_facing_north(data->player.angle))
-		sprite_dist_screen = -sprite_dist_screen;
-	sprite_screen_x = (double)data->screen.width / 2.0 - sprite_dist_screen;
-	corrected_dist = cos(degree_to_radians(sprite_angle)) * sprite->dist_to_sprite;
+	double sprite_dist_screen = dist_to_plane * tan(degree_to_radians(sprite_to_player_angle));
+	// if (sprite->center.x < data->player.position.x || is_facing_north(data->player.angle))
+	// 	sprite_dist_screen = -sprite_dist_screen;
+	if (data->player.angle > sprite_angle)
+		sprite_dist_screen *= -1;
+	double sprite_screen_x = (double)data->screen.width / 2.0 - sprite_dist_screen;
+
+	double corrected_dist = cos(degree_to_radians(sprite_to_player_angle)) * sprite->dist_to_sprite;
 	sprite->dist_to_sprite = corrected_dist;
 
 	sprite->dimensions = get_dimensions(sprite->dist_to_sprite, data->player, data->screen);
 	double projected_sprite_width;
 	sprite->height = sprite->dimensions.height;
-	sprite->start_y = -sprite->height / 2.0 + data->screen.height / 2.0;
-	sprite->end_y = sprite->height / 2.0 + data->screen.height / 2.0;
+	sprite->start_y = (data->screen.height / 2.0) - (sprite->height / 2.0);
+	sprite->end_y = sprite->start_y + data->screen.height;
 	projected_sprite_width = sprite->dimensions.width;
-	sprite->start_x = -projected_sprite_width / 2.0 + sprite_screen_x;
-	sprite->end_x = projected_sprite_width / 2.0 + sprite_screen_x;
+	sprite->start_x = sprite_screen_x - (projected_sprite_width / 2.0);
+	sprite->end_x = sprite->start_x + projected_sprite_width;
 }
 
 static t_texture_position
