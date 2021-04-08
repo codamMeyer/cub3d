@@ -139,7 +139,7 @@ t_status run(const char *filename, t_bool save)
 	if (!load_textures(&data))
 	{
 		close_window(&data);
-		return (FALSE);
+		return (TEXTURE_INFO_ERROR);
 	}
 	data.save = save;
 	mlx_hook(data.img.window, KEY_PRESS_EVENT, KEY_PRESS_MASK, keypressed, &data);
