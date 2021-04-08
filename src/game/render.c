@@ -61,6 +61,27 @@ static t_texture_position get_texture_position(const t_texture *texture,
 	return (pos);
 }
 
+t_color apply_shading(double distance, t_color color)
+{
+	t_color shade;
+	unsigned char *address_shade;
+	unsigned char *address_color;
+	int i;
+
+	address_shade = (unsigned char *)&shade;
+	address_color = (unsigned char *)&color;
+
+	if (distance <= 400 || color == BLACK)
+		return (color);
+	i = 0;
+	while (i < 3)
+	{
+		address_shade[i] = address_color[i] * 0.3;
+		++i;
+	}
+	return (shade);
+}
+
 static void draw_wall_slice(t_data *data,
 							int slice_col,
 							t_dimensions wall_dimensions,
@@ -75,6 +96,7 @@ static void draw_wall_slice(t_data *data,
 		texture_pos =
 			get_texture_position(&data->textures[texture], ray, wall_dimensions, wall_index);
 		color = get_pixel_color(&data->textures[texture], texture_pos.x, texture_pos.y);
+		color = apply_shading(ray->distance, color);
 		if ((unsigned int)color != BLACK)
 			my_mlx_pixel_put(&data->img, slice_col, wall_index, color);
 		++wall_index;
@@ -93,11 +115,11 @@ static void draw_floor_slice(t_data *data, int slice_col, int wall_bottom, int w
 
 t_dimensions get_dimensions(double dist_to_wall, t_player player, t_window screen)
 {
-	const double dist_to_plane = (screen.width / 2.0) / tan(degree_to_radians(player.FOV / 2.0));
+	
 	t_dimensions dimensions;
 
-	dimensions.real_height = round((GRID_SIZE / dist_to_wall) * dist_to_plane);
-	dimensions.real_width = round((GRID_SIZE / dist_to_wall) * dist_to_plane);
+	dimensions.real_height = round((GRID_SIZE / dist_to_wall) * player.dist_to_plane);
+	dimensions.real_width = round((GRID_SIZE / dist_to_wall) * player.dist_to_plane);
 	dimensions.height = min_i(dimensions.real_height, screen.height);
 	dimensions.width = min_i(dimensions.real_width, screen.width);
 	dimensions.top = round(((double)screen.height / 2.0) - (dimensions.height / 2.0));
@@ -121,9 +143,7 @@ void draw_slice(t_data *data, int slice_col, t_ray *ray)
 	draw_ceiling_slice(data, slice_col, dimensions.top, dimensions.height);
 	draw_floor_slice(data, slice_col, dimensions.bottom, dimensions.height);
 
-	if (ray->distance > 590)
-		draw_wall_slice(data, slice_col, dimensions, ray, SHADOW);
-	else if (is_facing_north(ray->angle) && ray->orientation == HORIZONTAL)
+	if (is_facing_north(ray->angle) && ray->orientation == HORIZONTAL)
 		draw_wall_slice(data, slice_col, dimensions, ray, SO);
 	else if (is_facing_south(ray->angle) && ray->orientation == HORIZONTAL)
 		draw_wall_slice(data, slice_col, dimensions, ray, NO);

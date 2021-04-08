@@ -4,6 +4,7 @@
 #include <game/sprite.h>
 #include <game/wall_detection.h>
 #include <libft/libft.h>
+#include <math.h>
 #include <mlx.h>
 #include <parser/parser.h>
 #include <stdio.h>
@@ -27,19 +28,18 @@ t_texture load_texture(t_data *data, char *filename)
 	return (texture);
 }
 
-void find_and_draw_sprites(int col, t_data *data, t_ray *ray)
+void find_and_draw_sprites(int col, t_data *data, t_ray *ray, double wall_dist)
 {
 	t_list *sprites;
+	t_list *cur;
 
 	sprites = NULL;
 	find_sprites(data, &sprites, ray->angle);
-
-	t_list *cur;
 	cur = sprites;
 	while (cur != NULL)
 	{
 		get_sprite_values(data, cur->content);
-		draw_sprites_vertical_line(data, col, 400, *((t_sprite *)cur->content));
+		draw_sprites_slice(data, col, wall_dist, *((t_sprite *)cur->content));
 		cur = cur->next;
 	}
 	ft_lstclear(&sprites, free);
@@ -49,13 +49,14 @@ void ray_casting(t_data *data)
 {
 	const double ray_increment = (double)data->player.FOV / (double)data->screen.width;
 	t_ray ray;
+	double dist;
 
 	ray.angle = data->player.angle + (data->player.FOV / 2);
 
 	for (int col = 0; col < data->screen.width; col++)
 	{
-		find_and_draw_walls(col, data, &ray); // return dist
-		find_and_draw_sprites(col, data, &ray);
+		dist = find_and_draw_walls(col, data, &ray);
+		find_and_draw_sprites(col, data, &ray, dist);
 		ray.angle -= ray_increment;
 	}
 
@@ -76,7 +77,6 @@ static t_bool load_textures(t_data *data)
 	data->textures[WE] = load_texture(data, data->textures[WE].filename);
 	data->textures[EA] = load_texture(data, data->textures[EA].filename);
 	data->textures[SP] = load_texture(data, data->textures[SP].filename);
-	data->textures[SHADOW] = load_texture(data, "./textures/tree_wall_shadow.xpm");
 
 	if (!data->textures[NO].initialized || !data->textures[SO].initialized ||
 		!data->textures[WE].initialized || !data->textures[EA].initialized ||
@@ -141,6 +141,8 @@ t_status run(const char *filename, t_bool save)
 		close_window(&data);
 		return (TEXTURE_INFO_ERROR);
 	}
+	data.player.dist_to_plane =
+		(data.screen.width / 2.0) / tan(degree_to_radians(data.player.FOV / 2.0));
 	data.save = save;
 	mlx_hook(data.img.window, KEY_PRESS_EVENT, KEY_PRESS_MASK, keypressed, &data);
 	mlx_hook(data.img.window, CLIENT_MESSAGE_EVENT, STRUCT_NOTIFY_MASK, red_cross, &data);

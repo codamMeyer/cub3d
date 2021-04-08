@@ -20,6 +20,11 @@
   - [🖍️ STEP 6: Drawing walls](#️-step-6-drawing-walls)
   - [🧱 STEP 7: Texture mapped walls](#-step-7-texture-mapped-walls)
       - [What's an XPM file?](#whats-an-xpm-file)
+  - [🌲 STEP 8: Detecting and drawing sprites](#-step-8-detecting-and-drawing-sprites)
+      - [First we find the sprite angle:](#first-we-find-the-sprite-angle)
+      - [Then we calculate the angle between the player and the sprite:](#then-we-calculate-the-angle-between-the-player-and-the-sprite)
+      - [Find dist to plane (this is a constant value):](#find-dist-to-plane-this-is-a-constant-value)
+      - [Define the center of sprite projection](#define-the-center-of-sprite-projection)
 - [📚 Reference](#-reference)
 
 
@@ -108,7 +113,7 @@ Therefore, to render such scene, we can simply trace 320 rays starting from left
     3. Record the distance to the wall (the distance is equal to the length of the ray).
     4. Add the angle increment so that the ray moves to the right (we know from Figure 10 that the value of the angle increment is 60/320 degrees).
     5. Repeat step 2 and 3 for each subsequent column until all 320 rays are cast.
-
+****
 The trick to step 2.A is that instead of checking each pixels, we only have to check each grid. This is because a wall can only appear on a grid boundary. Consider a ray being traced as in the figure bellow. To check whether this ray has hit a wall or not, it is sufficient to check the grid intersection points at 1, 2, 3, 4, 5, and 6.
 
 ![figure 9](./images/figure9.png)
@@ -357,11 +362,33 @@ int get_pixel_color(const t_texture *texture, int x, int y)
 }
 ```
 
+## 🌲 STEP 8: Detecting and drawing sprites
+
+#### First we find the sprite angle:
+![sprite 1](./images/sprite1.png)
+#### Then we calculate the angle between the player and the sprite:
+![sprite 2](./images/sprite2.png)
+#### Find dist to plane (this is a constant value):
+![sprite 3](./images/sprite3.png)
+#### Define the center of sprite projection
+![sprite 4](./images/sprite4.png)
+
+
+
+
+
+
+
+
+
+
+
 # 📚 Reference
 
 
 - [Ray-Casting Tutorial For Game Development And Other Purposes by F. Permadi](https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/)
 
 
-
 [![forthebadge](https://forthebadge.com/images/badges/powered-by-coffee.svg)](https://forthebadge.com)
+
+

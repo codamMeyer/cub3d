@@ -25,36 +25,6 @@ static t_bool hit_sprite(t_map worldMap, t_position pos)
 	return (FALSE);
 }
 
-static t_sprite find_sprite(t_map worldMap, double x_increment, double y_increment, t_position ray)
-{
-	t_sprite sprite;
-	while (!hit_sprite(worldMap, ray))
-	{
-		ray.x += x_increment;
-		ray.y += y_increment;
-	}
-	sprite.grid_pos = to_grid_position(worldMap, ray);
-	sprite.center = get_grid_center(sprite.grid_pos);
-	return (sprite);
-}
-
-t_sprite find_sprite_horizontal_line(t_data *data, double ray_angle)
-{
-	t_position pos;
-	t_sprite sprite;
-	if (is_straight_left_or_right(&pos, ray_angle))
-	{
-		sprite.grid_pos.x = -1;
-		sprite.grid_pos.y = -1;
-		return (sprite);
-	}
-	double tan_angle = tan(degree_to_radians(ray_angle));
-	double y_increment = get_y_increment_for_horizontal_detection(ray_angle);
-	double x_increment = get_x_increment_for_horizontal_detection(ray_angle, tan_angle);
-	pos = get_first_horizontal_intersection(data->player, ray_angle, tan_angle);
-	return (find_sprite(data->worldMap, x_increment, y_increment, pos));
-}
-
 void add_sprites_to_list(t_map worldMap,
 						 t_list **sprites,
 						 double x_increment,
@@ -63,6 +33,8 @@ void add_sprites_to_list(t_map worldMap,
 {
 	t_sprite *sprite;
 	t_bool hit = FALSE;
+	t_grid_position grid_pos;
+
 	while (TRUE)
 	{
 		hit = hit_sprite(worldMap, ray);
@@ -71,8 +43,8 @@ void add_sprites_to_list(t_map worldMap,
 		if (hit)
 		{
 			sprite = malloc(sizeof(t_sprite));
-			sprite->grid_pos = to_grid_position(worldMap, ray);
-			sprite->center = get_grid_center(sprite->grid_pos);
+			grid_pos = to_grid_position(worldMap, ray);
+			sprite->center = get_grid_center(grid_pos);
 			t_list *new_element = ft_lstnew(sprite);
 			ft_lstadd_front(sprites, new_element);
 		}
@@ -84,8 +56,6 @@ void add_sprites_to_list(t_map worldMap,
 void find_sprite_list_horizontal_line(t_data *data, t_list **sprites, double ray_angle)
 {
 	t_position pos;
-	if (is_straight_left_or_right(&pos, ray_angle))
-		return;
 	double tan_angle = tan(degree_to_radians(ray_angle));
 	double y_increment = get_y_increment_for_horizontal_detection(ray_angle);
 	double x_increment = get_x_increment_for_horizontal_detection(ray_angle, tan_angle);
@@ -103,50 +73,6 @@ void find_sprite_list_vertical_line(t_data *data, t_list **sprites, double ray_a
 	add_sprites_to_list(data->worldMap, sprites, x_increment, y_increment, pos);
 }
 
-t_sprite find_sprite_vertical_line(t_data *data, double ray_angle)
-{
-	t_position pos;
-	t_sprite sprite;
-	if (is_straight_up_or_down(&pos, ray_angle))
-	{
-		sprite.center = pos;
-		sprite.grid_pos.x = -1;
-		sprite.grid_pos.y = -1;
-		return (sprite);
-	}
-	double tan_angle = tan(degree_to_radians(ray_angle));
-	double x_increment = get_x_increment_for_vertical_detection(ray_angle);
-	double y_increment = get_y_increment_for_vertical_detection(ray_angle, tan_angle);
-	pos = get_first_vertical_intersection(data->player, ray_angle, tan_angle);
-	return (find_sprite(data->worldMap, x_increment, y_increment, pos));
-}
-
-double get_sprite_distance(t_position sprite_center, t_position player_coord)
-{
-	const double x_diff = (player_coord.x - sprite_center.x) * (player_coord.x - sprite_center.x);
-	const double y_diff = (player_coord.y - sprite_center.y) * (player_coord.y - sprite_center.y);
-	return (sqrt(x_diff + y_diff));
-}
-
-t_sprite
-find_closest_sprite(t_map worldmap, t_sprite horizontal, t_sprite vertical, t_player player)
-{
-	if (is_valid_grid_position(worldmap, horizontal.grid_pos))
-	{
-		const double h_dist = get_sprite_distance(horizontal.center, player.position);
-		if (is_valid_grid_position(worldmap, vertical.grid_pos))
-		{
-			const double v_dist = get_sprite_distance(vertical.center, player.position);
-			if (h_dist < v_dist)
-				return (horizontal);
-			return (vertical);
-		}
-		return (horizontal);
-	}
-	else
-		return (vertical);
-}
-
 static double radians_to_degrees(double radians)
 {
 	return (180.0 * radians / PI);
@@ -156,22 +82,18 @@ void get_sprite_values(t_data *data, t_sprite *sprite)
 {
 	const t_position delta = {.x = sprite->center.x - data->player.position.x,
 							  .y = sprite->center.y - data->player.position.y};
-	//minus is necessary because the cartesian plan is inverted
-	const double sprite_angle = fix_angle(radians_to_degrees(atan2(-delta.y, delta.x)));
-
-	sprite->dist_to_sprite = get_sprite_distance(sprite->center, data->player.position);
+	const double sprite_angle =
+		fix_angle(radians_to_degrees(atan2(-delta.y, delta.x))); //cartesian plan is inverted
 	const double sprite_to_player_angle = abs_value(sprite_angle - data->player.angle);
-	const double dist_to_plane =
-		((double)data->screen.width / 2.0) / tan(degree_to_radians((double)data->player.FOV / 2.0));
+	sprite->dist_to_sprite = get_distance_from_player(sprite->center, data->player.position);
 
-	double sprite_dist_screen = dist_to_plane * tan(degree_to_radians(sprite_to_player_angle));
+	double sprite_screen_center =
+		data->player.dist_to_plane * tan(degree_to_radians(sprite_to_player_angle));
 	if (data->player.angle > sprite_angle)
-		sprite_dist_screen *= -1;
-	double sprite_screen_x = (double)data->screen.width / 2.0 - sprite_dist_screen;
-
+		sprite_screen_center *= -1;
+	double sprite_screen_x = (double)data->screen.width / 2.0 - sprite_screen_center;
 	double corrected_dist = cos(degree_to_radians(sprite_to_player_angle)) * sprite->dist_to_sprite;
 	sprite->dist_to_sprite = corrected_dist;
-
 	sprite->dimensions = get_dimensions(sprite->dist_to_sprite, data->player, data->screen);
 	double projected_sprite_width;
 	sprite->height = sprite->dimensions.height;
@@ -195,44 +117,34 @@ get_texture_position(const t_texture *texture, t_dimensions dimensions, int y_in
 	return (pos);
 }
 
-t_color sample_sprites_vertical_line(t_data *data, int x, int y, t_sprite sprite)
+t_bool is_visible(t_sprite sprite, int col, double dist_to_wall)
 {
-	t_texture_position pos = get_texture_position(&data->textures[SP], sprite.dimensions, y, x);
-	t_color color;
-
-	color = get_pixel_color(&data->textures[SP], pos.x, pos.y);
-	return (color);
+	return (sprite.dist_to_sprite < dist_to_wall && sprite.dist_to_sprite > 0.0 &&
+			col >= sprite.start_x && col <= sprite.end_x);
 }
 
-void draw_sprites_vertical_line(t_data *data, int col, double dist_to_wall, t_sprite sprite)
+void draw_sprites_slice(t_data *data, int col, double dist_to_wall, t_sprite sprite)
 {
+	t_texture_position pos;
+	t_color color;
 	int y;
 
-	if (sprite.dist_to_sprite < dist_to_wall && sprite.dist_to_sprite > 0.0 &&
-		col >= sprite.start_x && col <= sprite.end_x)
+	if (is_visible(sprite, col, dist_to_wall))
 	{
 		y = max_i(sprite.start_y, 0);
 		while (y <= min_i(sprite.end_y, data->screen.height))
 		{
-			t_color color = sample_sprites_vertical_line(data, col - sprite.start_x, y, sprite);
-			if (color != 0xFF000000)
+			pos = get_texture_position(&data->textures[SP],
+									   sprite.dimensions,
+									   y,
+									   col - sprite.start_x);
+			color = get_pixel_color(&data->textures[SP], pos.x, pos.y);
+			color = apply_shading(sprite.dist_to_sprite, color);
+			if (color != BLACK)
 				my_mlx_pixel_put(&data->img, col, y, color);
 			y++;
 		}
 	}
-}
-
-t_bool is_left_or_right(double ray_angle)
-{
-	if (ray_angle == 0.0 || ray_angle == 180.0 || ray_angle == 360.0)
-		return (TRUE);
-	return (FALSE);
-}
-t_bool is_up_or_down(double ray_angle)
-{
-	if (ray_angle == 90.0 || ray_angle == 270.0)
-		return (TRUE);
-	return (FALSE);
 }
 
 void find_sprites(t_data *data, t_list **sprites, double ray_angle)
@@ -242,20 +154,4 @@ void find_sprites(t_data *data, t_list **sprites, double ray_angle)
 		find_sprite_list_horizontal_line(data, sprites, ray_angle);
 	if (!is_up_or_down(ray_angle))
 		find_sprite_list_vertical_line(data, sprites, ray_angle);
-	// t_sprite hor = find_sprite_horizontal_line(data, ray_angle);
-	// t_sprite ver = find_sprite_vertical_line(data, ray_angle);
-
-	// t_sprite closest = find_closest_sprite(data->worldMap, hor, ver, data->player);
-
-	// if (is_valid_grid_position(data->worldMap, closest.grid_pos))
-	// {
-	// 	t_sprite *sprite = malloc(sizeof(t_sprite));
-	// 	if (sprite)
-	// 	{
-	// 		sprite->center = closest.center;
-	// 		sprite->grid_pos = closest.grid_pos;
-	// 		t_list *new_element = ft_lstnew(sprite);
-	// 		ft_lstadd_back(sprites, new_element);
-	// 	}
-	// }
 }

@@ -6,7 +6,6 @@
 typedef struct s_sprite
 {
 	t_position center;
-	t_grid_position grid_pos;
 	int height;
 	int width;
 	int start_y;
@@ -22,6 +21,6 @@ t_sprite find_sprite_vertical_line(t_data *data, double ray_angle);
 t_sprite find_sprite_horizontal_line(t_data *data, double ray_angle);
 void draw_sprites(t_data *data, t_sprite *sprites, int size);
 void get_sprite_values(t_data *data, t_sprite *sprite);
-void draw_sprites_vertical_line(t_data *data, int col, double dist_to_wall, t_sprite sprite);
+void draw_sprites_slice(t_data *data, int col, double dist_to_wall, t_sprite sprite);
 
 #endif

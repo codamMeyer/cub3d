@@ -76,7 +76,6 @@ typedef enum e_texture
 	WE = 2,
 	EA = 3,
 	SP = 4,
-	SHADOW = 5,
 } t_texture_enum;
 
 typedef enum e_player_orientation
@@ -149,6 +148,7 @@ typedef struct s_player
 	int FOV;
 	double angle;
 	int speed;
+	double dist_to_plane;
 } t_player;
 
 typedef struct s_map
