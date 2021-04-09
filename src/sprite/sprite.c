@@ -1,9 +1,10 @@
 #include "sprite.h"
-#include <game/ray_casting_logic.h>
 #include <game/render.h>
-#include <game/wall_detection.h>
 #include <math.h>
+#include <raycast/horizontal_detection.h>
 #include <raycast/raycast_utils.h>
+#include <raycast/raycast_utils2.h>
+#include <raycast/vertical_detection.h>
 #include <stdio.h>
 #include <utils/direction.h>
 #include <utils/math_utils.h>
@@ -93,8 +94,7 @@ void get_sprite_values(t_player player, t_window screen, t_sprite *sprite)
 	if (player.angle > sprite_angle)
 		sprite_screen_center *= -1;
 	double sprite_screen_x = (double)screen.width / 2.0 - sprite_screen_center;
-	double corrected_dist = cos(degree_to_radians(sprite_to_player_angle)) * sprite->dist_to_sprite;
-	sprite->dist_to_sprite = corrected_dist;
+	sprite->dist_to_sprite = fix_fisheye_effect(sprite->dist_to_sprite, sprite_to_player_angle);
 	sprite->dimensions = get_dimensions(sprite->dist_to_sprite, player, screen);
 	double projected_sprite_width;
 	sprite->height = sprite->dimensions.height;

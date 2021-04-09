@@ -7,11 +7,13 @@ LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz  -L./libft -lft
 
 SRC_FILES=									\
 	src/game/game.c 						\
-	src/game/ray_casting_logic.c			\
 	src/game/render.c						\
-	src/game/wall_detection.c				\
 	src/sprite/sprite.c						\
+	src/raycast/horizontal_detection.c		\
+	src/raycast/vertical_detection.c		\
+	src/walls/walls.c    					\
 	src/raycast/raycast_utils.c 			\
+	src/raycast/raycast_utils2.c 			\
 	src/player/player.c						\
 	src/game/keyboard.c						\
 	src/utils/map_utils.c	    			\
@@ -29,15 +31,17 @@ SRC_FILES=									\
 	
 
 INC_FILES=									\
-	inc/game/ray_casting_logic.h			\
 	inc/game/render.h						\
-	inc/game/wall_detection.h				\
 	inc/utils/map_utils.h	    			\
 	inc/utils/utils.h  						\
 	inc/utils/math_utils.h  				\
 	inc/utils/direction.h  					\
 	inc/utils/defs.h						\
+	src/walls/walls.h    					\
 	src/raycast/raycast_utils.h 			\
+	src/raycast/raycast_utils2.h 					\
+	src/raycast/horizontal_detection.h 		\
+	src/raycast/vertical_detection.h 		\
 	src/game/keyboard.h						\
 	src/errors/errors.h						\
 	src/player/player.h						\

@@ -2,7 +2,6 @@
 #include <bmp/bmp.h>
 #include <errors/errors.h>
 #include <game/keyboard.h>
-#include <game/wall_detection.h>
 #include <libft/libft.h>
 #include <math.h>
 #include <mlx.h>
@@ -12,6 +11,7 @@
 #include <stdio.h>
 #include <utils/map_utils.h>
 #include <utils/math_utils.h>
+#include <walls/walls.h>
 
 void close_window(t_data *data)
 {

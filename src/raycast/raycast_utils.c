@@ -1,4 +1,5 @@
 #include "raycast_utils.h"
+#include <math.h>
 #include <utils/math_utils.h>
 
 t_bool is_left_or_right(double ray_angle)
@@ -31,4 +32,9 @@ t_bool detect_hit(t_map worldMap, t_position pos, t_collider collider)
 	if (worldMap.matrix[grid_pos.y][grid_pos.x] == (int)collider)
 		return (TRUE);
 	return (FALSE);
+}
+
+double fix_fisheye_effect(double dist, double angle)
+{
+	return (dist * cos(degree_to_radians(angle)));
 }
