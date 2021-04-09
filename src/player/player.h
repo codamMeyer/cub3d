@@ -1,6 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include <utils/defs.h>
+#include <utils/position.h>
 
 typedef struct s_player
 {

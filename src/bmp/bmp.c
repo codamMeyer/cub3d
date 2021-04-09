@@ -3,15 +3,12 @@
 #include <unistd.h>
 #include <utils/defs.h>
 
-unsigned int get_size_of_bitmap_file(t_window window, const int pixel_data_offset)
-{
-	const int bytes_per_pixel = 4;
-	return (pixel_data_offset + (window.height * window.width * bytes_per_pixel));
-}
-
 t_bmp_header create_bmp_header(t_window window)
 {
 	const int pixel_data_offset = 54;
+	const int bytes_per_pixel = 4;
+	const uint32_t bitmap_size =
+		pixel_data_offset + (window.height * window.width * bytes_per_pixel);
 	t_bmp_header bmp_header;
 
 	bmp_header.bitmap_signature_bytes[0] = 'B';

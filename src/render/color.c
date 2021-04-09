@@ -9,6 +9,11 @@ t_color_rgba get_black_color()
 	return (black);
 }
 
+t_bool is_black(t_color_rgba color)
+{
+	return (color.red == 0 && color.green == 0 && color.blue == 0 && color.opacity == 0xFF);
+}
+
 t_color_rgba get_pixel_color(const t_texture *texture, int x, int y)
 {
 	const int bytes_per_pixel = 4;
@@ -27,14 +32,22 @@ t_color_rgba get_pixel_color(const t_texture *texture, int x, int y)
 	return (color);
 }
 
-t_bool is_black(t_color_rgba color)
-{
-	return (color.red == 0 && color.green == 0 && color.blue == 0 && color.opacity == 0xFF);
-}
-
 t_color_rgba apply_shading(double distance, t_color_rgba color, double min_dist)
 {
 	const double gradient = 1.0 - ((distance - min_dist) / 1000);
+	t_color_rgba shade;
+
+	if (distance <= min_dist || is_black(color))
+		return (color);
+	shade.red = max_i(0, color.red * gradient);
+	shade.green = max_i(0, color.green * gradient);
+	shade.blue = max_i(0, color.blue * gradient);
+	return (shade);
+}
+
+t_color_rgba apply_ceiling_shading(double distance, t_color_rgba color, double min_dist)
+{
+	const double gradient = 1.0 - ((distance - min_dist) / 100);
 	t_color_rgba shade;
 
 	if (distance <= min_dist || is_black(color))
@@ -65,12 +78,10 @@ t_texture_position get_wall_texture_position(const t_texture *texture,
 {
 	const double texture_to_wall_ratio =
 		(double)texture->height / (double)wall_dimensions.real_height;
-
 	const int wall_pixel_position = (wall_index - wall_dimensions.real_top);
 	t_texture_position pos;
 
 	pos.y = floor(wall_pixel_position * texture_to_wall_ratio);
-
 	if (ray->orientation == HORIZONTAL)
 		pos.x = (int)ray->pos.x % texture->width;
 	else

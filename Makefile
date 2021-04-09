@@ -2,7 +2,7 @@ NAME=raycaster
 CC=clang
 CFLAGS= -ggdb3 -Wall -Wextra -Werror -fsanitize=address -fsanitize=leak
 TEST_CFLAGS= -ggdb3 -Wall -Wextra -Werror #-fsanitize=address -fsanitize=leak
-INC_PATH=-I./mlx_linux -I./inc -I./ -I./libft -I./src
+INC_PATH=-I./mlx_linux -I./ -I./libft -I./src
 LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz  -L./libft -lft
 
 SRC_FILES=									\
@@ -15,13 +15,12 @@ SRC_FILES=									\
 	src/raycast/vertical_detection.c		\
 	src/walls/walls.c    					\
 	src/raycast/raycast_utils.c 			\
-	src/raycast/raycast_utils2.c 			\
 	src/player/player.c						\
 	src/game/keyboard.c						\
 	src/utils/map_utils.c	    			\
-	src/utils/utils.c  						\
 	src/utils/math_utils.c  				\
-	src/utils/math_utils2.c  				\
+	src/utils/angle_utils.c  				\
+	src/utils/position.c	  				\
 	src/utils/direction.c  					\
 	src/errors/errors.c						\
 	src/gnl/get_next_line_utils.c			\
@@ -31,13 +30,12 @@ SRC_FILES=									\
 	src/parser/texture_parser.c				\
 	src/parser/map_parser.c					\
 	src/bmp/bmp.c
-	
 
 INC_FILES=									\
 	src/utils/map_utils.h	    			\
-	src/utils/utils.h  						\
 	src/utils/math_utils.h  				\
-	src/utils/math_utils2.c  				\
+	src/utils/angle_utils.c  				\
+	src/utils/position.h	  				\
 	src/utils/direction.h  					\
 	src/utils/defs.h						\
 	src/render/color.h						\
@@ -45,7 +43,6 @@ INC_FILES=									\
 	src/render/render_utils.h				\
 	src/walls/walls.h    					\
 	src/raycast/raycast_utils.h 			\
-	src/raycast/raycast_utils2.h 			\
 	src/raycast/horizontal_detection.h 		\
 	src/raycast/vertical_detection.h 		\
 	src/game/keyboard.h						\

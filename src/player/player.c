@@ -1,9 +1,9 @@
 #include "player.h"
 #include <math.h>
+#include <utils/angle_utils.h>
 #include <utils/math_utils.h>
-#include <utils/math_utils2.h>
 
-t_player create_player()
+t_player create_player(void)
 {
 	t_player player;
 
@@ -31,39 +31,44 @@ static t_bool move(t_player *player, t_map worldMap, t_position new_pos)
 
 t_bool move_left(t_player *player, t_map worldMap)
 {
-	const t_position new_pos = {
-		.x = (player->position.x +
-			  floor(cos(degree_to_radians(player->angle + 90)) * player->speed)),
-		.y =
-			player->position.y - floor(sin(degree_to_radians(player->angle + 90)) * player->speed)};
+	const double dir_x = cos(degree_to_radians(player->angle + 90));
+	const double dir_y = sin(degree_to_radians(player->angle + 90));
+	const int mov_x = floor(dir_x * player->speed);
+	const int mov_y = floor(dir_y * player->speed);
+	const t_position new_pos = {.x = (player->position.x + mov_x), .y = player->position.y - mov_y};
 
 	return (move(player, worldMap, new_pos));
 }
 
 t_bool move_right(t_player *player, t_map worldMap)
 {
-	const t_position new_pos = {
-		.x = player->position.x + floor(cos(degree_to_radians(player->angle - 90)) * player->speed),
-		.y =
-			player->position.y - floor(sin(degree_to_radians(player->angle - 90)) * player->speed)};
+	const double dir_x = cos(degree_to_radians(player->angle - 90));
+	const double dir_y = sin(degree_to_radians(player->angle - 90));
+	const int mov_x = floor(dir_x * player->speed);
+	const int mov_y = floor(dir_y * player->speed);
+	const t_position new_pos = {.x = (player->position.x + mov_x), .y = player->position.y - mov_y};
 
 	return (move(player, worldMap, new_pos));
 }
 
 t_bool move_forward(t_player *player, t_map worldMap)
 {
-	const t_position new_pos = {
-		.x = player->position.x + floor(cos(degree_to_radians(player->angle)) * player->speed),
-		.y = player->position.y - floor(sin(degree_to_radians(player->angle)) * player->speed)};
+	const double dir_x = cos(degree_to_radians(player->angle));
+	const double dir_y = sin(degree_to_radians(player->angle));
+	const int mov_x = floor(dir_x * player->speed);
+	const int mov_y = floor(dir_y * player->speed);
+	const t_position new_pos = {.x = player->position.x + mov_x, .y = player->position.y - mov_y};
 
 	return (move(player, worldMap, new_pos));
 }
 
 t_bool move_backward(t_player *player, t_map worldMap)
 {
-	const t_position new_pos = {
-		.x = player->position.x - floor(cos(degree_to_radians(player->angle)) * player->speed),
-		.y = player->position.y + floor(sin(degree_to_radians(player->angle)) * player->speed)};
+	const double dir_x = cos(degree_to_radians(player->angle));
+	const double dir_y = sin(degree_to_radians(player->angle));
+	const int mov_x = floor(dir_x * player->speed);
+	const int mov_y = floor(dir_y * player->speed);
+	const t_position new_pos = {.x = player->position.x - mov_x, .y = player->position.y + mov_y};
 
 	return (move(player, worldMap, new_pos));
 }

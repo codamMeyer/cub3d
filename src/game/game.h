@@ -2,6 +2,7 @@
 #define RAYTRACER_H
 #include <errors/errors.h>
 #include <player/player.h>
+#include <render/color.h>
 #include <utils/defs.h>
 
 typedef struct s_window

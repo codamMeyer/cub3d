@@ -1,7 +1,8 @@
 #ifndef PARSER_TEXTURE_H
-#define PARSER_TEXTURE_H
-#include <errors/errors.h>
-#include <utils/defs.h>
+# define PARSER_TEXTURE_H
+# include <errors/errors.h>
+# include <render/color.h>
+# include <utils/defs.h>
 
 t_texture_enum texture_to_enum(char *texture_type);
 t_bool is_texture(const char *line);

@@ -4,8 +4,8 @@
 #include <parser/utils_parser.h>
 #include <player/player.h>
 #include <stdio.h>
+#include <utils/angle_utils.h>
 #include <utils/math_utils.h>
-#include <utils/math_utils2.h>
 
 static t_player_orientation get_orientation(char c)
 {

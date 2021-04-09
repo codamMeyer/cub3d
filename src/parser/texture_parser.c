@@ -3,16 +3,18 @@
 #include <parser/utils_parser.h>
 #include <stdio.h>
 
-static t_bool is_valid_color_range(char **colors)
+static t_bool	is_valid_color_range(char **colors)
 {
-	const int red = ft_atoi(colors[2]);
-	const int green = ft_atoi(colors[1]);
-	const int blue = ft_atoi(colors[0]);
+	const int	red = ft_atoi(colors[2]);
+	const int	green = ft_atoi(colors[1]);
+	const int	blue = ft_atoi(colors[0]);
 
-	return ((red >= 0 && red <= 255) && (green >= 0 && green <= 255) && (blue >= 0 && blue <= 255));
+	return ((red >= 0 && red <= 255) && \
+			(green >= 0 && green <= 255) && \
+			(blue >= 0 && blue <= 255));
 }
 
-t_texture_enum texture_to_enum(char *texture_type)
+t_texture_enum	texture_to_enum(char *texture_type)
 {
 	if (ft_strncmp("NO", texture_type, 2) == 0)
 		return (NO);
@@ -26,7 +28,7 @@ t_texture_enum texture_to_enum(char *texture_type)
 		return (SP);
 }
 
-t_bool is_texture(const char *line)
+t_bool	is_texture(const char *line)
 {
 	if (ft_strncmp("NO", line, 2) == 0)
 		return (TRUE);
@@ -41,12 +43,14 @@ t_bool is_texture(const char *line)
 	return (FALSE);
 }
 
-t_status get_texture(const char *line, t_texture textures[])
+t_status	get_texture(const char *line, t_texture textures[])
 {
-	char **split = NULL;
-	t_texture_enum text_index;
-	t_status ret = TEXTURE_INFO_ERROR;
+	char			**split;
+	t_texture_enum	text_index;
+	t_status		ret;
 
+	split = NULL;
+	ret = TEXTURE_INFO_ERROR;
 	split = ft_split(line, ' ');
 	if (!split)
 		return (MALLOC_ERROR);
@@ -60,11 +64,13 @@ t_status get_texture(const char *line, t_texture textures[])
 	return (ret);
 }
 
-t_status get_color(const char *line, t_color_rgba *color)
+t_status	get_color(const char *line, t_color_rgba *color)
 {
-	char **split = NULL;
-	t_status ret = COLOR_ERROR;
+	char		**split;
+	t_status	ret;
 
+	ret = COLOR_ERROR;
+	split = NULL;
 	split = ft_split(&line[1], ',');
 	if (!split)
 		return (MALLOC_ERROR);

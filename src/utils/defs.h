@@ -7,14 +7,6 @@
 
 typedef int t_bool;
 
-typedef struct s_color_rgba
-{
-	uint8_t blue;
-	uint8_t green;
-	uint8_t red;
-	uint8_t opacity;
-} t_color_rgba;
-
 typedef struct s_texture
 {
 	char filename[200];
@@ -59,31 +51,6 @@ typedef enum e_orientation
 	HORIZONTAL
 } t_orientation;
 
-typedef struct s_position
-{
-	double x;
-	double y;
-} t_position;
-
-typedef struct s_grid_position
-{
-	int x;
-	int y;
-} t_grid_position;
-
-typedef struct s_texture_position
-{
-	int x;
-	int y;
-} t_texture_position;
-
-typedef struct s_ray
-{
-	t_position pos;
-	double distance;
-	double angle;
-	t_orientation orientation;
-} t_ray;
 
 typedef struct s_dimensions
 {

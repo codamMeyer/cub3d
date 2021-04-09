@@ -8,7 +8,25 @@ static void draw_ceiling_slice(t_data *data, int slice_col, int wall_top, int wa
 	int i = 0;
 	while (i < wall_top + (wall_height / 2))
 	{
-		my_mlx_pixel_put(&data->img, slice_col, i, data->ceiling);
+		t_color_rgba color =
+			apply_ceiling_shading(i,
+								  data->ceiling,
+								  (data->screen.height / 2) - (data->screen.height / 15));
+		my_mlx_pixel_put(&data->img, slice_col, i, color);
+		++i;
+	}
+}
+
+static void draw_floor_slice(t_data *data, int slice_col, int wall_bottom, int wall_height)
+{
+	int i = wall_bottom - (wall_height / 2);
+	while (i < data->screen.height)
+	{
+		t_color_rgba color =
+			apply_floor_shading(i,
+								data->floor,
+								(data->screen.height / 2) + (data->screen.height / 10));
+		my_mlx_pixel_put(&data->img, slice_col, i, color);
 		++i;
 	}
 }
@@ -38,20 +56,6 @@ static void draw_wall_slice(t_data *data,
 		if (!is_black(color))
 			my_mlx_pixel_put(&data->img, slice_col, wall_index, color);
 		++wall_index;
-	}
-}
-
-static void draw_floor_slice(t_data *data, int slice_col, int wall_bottom, int wall_height)
-{
-	int i = wall_bottom - (wall_height / 2);
-	while (i < data->screen.height)
-	{
-		t_color_rgba color =
-			apply_floor_shading(i,
-								data->floor,
-								(data->screen.height / 2) + (data->screen.height / 10));
-		my_mlx_pixel_put(&data->img, slice_col, i, color);
-		++i;
 	}
 }
 

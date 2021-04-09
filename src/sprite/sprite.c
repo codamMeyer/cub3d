@@ -2,14 +2,12 @@
 #include <math.h>
 #include <raycast/horizontal_detection.h>
 #include <raycast/raycast_utils.h>
-#include <raycast/raycast_utils2.h>
 #include <raycast/vertical_detection.h>
 #include <render/render_utils.h>
 #include <stdio.h>
+#include <utils/angle_utils.h>
 #include <utils/direction.h>
 #include <utils/math_utils.h>
-#include <utils/utils.h>
-#include <utils/math_utils2.h>
 
 static t_bool hit_sprite(t_map worldMap, t_position pos)
 {

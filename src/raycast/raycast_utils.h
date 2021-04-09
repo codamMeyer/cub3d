@@ -1,6 +1,7 @@
 #ifndef RAYCAST_UTILS_H
 #define RAYCAST_UTILS_H
 #include <utils/defs.h>
+#include <utils/position.h>
 
 t_bool is_left_or_right(double ray_angle);
 t_bool is_up_or_down(double ray_angle);

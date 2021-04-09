@@ -1,4 +1,4 @@
-#include "math_utils2.h"
+#include "position.h"
 #include "map_utils.h"
 #include <math.h>
 
@@ -12,20 +12,6 @@ t_grid_position to_grid_position(t_map worldMap, t_position pos)
 		grid_pos.y = INVALID;
 	}
 	return (grid_pos);
-}
-
-double degree_to_radians(double degree)
-{
-	return (degree * M_PI / 180.0);
-}
-
-double fix_angle(double angle)
-{
-	if (angle > 359)
-		angle -= 360;
-	if (angle < 0)
-		angle += 360;
-	return angle;
 }
 
 t_position get_grid_center(t_grid_position grid_pos)
@@ -42,4 +28,20 @@ t_bool is_valid_grid_position(t_map worldmap, t_grid_position position)
 {
 	return ((position.x > 0 && position.x < worldmap.width) &&
 			(position.y > 0 && position.y < worldmap.height));
+}
+
+t_position create_invalid_position()
+{
+	t_position pos;
+
+	pos.x = INVALID;
+	pos.y = INVALID;
+	return (pos);
+}
+
+double get_distance_from_player(t_position ray_coord, t_position player_coord)
+{
+	const double x_diff = (player_coord.x - ray_coord.x) * (player_coord.x - ray_coord.x);
+	const double y_diff = (player_coord.y - ray_coord.y) * (player_coord.y - ray_coord.y);
+	return (sqrt(x_diff + y_diff));
 }

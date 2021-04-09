@@ -9,9 +9,9 @@
 #include <player/player.h>
 #include <src/sprite/sprite.h>
 #include <stdio.h>
+#include <utils/angle_utils.h>
 #include <utils/map_utils.h>
 #include <utils/math_utils.h>
-#include <utils/math_utils2.h>
 #include <walls/walls.h>
 
 void close_window(t_data *data)
