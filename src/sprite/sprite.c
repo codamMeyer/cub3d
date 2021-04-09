@@ -1,10 +1,10 @@
 #include "sprite.h"
-#include <game/render.h>
 #include <math.h>
 #include <raycast/horizontal_detection.h>
 #include <raycast/raycast_utils.h>
 #include <raycast/raycast_utils2.h>
 #include <raycast/vertical_detection.h>
+#include <render/render_utils.h>
 #include <stdio.h>
 #include <utils/direction.h>
 #include <utils/math_utils.h>
@@ -122,11 +122,6 @@ t_bool is_visible(t_sprite sprite, int col, double dist_to_wall)
 {
 	return (sprite.dist_to_sprite < dist_to_wall && sprite.dist_to_sprite > 0.0 &&
 			col >= sprite.start_x && col <= sprite.end_x);
-}
-
-static t_bool is_black(t_color_rgba color)
-{
-	return (color.red == 0 && color.green == 0 && color.blue == 0 && color.opacity == 0xFF);
 }
 
 void draw_sprites_slice(t_data *data, int col, double dist_to_wall, t_sprite sprite)

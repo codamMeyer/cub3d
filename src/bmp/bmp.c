@@ -1,6 +1,5 @@
 #include "bmp.h"
 #include <fcntl.h>
-#include <game/render.h>
 #include <unistd.h>
 #include <utils/defs.h>
 

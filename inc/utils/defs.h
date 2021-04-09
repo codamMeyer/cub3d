@@ -7,6 +7,14 @@
 
 typedef int t_bool;
 
+typedef struct s_color_rgba
+{
+	uint8_t blue;
+	uint8_t green;
+	uint8_t red;
+	uint8_t opacity;
+} t_color_rgba;
+
 typedef struct s_texture
 {
 	char filename[200];
@@ -25,15 +33,6 @@ typedef enum e_collider
 	WALL,
 	SPRITE
 } t_collider;
-
-typedef struct s_color_rgba
-{
-	uint8_t blue;
-	uint8_t green;
-	uint8_t red;
-	uint8_t opacity;
-} t_color_rgba;
-
 
 typedef enum e_texture
 {

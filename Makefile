@@ -6,8 +6,10 @@ INC_PATH=-I./mlx_linux -I./inc -I./ -I./libft -I./src
 LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz  -L./libft -lft
 
 SRC_FILES=									\
+	src/render/render.c						\
+	src/render/render_utils.c				\
+	src/render/color.c						\
 	src/game/game.c 						\
-	src/game/render.c						\
 	src/sprite/sprite.c						\
 	src/raycast/horizontal_detection.c		\
 	src/raycast/vertical_detection.c		\
@@ -31,15 +33,17 @@ SRC_FILES=									\
 	
 
 INC_FILES=									\
-	inc/game/render.h						\
 	inc/utils/map_utils.h	    			\
 	inc/utils/utils.h  						\
 	inc/utils/math_utils.h  				\
 	inc/utils/direction.h  					\
 	inc/utils/defs.h						\
+	src/render/color.h						\
+	src/render/render.h						\
+	src/render/render_utils.h				\
 	src/walls/walls.h    					\
 	src/raycast/raycast_utils.h 			\
-	src/raycast/raycast_utils2.h 					\
+	src/raycast/raycast_utils2.h 			\
 	src/raycast/horizontal_detection.h 		\
 	src/raycast/vertical_detection.h 		\
 	src/game/keyboard.h						\
