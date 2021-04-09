@@ -11,8 +11,9 @@ SRC_FILES=									\
 	src/game/render.c						\
 	src/game/wall_detection.c				\
 	src/sprite/sprite.c						\
+	src/raycast/raycast_utils.c 			\
 	src/player/player.c						\
-	src/game/keyboard.c					\
+	src/game/keyboard.c						\
 	src/utils/map_utils.c	    			\
 	src/utils/utils.c  						\
 	src/utils/math_utils.c  				\
@@ -36,7 +37,8 @@ INC_FILES=									\
 	inc/utils/math_utils.h  				\
 	inc/utils/direction.h  					\
 	inc/utils/defs.h						\
-	src/game/keyboard.h					\
+	src/raycast/raycast_utils.h 			\
+	src/game/keyboard.h						\
 	src/errors/errors.h						\
 	src/player/player.h						\
 	src/game/game.h 						\

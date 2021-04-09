@@ -3,6 +3,7 @@
 #include <game/render.h>
 #include <game/wall_detection.h>
 #include <math.h>
+#include <raycast/raycast_utils.h>
 #include <stdio.h>
 #include <utils/direction.h>
 #include <utils/math_utils.h>
@@ -13,15 +14,9 @@ static t_bool hit_sprite(t_map worldMap, t_position pos)
 	t_grid_position grid_pos = to_grid_position(worldMap, pos);
 	if (!is_valid_grid_position(worldMap, grid_pos))
 		return (INVALID);
-	grid_pos.x = max_i(grid_pos.x, 0);
-	grid_pos.y = max_i(grid_pos.y, 0);
-	grid_pos.x = min_i(grid_pos.x, worldMap.width - 1);
-	grid_pos.y = min_i(grid_pos.y, worldMap.height - 1);
-
+	keep_inside_map(&grid_pos, worldMap);
 	if (worldMap.matrix[grid_pos.y][grid_pos.x] == SPRITE)
-	{
 		return (TRUE);
-	}
 	return (FALSE);
 }
 
@@ -150,7 +145,7 @@ void draw_sprites_slice(t_data *data, int col, double dist_to_wall, t_sprite spr
 									   y,
 									   col - sprite.start_x);
 			color = get_pixel_color(&data->textures[SP], pos.x, pos.y);
-			color = apply_shading(sprite.dist_to_sprite, color);
+			color = apply_shading(sprite.dist_to_sprite, color, 400);
 			if (!is_black(color))
 				my_mlx_pixel_put(&data->img, col, y, color);
 			y++;

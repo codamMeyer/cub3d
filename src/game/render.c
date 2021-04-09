@@ -68,9 +68,8 @@ static t_bool is_black(t_color_rgba color)
 	return (color.red == 0 && color.green == 0 && color.blue == 0 && color.opacity == 0xFF);
 }
 
-t_color_rgba apply_shading(double distance, t_color_rgba color)
+t_color_rgba apply_shading(double distance, t_color_rgba color, double min_dist)
 {
-	const int min_dist = 400;
 	const double gradient = 1.0 - ((distance - min_dist) / 1000);
 	t_color_rgba shade;
 
@@ -97,11 +96,30 @@ static void draw_wall_slice(t_data *data,
 		texture_pos =
 			get_texture_position(&data->textures[texture], ray, wall_dimensions, wall_index);
 		color = get_pixel_color(&data->textures[texture], texture_pos.x, texture_pos.y);
-		color = apply_shading(ray->distance, color);
+		if (ray->orientation == VERTICAL)
+		{
+			color.red *= 0.8;
+			color.green *= 0.8;
+			color.blue *= 0.8;
+		}
+		color = apply_shading(ray->distance, color, 400);
 		if (!is_black(color))
 			my_mlx_pixel_put(&data->img, slice_col, wall_index, color);
 		++wall_index;
 	}
+}
+
+static t_color_rgba apply_floor_shading(double distance, t_color_rgba color, double min_dist)
+{
+	const double gradient = 1.0 - ((distance - min_dist) / 100);
+	t_color_rgba shade;
+
+	if (distance >= min_dist || is_black(color))
+		return (color);
+	shade.red = max_i(0, color.red / gradient);
+	shade.green = max_i(0, color.green / gradient);
+	shade.blue = max_i(0, color.blue / gradient);
+	return (shade);
 }
 
 static void draw_floor_slice(t_data *data, int slice_col, int wall_bottom, int wall_height)
@@ -109,7 +127,11 @@ static void draw_floor_slice(t_data *data, int slice_col, int wall_bottom, int w
 	int i = wall_bottom - (wall_height / 2);
 	while (i < data->screen.height)
 	{
-		my_mlx_pixel_put(&data->img, slice_col, i, data->floor);
+		t_color_rgba color =
+			apply_floor_shading(i,
+								data->floor,
+								(data->screen.height / 2) + (data->screen.height / 10));
+		my_mlx_pixel_put(&data->img, slice_col, i, color);
 		++i;
 	}
 }

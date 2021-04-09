@@ -2,7 +2,19 @@
 #include <game/render.h>
 #include <game/wall_detection.h>
 #include <math.h>
+#include <raycast/raycast_utils.h>
 #include <utils/math_utils.h>
+
+
+static t_position find_wall(t_map worldMap, double x_increment, double y_increment, t_position ray)
+{
+	while (!detect_hit(worldMap, ray, WALL))
+	{
+		ray.x += x_increment;
+		ray.y += y_increment;
+	}
+	return (ray);
+}
 
 t_position create_invalid_position()
 {
