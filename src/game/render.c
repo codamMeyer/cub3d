@@ -9,26 +9,28 @@
 #include <utils/math_utils.h>
 #include <utils/utils.h>
 
-t_color get_pixel_color(const t_texture *texture, int x, int y)
+t_color_rgba get_black_color()
+{
+	const t_color_rgba black = {.red = 0, .green = 0, .blue = 0, .opacity = 0xFF};
+
+	return (black);
+}
+
+t_color_rgba get_pixel_color(const t_texture *texture, int x, int y)
 {
 	const int bytes_per_pixel = 4;
-	unsigned char *color_address;
-	t_color color;
-	int index;
-	int i;
-	color = BLACK;
-	color_address = (unsigned char *)&color;
+	const int index = (x + y * texture->width) * bytes_per_pixel;
+	t_color_rgba color;
+
+	color = get_black_color();
 	if (x >= texture->width || y >= texture->height)
 		return (color);
 	if (x < 0 || y < 0)
 		return (color);
-	index = (x + y * texture->width) * bytes_per_pixel;
-	i = 0;
-	while (i < bytes_per_pixel)
-	{
-		color_address[i] = texture->data[index + i];
-		++i;
-	}
+	color.red = texture->data[index + 2];
+	color.green = texture->data[index + 1];
+	color.blue = texture->data[index];
+	color.opacity = texture->data[index + 3];
 	return (color);
 }
 
@@ -61,24 +63,22 @@ static t_texture_position get_texture_position(const t_texture *texture,
 	return (pos);
 }
 
-t_color apply_shading(double distance, t_color color)
+static t_bool is_black(t_color_rgba color)
 {
-	t_color shade;
-	unsigned char *address_shade;
-	unsigned char *address_color;
-	int i;
+	return (color.red == 0 && color.green == 0 && color.blue == 0 && color.opacity == 0xFF);
+}
 
-	address_shade = (unsigned char *)&shade;
-	address_color = (unsigned char *)&color;
+t_color_rgba apply_shading(double distance, t_color_rgba color)
+{
+	const int min_dist = 400;
+	const double gradient = 1.0 - ((distance - min_dist) / 1000);
+	t_color_rgba shade;
 
-	if (distance <= 400 || color == BLACK)
+	if (distance <= min_dist || is_black(color))
 		return (color);
-	i = 0;
-	while (i < 3)
-	{
-		address_shade[i] = address_color[i] * 0.3;
-		++i;
-	}
+	shade.red = max_i(0, color.red * gradient);
+	shade.green = max_i(0, color.green * gradient);
+	shade.blue = max_i(0, color.blue * gradient);
 	return (shade);
 }
 
@@ -89,7 +89,8 @@ static void draw_wall_slice(t_data *data,
 							t_texture_enum texture)
 {
 	int wall_index = wall_dimensions.top;
-	t_color color;
+	t_color_rgba color;
+
 	t_texture_position texture_pos;
 	while (wall_index <= wall_dimensions.bottom)
 	{
@@ -97,7 +98,7 @@ static void draw_wall_slice(t_data *data,
 			get_texture_position(&data->textures[texture], ray, wall_dimensions, wall_index);
 		color = get_pixel_color(&data->textures[texture], texture_pos.x, texture_pos.y);
 		color = apply_shading(ray->distance, color);
-		if ((unsigned int)color != BLACK)
+		if (!is_black(color))
 			my_mlx_pixel_put(&data->img, slice_col, wall_index, color);
 		++wall_index;
 	}
@@ -115,7 +116,7 @@ static void draw_floor_slice(t_data *data, int slice_col, int wall_bottom, int w
 
 t_dimensions get_dimensions(double dist_to_wall, t_player player, t_window screen)
 {
-	
+
 	t_dimensions dimensions;
 
 	dimensions.real_height = round((GRID_SIZE / dist_to_wall) * player.dist_to_plane);
@@ -128,14 +129,6 @@ t_dimensions get_dimensions(double dist_to_wall, t_player player, t_window scree
 
 	return (dimensions);
 }
-
-// static t_collider get_collider_type(t_map worldmap, t_position pos)
-// {
-// 	t_grid_position grid_pos = to_grid_position(worldmap, pos);
-// 	if(grid_pos.x == INVALID || grid_pos.y == INVALID)
-// 		return (INVALID);
-// 	return (worldmap.matrix[grid_pos.y][grid_pos.x]);
-// }
 
 void draw_slice(t_data *data, int slice_col, t_ray *ray)
 {

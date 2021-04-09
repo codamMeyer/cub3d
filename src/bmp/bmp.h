@@ -1,5 +1,6 @@
 #ifndef BMP_H
 #define BMP_H
+#include <game/game.h>
 #include <stdint.h>
 #include <utils/defs.h>
 
@@ -39,6 +40,6 @@ unsigned int get_size_of_bitmap_file(t_window window, const int pixel_data_offse
 t_bmp_header create_bmp_header(t_window window);
 t_bmp_info_header create_bmp_info_header(t_window window);
 void create_bmp_file(t_window window, void *image);
-void save_image(t_data *data);
+void save_image(t_window screen, void *address, t_bool save);
 
 #endif

@@ -1,17 +1,24 @@
+#include "game.h"
 #include <bmp/bmp.h>
-#include <game/game.h>
-#include <game/player.h>
-#include <game/sprite.h>
+#include <errors/errors.h>
+#include <game/keyboard.h>
 #include <game/wall_detection.h>
 #include <libft/libft.h>
 #include <math.h>
 #include <mlx.h>
 #include <parser/parser.h>
+#include <player/player.h>
+#include <src/sprite/sprite.h>
 #include <stdio.h>
-#include <utils/errors.h>
-#include <utils/keyboard.h>
 #include <utils/map_utils.h>
 #include <utils/math_utils.h>
+
+void close_window(t_data *data)
+{
+	free_matrix(data->worldMap.matrix, data->worldMap.height);
+	mlx_destroy_window(data->img.mlx, data->img.window);
+	exit(0);
+}
 
 t_texture load_texture(t_data *data, char *filename)
 {
@@ -34,11 +41,11 @@ void find_and_draw_sprites(int col, t_data *data, t_ray *ray, double wall_dist)
 	t_list *cur;
 
 	sprites = NULL;
-	find_sprites(data, &sprites, ray->angle);
+	find_sprites(data->player, data->worldMap, &sprites, ray->angle);
 	cur = sprites;
 	while (cur != NULL)
 	{
-		get_sprite_values(data, cur->content);
+		get_sprite_values(data->player, data->screen, cur->content);
 		draw_sprites_slice(data, col, wall_dist, *((t_sprite *)cur->content));
 		cur = cur->next;
 	}
@@ -60,7 +67,7 @@ void ray_casting(t_data *data)
 		ray.angle -= ray_increment;
 	}
 
-	save_image(data);
+	save_image(data->screen, data->img.addr, data->save);
 	mlx_put_image_to_window(data->img.mlx, data->img.window, data->img.ptr, 0, 0);
 }
 
@@ -116,7 +123,6 @@ static t_bool init_window(t_data *data)
 									   &data->img.endian);
 	if (!data->img.addr)
 		return (FALSE);
-
 	return (TRUE);
 }
 
@@ -131,7 +137,7 @@ t_status run(const char *filename, t_bool save)
 	t_data data;
 	t_status ret;
 
-	init_player(&data);
+	data.player = create_player();
 	if ((ret = parse_input(filename, &data)))
 		return (ret);
 	if (!init_window(&data))

@@ -1,6 +1,8 @@
 #ifndef MAP_PARSER_H
 #define MAP_PARSER_H
+#include <errors/errors.h>
 #include <utils/defs.h>
+#include <player/player.h>
 
 t_bool check_map_content(t_map *map, t_player *player);
 t_status populate_map(const int fd, t_map *map, char **line);

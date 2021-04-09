@@ -1,20 +1,11 @@
 #ifndef DEFS_H
 #define DEFS_H
-
+#include <stdint.h>
 #define INVALID -1
 #define TRUE 1
 #define FALSE 0
-#define BLACK 0xff000000
-#define PI 3.14159265358979323846
-
-// X11 events
-#define KEY_PRESS_EVENT 2
-#define CLIENT_MESSAGE_EVENT 33
-#define KEY_PRESS_MASK (1L << 0)
-#define STRUCT_NOTIFY_MASK (1L << 17)
 
 typedef int t_bool;
-typedef unsigned int t_color;
 
 typedef struct s_texture
 {
@@ -28,12 +19,6 @@ typedef struct s_texture
 	char *data;
 } t_texture;
 
-typedef struct s_window
-{
-	int width;
-	int height;
-} t_window;
-
 typedef enum e_collider
 {
 	EMPTY,
@@ -41,32 +26,14 @@ typedef enum e_collider
 	SPRITE
 } t_collider;
 
-// typedef struct s_color_rgb
-// {
-// 	unsigned char blue;
-// 	unsigned char green;
-// 	unsigned char red;
-// 	unsigned char oppacity;
-
-// } t_color_rgb;
-
-typedef enum e_status
+typedef struct s_color_rgba
 {
-	SUCCESS = 0,
-	FILE_ERROR,
-	EXTENSION_ERROR,
-	RESOLUTION_ERROR,
-	TEXTURE_INFO_ERROR,
-	COLOR_ERROR,
-	MISSING_MAP_ERROR,
-	MAP_CONTENT_ERROR,
-	MAP_NOT_SURROUNDED_ERROR,
-	PLAYER_INIT_ERROR,
-	LOAD_ERROR,
-	MALLOC_ERROR,
-	ARG_ERROR,
-	INIT_WINDOW_ERROR,
-} t_status;
+	uint8_t blue;
+	uint8_t green;
+	uint8_t red;
+	uint8_t opacity;
+} t_color_rgba;
+
 
 typedef enum e_texture
 {
@@ -142,32 +109,11 @@ typedef struct s_img
 	int color;
 } t_img;
 
-typedef struct s_player
-{
-	t_position position;
-	int FOV;
-	double angle;
-	int speed;
-	double dist_to_plane;
-} t_player;
-
 typedef struct s_map
 {
 	int width;
 	int height;
 	int **matrix;
 } t_map;
-
-typedef struct s_data
-{
-	t_window screen;
-	t_img img;
-	t_map worldMap;
-	t_player player;
-	t_texture textures[6];
-	t_color floor;
-	t_color ceiling;
-	t_bool save;
-} t_data;
 
 #endif

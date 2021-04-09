@@ -128,6 +128,7 @@ CTEST_TEARDOWN(find_sprite_list)
 	ft_lstclear(&data->sprites, free);
 	free_matrix(data->game.worldMap.matrix, data->game.worldMap.height);
 }
+
 CTEST2(find_sprite_list, player_facing_270_and_two_sprites)
 {
 	data->game.worldMap.matrix[3][2] = 2;

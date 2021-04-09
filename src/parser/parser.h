@@ -1,5 +1,8 @@
 #ifndef PARSER_H
 #define PARSER_H
+#include <errors/errors.h>
+#include <game/game.h>
+#include <player/player.h>
 #include <utils/defs.h>
 
 t_status get_resolution(const char *line, t_window *window);

@@ -1,15 +1,15 @@
+#include "utils_parser.h"
+#include "texture_parser.h"
 #include <libft.h>
-#include <parser/texture_parser.h>
-#include <parser/utils_parser.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 int num_of_strings(char **split)
 {
 	int i = 0;
-	if(split == NULL)
+	if (split == NULL)
 		return (i);
-	while(split[i] != NULL)
+	while (split[i] != NULL)
 		++i;
 	return (i);
 }
@@ -17,7 +17,7 @@ int num_of_strings(char **split)
 void free_split(char **split)
 {
 	int i = 0;
-	while(split[i] != NULL)
+	while (split[i] != NULL)
 	{
 		free(split[i]);
 		++i;

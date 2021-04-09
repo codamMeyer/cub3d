@@ -1,5 +1,6 @@
 #ifndef RAY_CASTING_LOGIC_H
 #define RAY_CASTING_LOGIC_H
+#include <player/player.h>
 #include <utils/defs.h>
 
 t_bool is_left_or_right(double ray_angle);

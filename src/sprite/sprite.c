@@ -1,6 +1,6 @@
+#include "sprite.h"
 #include <game/ray_casting_logic.h>
 #include <game/render.h>
-#include <game/sprite.h>
 #include <game/wall_detection.h>
 #include <math.h>
 #include <stdio.h>
@@ -53,52 +53,58 @@ void add_sprites_to_list(t_map worldMap,
 	}
 }
 
-void find_sprite_list_horizontal_line(t_data *data, t_list **sprites, double ray_angle)
+void find_sprite_list_horizontal_line(t_player player,
+									  t_map worldMap,
+									  t_list **sprites,
+									  double ray_angle)
 {
 	t_position pos;
 	double tan_angle = tan(degree_to_radians(ray_angle));
 	double y_increment = get_y_increment_for_horizontal_detection(ray_angle);
 	double x_increment = get_x_increment_for_horizontal_detection(ray_angle, tan_angle);
-	pos = get_first_horizontal_intersection(data->player, ray_angle, tan_angle);
-	add_sprites_to_list(data->worldMap, sprites, x_increment, y_increment, pos);
+	pos = get_first_horizontal_intersection(player, ray_angle, tan_angle);
+	add_sprites_to_list(worldMap, sprites, x_increment, y_increment, pos);
 }
 
-void find_sprite_list_vertical_line(t_data *data, t_list **sprites, double ray_angle)
+void find_sprite_list_vertical_line(t_player player,
+									t_map worldMap,
+									t_list **sprites,
+									double ray_angle)
 {
 	t_position pos;
 	double tan_angle = tan(degree_to_radians(ray_angle));
 	double x_increment = get_x_increment_for_vertical_detection(ray_angle);
 	double y_increment = get_y_increment_for_vertical_detection(ray_angle, tan_angle);
-	pos = get_first_vertical_intersection(data->player, ray_angle, tan_angle);
-	add_sprites_to_list(data->worldMap, sprites, x_increment, y_increment, pos);
+	pos = get_first_vertical_intersection(player, ray_angle, tan_angle);
+	add_sprites_to_list(worldMap, sprites, x_increment, y_increment, pos);
 }
 
 static double radians_to_degrees(double radians)
 {
-	return (180.0 * radians / PI);
+	return (180.0 * radians / M_PI);
 }
 
-void get_sprite_values(t_data *data, t_sprite *sprite)
+void get_sprite_values(t_player player, t_window screen, t_sprite *sprite)
 {
-	const t_position delta = {.x = sprite->center.x - data->player.position.x,
-							  .y = sprite->center.y - data->player.position.y};
+	const t_position delta = {.x = sprite->center.x - player.position.x,
+							  .y = sprite->center.y - player.position.y};
 	const double sprite_angle =
 		fix_angle(radians_to_degrees(atan2(-delta.y, delta.x))); //cartesian plan is inverted
-	const double sprite_to_player_angle = abs_value(sprite_angle - data->player.angle);
-	sprite->dist_to_sprite = get_distance_from_player(sprite->center, data->player.position);
+	const double sprite_to_player_angle = abs_value(sprite_angle - player.angle);
+	sprite->dist_to_sprite = get_distance_from_player(sprite->center, player.position);
 
 	double sprite_screen_center =
-		data->player.dist_to_plane * tan(degree_to_radians(sprite_to_player_angle));
-	if (data->player.angle > sprite_angle)
+		player.dist_to_plane * tan(degree_to_radians(sprite_to_player_angle));
+	if (player.angle > sprite_angle)
 		sprite_screen_center *= -1;
-	double sprite_screen_x = (double)data->screen.width / 2.0 - sprite_screen_center;
+	double sprite_screen_x = (double)screen.width / 2.0 - sprite_screen_center;
 	double corrected_dist = cos(degree_to_radians(sprite_to_player_angle)) * sprite->dist_to_sprite;
 	sprite->dist_to_sprite = corrected_dist;
-	sprite->dimensions = get_dimensions(sprite->dist_to_sprite, data->player, data->screen);
+	sprite->dimensions = get_dimensions(sprite->dist_to_sprite, player, screen);
 	double projected_sprite_width;
 	sprite->height = sprite->dimensions.height;
-	sprite->start_y = (data->screen.height / 2.0) - (sprite->height / 2.0);
-	sprite->end_y = sprite->start_y + data->screen.height;
+	sprite->start_y = (screen.height / 2.0) - (sprite->height / 2.0);
+	sprite->end_y = sprite->start_y + screen.height;
 	projected_sprite_width = sprite->dimensions.width;
 	sprite->start_x = sprite_screen_x - (projected_sprite_width / 2.0);
 	sprite->end_x = sprite->start_x + projected_sprite_width;
@@ -123,10 +129,15 @@ t_bool is_visible(t_sprite sprite, int col, double dist_to_wall)
 			col >= sprite.start_x && col <= sprite.end_x);
 }
 
+static t_bool is_black(t_color_rgba color)
+{
+	return (color.red == 0 && color.green == 0 && color.blue == 0 && color.opacity == 0xFF);
+}
+
 void draw_sprites_slice(t_data *data, int col, double dist_to_wall, t_sprite sprite)
 {
 	t_texture_position pos;
-	t_color color;
+	t_color_rgba color;
 	int y;
 
 	if (is_visible(sprite, col, dist_to_wall))
@@ -140,18 +151,18 @@ void draw_sprites_slice(t_data *data, int col, double dist_to_wall, t_sprite spr
 									   col - sprite.start_x);
 			color = get_pixel_color(&data->textures[SP], pos.x, pos.y);
 			color = apply_shading(sprite.dist_to_sprite, color);
-			if (color != BLACK)
+			if (!is_black(color))
 				my_mlx_pixel_put(&data->img, col, y, color);
 			y++;
 		}
 	}
 }
 
-void find_sprites(t_data *data, t_list **sprites, double ray_angle)
+void find_sprites(t_player player, t_map worldMap, t_list **sprites, double ray_angle)
 {
 
 	if (!is_left_or_right(ray_angle))
-		find_sprite_list_horizontal_line(data, sprites, ray_angle);
+		find_sprite_list_horizontal_line(player, worldMap, sprites, ray_angle);
 	if (!is_up_or_down(ray_angle))
-		find_sprite_list_vertical_line(data, sprites, ray_angle);
+		find_sprite_list_vertical_line(player, worldMap, sprites, ray_angle);
 }

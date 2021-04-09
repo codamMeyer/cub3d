@@ -1,4 +1,4 @@
-#include <game/player.h>
+#include "player.h"
 #include <math.h>
 #include <utils/math_utils.h>
 
@@ -10,21 +10,22 @@ static t_bool hit_wall(t_map worldMap, t_position new_pos)
 	return (FALSE);
 }
 
-void init_player(t_data *data)
+t_player create_player()
 {
-	data->player.angle = INVALID_ORIENTATION;
-	data->player.FOV = 60;
-	data->screen.width = data->screen.width;
-	data->screen.height = data->screen.height;
-	data->player.speed = 10;
+	t_player player;
+
+	player.angle = INVALID_ORIENTATION;
+	player.FOV = 60;
+	player.speed = 10;
+	return (player);
 }
 
-t_bool move_left(t_player *player, t_data *data)
+t_bool move_left(t_player *player, t_map worldMap)
 {
 	t_position new_pos = player->position;
 	new_pos.x += floor(cos(degree_to_radians(player->angle + 90)) * player->speed);
 	new_pos.y -= floor(sin(degree_to_radians(player->angle + 90)) * player->speed);
-	if (!hit_wall(data->worldMap, new_pos))
+	if (!hit_wall(worldMap, new_pos))
 	{
 		player->position.y = new_pos.y;
 		player->position.x = new_pos.x;
@@ -33,12 +34,12 @@ t_bool move_left(t_player *player, t_data *data)
 	return (FALSE);
 }
 
-t_bool move_right(t_player *player, t_data *data)
+t_bool move_right(t_player *player, t_map worldMap)
 {
 	t_position new_pos = player->position;
 	new_pos.x += floor(cos(degree_to_radians(player->angle - 90)) * player->speed);
 	new_pos.y -= floor(sin(degree_to_radians(player->angle - 90)) * player->speed);
-	if (!hit_wall(data->worldMap, new_pos))
+	if (!hit_wall(worldMap, new_pos))
 	{
 		player->position.y = new_pos.y;
 		player->position.x = new_pos.x;
@@ -47,12 +48,12 @@ t_bool move_right(t_player *player, t_data *data)
 	return (FALSE);
 }
 
-t_bool move_forward(t_player *player, t_data *data)
+t_bool move_forward(t_player *player, t_map worldMap)
 {
 	t_position new_pos = player->position;
 	new_pos.x += floor(cos(degree_to_radians(player->angle)) * player->speed);
 	new_pos.y -= floor(sin(degree_to_radians(player->angle)) * player->speed);
-	if (!hit_wall(data->worldMap, new_pos))
+	if (!hit_wall(worldMap, new_pos))
 	{
 		player->position.y = new_pos.y;
 		player->position.x = new_pos.x;
@@ -61,12 +62,12 @@ t_bool move_forward(t_player *player, t_data *data)
 	return (FALSE);
 }
 
-t_bool move_backward(t_player *player, t_data *data)
+t_bool move_backward(t_player *player, t_map worldMap)
 {
 	t_position new_pos = player->position;
 	new_pos.x -= floor(cos(degree_to_radians(player->angle)) * player->speed);
 	new_pos.y += floor(sin(degree_to_radians(player->angle)) * player->speed);
-	if (!hit_wall(data->worldMap, new_pos))
+	if (!hit_wall(worldMap, new_pos))
 	{
 		player->position.y = new_pos.y;
 		player->position.x = new_pos.x;

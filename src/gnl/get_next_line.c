@@ -1,4 +1,4 @@
-#include <gnl/get_next_line.h>
+#include "get_next_line.h"
 
 static int	populate_line(char **dest, t_file_state *file_state, int *ret)
 {

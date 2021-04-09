@@ -1,6 +1,8 @@
 #ifndef SPRITE_H
 #define SPRITE_H
+#include <game/game.h>
 #include <libft.h>
+#include <player/player.h>
 #include <utils/defs.h>
 
 typedef struct s_sprite
@@ -16,11 +18,8 @@ typedef struct s_sprite
 	t_dimensions dimensions;
 } t_sprite;
 
-void find_sprites(t_data *data, t_list **sprites, double ray_angle);
-t_sprite find_sprite_vertical_line(t_data *data, double ray_angle);
-t_sprite find_sprite_horizontal_line(t_data *data, double ray_angle);
-void draw_sprites(t_data *data, t_sprite *sprites, int size);
-void get_sprite_values(t_data *data, t_sprite *sprite);
+void find_sprites(t_player player, t_map worldMap, t_list **sprites, double ray_angle);
+void get_sprite_values(t_player player, t_window screen, t_sprite *sprite);
 void draw_sprites_slice(t_data *data, int col, double dist_to_wall, t_sprite sprite);
 
 #endif
