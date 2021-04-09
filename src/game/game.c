@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <utils/map_utils.h>
 #include <utils/math_utils.h>
+#include <utils/math_utils2.h>
 #include <walls/walls.h>
 
 void close_window(t_data *data)

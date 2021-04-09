@@ -9,6 +9,7 @@
 #include <utils/direction.h>
 #include <utils/math_utils.h>
 #include <utils/utils.h>
+#include <utils/math_utils2.h>
 
 static t_bool hit_sprite(t_map worldMap, t_position pos)
 {

@@ -31,29 +31,3 @@ void free_matrix(int **map, int height)
 	}
 	free(map);
 }
-
-// int draw_map_2d(t_data *data)
-// {
-// 	int i;
-// 	int j;
-// 	int color;
-// 	int x = 0;
-// 	int y = 0;
-// 	int grid_size = GRID_SIZE / 7;
-
-// 	for(i = 0; i < data->worldMap.height; i++)
-// 	{
-// 		for(j = 0; j < data->worldMap.width; j++)
-// 		{
-// 			if(data->worldMap.matrix[i][j] > 0)
-// 				color = WHITE;
-// 			else
-// 				color = BLACK;
-// 			draw_square(&data->img, grid_size, x, y, color);
-// 			x += grid_size;
-// 		}
-// 		x = 0;
-// 		y += grid_size;
-// 	}
-// 	return (0);
-// }

@@ -1,6 +1,7 @@
 #include "raycast_utils.h"
 #include <math.h>
 #include <utils/math_utils.h>
+#include <utils/math_utils2.h>
 
 t_bool is_left_or_right(double ray_angle)
 {

@@ -1,6 +1,7 @@
 #include "player.h"
 #include <math.h>
 #include <utils/math_utils.h>
+#include <utils/math_utils2.h>
 
 t_player create_player()
 {

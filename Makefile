@@ -21,6 +21,7 @@ SRC_FILES=									\
 	src/utils/map_utils.c	    			\
 	src/utils/utils.c  						\
 	src/utils/math_utils.c  				\
+	src/utils/math_utils2.c  				\
 	src/utils/direction.c  					\
 	src/errors/errors.c						\
 	src/gnl/get_next_line_utils.c			\
@@ -33,11 +34,12 @@ SRC_FILES=									\
 	
 
 INC_FILES=									\
-	inc/utils/map_utils.h	    			\
-	inc/utils/utils.h  						\
-	inc/utils/math_utils.h  				\
-	inc/utils/direction.h  					\
-	inc/utils/defs.h						\
+	src/utils/map_utils.h	    			\
+	src/utils/utils.h  						\
+	src/utils/math_utils.h  				\
+	src/utils/math_utils2.c  				\
+	src/utils/direction.h  					\
+	src/utils/defs.h						\
 	src/render/color.h						\
 	src/render/render.h						\
 	src/render/render_utils.h				\
