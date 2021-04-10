@@ -7,6 +7,11 @@ double degree_to_radians(double degree)
 	return (degree * M_PI / 180.0);
 }
 
+double radians_to_degrees(double radians)
+{
+	return (180.0 * radians / M_PI);
+}
+
 double fix_angle(double angle)
 {
 	if (angle > 359)

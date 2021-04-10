@@ -25,10 +25,10 @@ t_color_rgba get_pixel_color(const t_texture *texture, int x, int y)
 		return (color);
 	if (x < 0 || y < 0)
 		return (color);
+	color.opacity = texture->data[index + 3];
 	color.red = texture->data[index + 2];
 	color.green = texture->data[index + 1];
 	color.blue = texture->data[index];
-	color.opacity = texture->data[index + 3];
 	return (color);
 }
 

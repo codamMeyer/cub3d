@@ -40,14 +40,15 @@ void find_and_draw_sprites(int col, t_data *data, t_ray *ray, double wall_dist)
 {
 	t_list *sprites;
 	t_list *cur;
+	t_sprite_projection projection;
 
 	sprites = NULL;
 	find_sprites(data->player, data->worldMap, &sprites, ray->angle);
 	cur = sprites;
 	while (cur != NULL)
 	{
-		get_sprite_values(data->player, data->screen, cur->content);
-		draw_sprites_slice(data, col, wall_dist, *((t_sprite *)cur->content));
+		projection = create_sprite_projection(data->player, data->screen, *(t_sprite *)(cur->content));
+		draw_sprites_slice(data, col, wall_dist, projection);
 		cur = cur->next;
 	}
 	ft_lstclear(&sprites, free);
@@ -191,4 +192,4 @@ t_status run(const char *filename, t_bool save)
 // 	ray.angle -= ray_increment;
 // }
 // ray.angle = data->player.angle + (data->player.FOV / 2);
-// get_sprite_values(data, &sprites[0]);
+// create_sprite_projection(data, &sprites[0]);
