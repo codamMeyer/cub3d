@@ -18,20 +18,15 @@ t_position get_first_horizontal_intersection(t_player player, double ray_angle, 
 	return (ray);
 }
 
-double get_y_increment_for_horizontal_detection(double ray_angle)
+t_position get_increment_for_horizontal_detection(double ray_angle, double tan_angle)
 {
-	double y_increment;
-	if (is_facing_north(ray_angle))
-		y_increment = -GRID_SIZE;
-	else
-		y_increment = GRID_SIZE;
-	return (y_increment);
-}
+	t_position increment;
 
-double get_x_increment_for_horizontal_detection(double ray_angle, double tan_angle)
-{
-	double x_increment = GRID_SIZE / tan_angle;
+	increment.x = GRID_SIZE / tan_angle;
+	increment.y = GRID_SIZE;
+	if (is_facing_north(ray_angle))
+		increment.y *= -1;
 	if (is_facing_south(ray_angle))
-		x_increment *= -1;
-	return (x_increment);
+		increment.x *= -1;
+	return (increment);
 }

@@ -20,11 +20,7 @@ static t_bool hit_sprite(t_map worldMap, t_position pos)
 	return (FALSE);
 }
 
-void add_sprites_to_list(t_map worldMap,
-						 t_list **sprites,
-						 double x_increment,
-						 double y_increment,
-						 t_position ray)
+void add_sprites_to_list(t_map worldMap, t_list **sprites, t_position increment, t_position ray)
 {
 	t_sprite *sprite;
 	t_bool hit = FALSE;
@@ -43,8 +39,8 @@ void add_sprites_to_list(t_map worldMap,
 			t_list *new_element = ft_lstnew(sprite);
 			ft_lstadd_front(sprites, new_element);
 		}
-		ray.x += x_increment;
-		ray.y += y_increment;
+		ray.x += increment.x;
+		ray.y += increment.y;
 	}
 }
 
@@ -53,12 +49,12 @@ void find_sprite_list_horizontal_line(t_player player,
 									  t_list **sprites,
 									  double ray_angle)
 {
+	const double tan_angle = tan(degree_to_radians(ray_angle));
+	const t_position increment = get_increment_for_horizontal_detection(ray_angle, tan_angle);
 	t_position pos;
-	double tan_angle = tan(degree_to_radians(ray_angle));
-	double y_increment = get_y_increment_for_horizontal_detection(ray_angle);
-	double x_increment = get_x_increment_for_horizontal_detection(ray_angle, tan_angle);
+	
 	pos = get_first_horizontal_intersection(player, ray_angle, tan_angle);
-	add_sprites_to_list(worldMap, sprites, x_increment, y_increment, pos);
+	add_sprites_to_list(worldMap, sprites, increment, pos);
 }
 
 void find_sprite_list_vertical_line(t_player player,
@@ -66,18 +62,21 @@ void find_sprite_list_vertical_line(t_player player,
 									t_list **sprites,
 									double ray_angle)
 {
+	const double tan_angle = tan(degree_to_radians(ray_angle));
+	const t_position increment = get_increment_for_vertical_detection(ray_angle, tan_angle);
 	t_position pos;
-	double tan_angle = tan(degree_to_radians(ray_angle));
-	double x_increment = get_x_increment_for_vertical_detection(ray_angle);
-	double y_increment = get_y_increment_for_vertical_detection(ray_angle, tan_angle);
+
 	pos = get_first_vertical_intersection(player, ray_angle, tan_angle);
-	add_sprites_to_list(worldMap, sprites, x_increment, y_increment, pos);
+	add_sprites_to_list(worldMap, sprites, increment, pos);
 }
 
-double get_sprite_screen_center(double dist_to_plane, double sprite_to_player_angle, double player_angle, double sprite_angle)
+double get_sprite_screen_center(double dist_to_plane,
+								double sprite_to_player_angle,
+								double player_angle,
+								double sprite_angle)
 {
 	double sprite_screen_center;
-	
+
 	sprite_screen_center = dist_to_plane * tan(degree_to_radians(sprite_to_player_angle));
 	if (player_angle > sprite_angle)
 		sprite_screen_center *= -1;
@@ -86,9 +85,11 @@ double get_sprite_screen_center(double dist_to_plane, double sprite_to_player_an
 
 double get_sprite_angle(t_player player, t_sprite sprite)
 {
-	const t_position delta = {.x = sprite.center.x - player.position.x, .y = sprite.center.y - player.position.y};
-	const double sprite_angle = fix_angle(radians_to_degrees(atan2(-delta.y, delta.x))); //cartesian plan is inverted
-	
+	const t_position delta = {.x = sprite.center.x - player.position.x,
+							  .y = sprite.center.y - player.position.y};
+	const double sprite_angle =
+		fix_angle(radians_to_degrees(atan2(-delta.y, delta.x))); //cartesian plan is inverted
+
 	return (sprite_angle);
 }
 
@@ -96,12 +97,16 @@ t_sprite_projection create_sprite_projection(t_player player, t_window screen, t
 {
 	const double sprite_angle = get_sprite_angle(player, sprite);
 	const double sprite_to_player_angle = abs_value(sprite_angle - player.angle);
-	const double sprite_screen_center = get_sprite_screen_center(player.dist_to_plane, sprite_to_player_angle, player.angle, sprite_angle);
+	const double sprite_screen_center = get_sprite_screen_center(player.dist_to_plane,
+																 sprite_to_player_angle,
+																 player.angle,
+																 sprite_angle);
 	const double sprite_screen_x = (double)screen.width / 2.0 - sprite_screen_center;
 	t_sprite_projection projection;
-	
+
 	projection.dist_from_player = get_distance_from_player(sprite.center, player.position);
-	projection.dist_from_player = fix_fisheye_effect(projection.dist_from_player, sprite_to_player_angle);
+	projection.dist_from_player =
+		fix_fisheye_effect(projection.dist_from_player, sprite_to_player_angle);
 	projection.dimensions = get_dimensions(projection.dist_from_player, player, screen);
 	projection.start.y = (screen.height / 2.0) - (projection.dimensions.height / 2.0);
 	projection.end.y = projection.start.y + screen.height;

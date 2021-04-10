@@ -3,35 +3,31 @@
 #include <utils/direction.h>
 #include <utils/map_utils.h>
 
-double get_x_increment_for_vertical_detection(double ray_angle)
+t_position get_increment_for_vertical_detection(double ray_angle, double tan_angle)
 {
-	double x_increment;
-	if (is_facing_west(ray_angle))
-		x_increment = -GRID_SIZE;
-	else
-		x_increment = GRID_SIZE;
-	return (x_increment);
-}
+	t_position increment;
 
-double get_y_increment_for_vertical_detection(double ray_angle, double tan_angle)
-{
-	double y_increment = GRID_SIZE * tan_angle;
+	increment.x = GRID_SIZE;
+	increment.y = GRID_SIZE * tan_angle;
+	if (is_facing_west(ray_angle))
+		increment.x *= -1;
 	if (is_facing_east(ray_angle))
-		y_increment *= -1;
-	return (y_increment);
+		increment.y *= -1;
+	return (increment);
 }
 
 t_position get_first_vertical_intersection(t_player player, double ray_angle, double tan_angle)
 {
+	const int grid_boundary = floor(player.position.x / GRID_SIZE) * GRID_SIZE;
+	const double small_value = 0.000001;
 	t_position ray;
 	double width;
 
 	if (is_facing_west(ray_angle))
-		ray.x = floor(player.position.x / GRID_SIZE) * (GRID_SIZE) - (1e-6);
+		ray.x = grid_boundary - small_value;
 	else
-		ray.x = floor(player.position.x / GRID_SIZE) * (GRID_SIZE) + GRID_SIZE;
+		ray.x = grid_boundary + GRID_SIZE;
 	width = (player.position.x - ray.x) * tan_angle;
 	ray.y = player.position.y + width;
-
 	return (ray);
 }
