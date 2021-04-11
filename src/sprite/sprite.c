@@ -52,7 +52,7 @@ void find_sprite_list_horizontal_line(t_player player,
 	const double tan_angle = tan(degree_to_radians(ray_angle));
 	const t_position increment = get_increment_for_horizontal_detection(ray_angle, tan_angle);
 	t_position pos;
-	
+
 	pos = get_first_horizontal_intersection(player, ray_angle, tan_angle);
 	add_sprites_to_list(worldMap, sprites, increment, pos);
 }
@@ -104,9 +104,8 @@ t_sprite_projection create_sprite_projection(t_player player, t_window screen, t
 	const double sprite_screen_x = (double)screen.width / 2.0 - sprite_screen_center;
 	t_sprite_projection projection;
 
-	projection.dist_from_player = get_distance_from_player(sprite.center, player.position);
 	projection.dist_from_player =
-		fix_fisheye_effect(projection.dist_from_player, sprite_to_player_angle);
+		fix_fisheye_effect(sprite.dist_from_player, sprite_to_player_angle);
 	projection.dimensions = get_dimensions(projection.dist_from_player, player, screen);
 	projection.start.y = (screen.height / 2.0) - (projection.dimensions.height / 2.0);
 	projection.end.y = projection.start.y + screen.height;
@@ -159,6 +158,62 @@ void draw_sprites_slice(t_data *data, int col, double dist_to_wall, t_sprite_pro
 	}
 }
 
+void compute_sprite_dist_from_player(t_player player, t_list *sprites)
+{
+	t_list *cur;
+	t_sprite *sprite;
+
+	cur = sprites;
+	while (cur != NULL)
+	{
+		sprite = (t_sprite *)cur->content;
+		sprite->dist_from_player = get_distance_from_player(sprite->center, player.position);
+		cur = cur->next;
+	}
+}
+
+t_bool swap(t_list *cur, t_list *prev)
+{
+	const t_sprite *cur_sprite = (t_sprite *)cur->content;
+	const t_sprite *prev_sprite = (t_sprite *)prev->content;
+
+	void *tmp;
+	if (cur_sprite->dist_from_player > prev_sprite->dist_from_player)
+	{
+		tmp = cur->content;
+		cur->content = prev->content;
+		prev->content = tmp;
+		return (TRUE);
+	}
+	return (FALSE);
+}
+
+void sort_sprites(t_list *sprites)
+{
+	const int size = ft_lstsize(sprites);
+	t_list *prev;
+	t_list *cur;
+	t_bool swapped;
+	int i;
+
+	if (size <= 1)
+		return;
+	swapped = TRUE;
+	while (swapped)
+	{
+		swapped = FALSE;
+		prev = sprites;
+		cur = sprites->next;
+		i = 1;
+		while (i < size)
+		{
+			swapped = swap(cur, prev);
+			cur = cur->next;
+			++i;
+		}
+	}
+}
+
 void find_sprites(t_player player, t_map worldMap, t_list **sprites, double ray_angle)
 {
 
@@ -166,4 +221,25 @@ void find_sprites(t_player player, t_map worldMap, t_list **sprites, double ray_
 		find_sprite_list_horizontal_line(player, worldMap, sprites, ray_angle);
 	if (!is_up_or_down(ray_angle))
 		find_sprite_list_vertical_line(player, worldMap, sprites, ray_angle);
+}
+
+void find_and_draw_sprites(int col, t_data *data, t_ray *ray, double wall_dist)
+{
+	t_list *sprites;
+	t_list *cur;
+	t_sprite_projection projection;
+
+	sprites = NULL;
+	find_sprites(data->player, data->worldMap, &sprites, ray->angle);
+	compute_sprite_dist_from_player(data->player, sprites);
+	sort_sprites(sprites);
+	cur = sprites;
+	while (cur != NULL)
+	{
+		projection =
+			create_sprite_projection(data->player, data->screen, *(t_sprite *)(cur->content));
+		draw_sprites_slice(data, col, wall_dist, projection);
+		cur = cur->next;
+	}
+	ft_lstclear(&sprites, free);
 }

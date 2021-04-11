@@ -60,15 +60,16 @@ INC_FILES=									\
 
 TEST_FILES= 								\
 	test/main.c 							\
-	test/test_horizontal_lines_detection.c 	\
-	test/test_vertical_lines_detection.c 	\
-	test/test_player_forward_move.c			\
-	test/test_player_backward_move.c		\
-	test/test_wall_distance.c				\
-	test/test_intersection.c				\
-	test/test_find_closest_wall.c			\
 	test/test_find_sprite.c					\
-	test/test_parser.c						
+	# test/test_parser.c						
+	# test/test_horizontal_lines_detection.c 	
+	# test/test_vertical_lines_detection.c 	
+	# test/test_player_forward_move.c			
+	# test/test_player_backward_move.c		
+	# test/test_wall_distance.c				
+	# test/test_intersection.c				
+	# test/test_find_closest_wall.c			
+	
 
 all: libft $(NAME)
 

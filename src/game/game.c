@@ -36,24 +36,6 @@ t_texture load_texture(t_data *data, char *filename)
 	return (texture);
 }
 
-void find_and_draw_sprites(int col, t_data *data, t_ray *ray, double wall_dist)
-{
-	t_list *sprites;
-	t_list *cur;
-	t_sprite_projection projection;
-
-	sprites = NULL;
-	find_sprites(data->player, data->worldMap, &sprites, ray->angle);
-	cur = sprites;
-	while (cur != NULL)
-	{
-		projection = create_sprite_projection(data->player, data->screen, *(t_sprite *)(cur->content));
-		draw_sprites_slice(data, col, wall_dist, projection);
-		cur = cur->next;
-	}
-	ft_lstclear(&sprites, free);
-}
-
 void ray_casting(t_data *data)
 {
 	const double ray_increment = (double)data->player.FOV / (double)data->screen.width;
@@ -158,38 +140,3 @@ t_status run(const char *filename, t_bool save)
 	mlx_loop(data.img.mlx);
 	return (TRUE);
 }
-
-// t_sprite sprites[10];
-
-// t_bool found = FALSE;
-// t_sprite sprite;
-// int i = 0;
-// sprites[0].center.x = -1;
-// sprites[0].center.y = -1;
-// sprites[0].grid_pos.y = -1;
-// sprites[0].grid_pos.y = -1;
-// for (int col = 0; col < data->screen.width; col++)
-// {
-// 	sprite = find_sprites(data, ray.angle);
-// 	if (is_valid_grid_position(data->worldMap, sprite.grid_pos))
-// 	{
-// 		if (i > 0)
-// 		{
-// 			if (sprite.grid_pos.x != sprites[i - 1].grid_pos.x ||
-// 				sprite.grid_pos.y != sprites[i - 1].grid_pos.y)
-// 			{
-// 				sprites[i] = sprite;
-// 				++i;
-// 			}
-// 		}
-// 		else
-// 		{
-// 			sprites[i] = sprite;
-// 			i++;
-// 		}
-// 		found = TRUE;
-// 	}
-// 	ray.angle -= ray_increment;
-// }
-// ray.angle = data->player.angle + (data->player.FOV / 2);
-// create_sprite_projection(data, &sprites[0]);
