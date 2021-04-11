@@ -80,6 +80,7 @@ t_status populate_map(const int fd, t_map *map, char **line)
 	char cur_char;
 	int line_len;
 
+	map->sprites_count = 0;
 	i = 0;
 	while (TRUE)
 	{
@@ -94,7 +95,10 @@ t_status populate_map(const int fd, t_map *map, char **line)
 			else if (get_orientation(cur_char) != INVALID_ORIENTATION)
 				map->matrix[i][j] = get_orientation(cur_char);
 			else if (is_sprite(cur_char))
+			{
+				++(map->sprites_count);
 				map->matrix[i][j] = SPRITE;
+			}
 			else if (cur_char == '0')
 				map->matrix[i][j] = EMPTY;
 			else

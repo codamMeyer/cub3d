@@ -119,6 +119,17 @@ t_status parse_map(const char *filename, t_map *map)
 	return (ret);
 }
 
+t_bool init_sprites_array(t_data *data)
+{
+	data->sprites = malloc(sizeof(t_sprite) * data->worldMap.sprites_count);
+	if(data->sprites == NULL)
+	{
+		free_matrix(data->worldMap.matrix, data->worldMap.height);
+		return (MALLOC_ERROR);
+	}
+	return (SUCCESS);
+}
+
 t_status parse_input(const char *filename, t_data *data)
 {
 	t_status ret;
@@ -135,5 +146,7 @@ t_status parse_input(const char *filename, t_data *data)
 		ret = parse_map(filename, &data->worldMap);
 	if (ret == SUCCESS)
 		ret = init_map_matrix(filename, &data->worldMap, &data->player);
+	if (ret == SUCCESS)
+		ret = init_sprites_array(data);
 	return (ret);
 }

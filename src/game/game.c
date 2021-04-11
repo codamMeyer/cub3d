@@ -7,16 +7,22 @@
 #include <mlx.h>
 #include <parser/parser.h>
 #include <player/player.h>
-#include <src/sprite/sprite.h>
+#include <src/sprite/sprite_render.h>
 #include <stdio.h>
 #include <utils/angle_utils.h>
 #include <utils/map_utils.h>
 #include <utils/math_utils.h>
 #include <walls/walls.h>
 
-void close_window(t_data *data)
+void cleanup(t_data *data)
 {
 	free_matrix(data->worldMap.matrix, data->worldMap.height);
+	free(data->sprites);
+}
+
+void close_window(t_data *data)
+{
+	cleanup(data);
 	mlx_destroy_window(data->img.mlx, data->img.window);
 	exit(0);
 }
@@ -43,14 +49,12 @@ void ray_casting(t_data *data)
 	double dist;
 
 	ray.angle = data->player.angle + (data->player.FOV / 2);
-
 	for (int col = 0; col < data->screen.width; col++)
 	{
 		dist = find_and_draw_walls(col, data, &ray);
 		find_and_draw_sprites(col, data, &ray, dist);
 		ray.angle -= ray_increment;
 	}
-
 	save_image(data->screen, data->img.addr, data->save);
 	mlx_put_image_to_window(data->img.mlx, data->img.window, data->img.ptr, 0, 0);
 }
@@ -131,8 +135,7 @@ t_status run(const char *filename, t_bool save)
 		close_window(&data);
 		return (TEXTURE_INFO_ERROR);
 	}
-	data.player.dist_to_plane =
-		(data.screen.width / 2.0) / tan(degree_to_radians(data.player.FOV / 2.0));
+	data.player.dist_to_plane = (data.screen.width / 2.0) / tan(degree_to_radians(data.player.FOV / 2.0));
 	data.save = save;
 	mlx_hook(data.img.window, KEY_PRESS_EVENT, KEY_PRESS_MASK, keypressed, &data);
 	mlx_hook(data.img.window, CLIENT_MESSAGE_EVENT, STRUCT_NOTIFY_MASK, red_cross, &data);

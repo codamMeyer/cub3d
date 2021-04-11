@@ -289,7 +289,6 @@ CTEST(parse_map, wrong_chars_in_map)
 CTEST(get_all, correct_file)
 {
 	char *filename = "./test/maps/test_all.cub";
-
 	t_data data;
 	data.player.angle = (int)INVALID_ORIENTATION;
 
@@ -306,9 +305,10 @@ CTEST(get_all, correct_file)
 	ASSERT_EQUAL(246, data.floor.red);
 	ASSERT_EQUAL(208, data.floor.green);
 	ASSERT_EQUAL(95, data.floor.blue);
-
 	ASSERT_EQUAL(255, data.ceiling.opacity);
 	ASSERT_EQUAL(191, data.ceiling.red);
 	ASSERT_EQUAL(97, data.ceiling.green);
 	ASSERT_EQUAL(106, data.ceiling.blue);
+	ASSERT_EQUAL(2, data.worldMap.sprites_count);
+	ASSERT_TRUE(NULL != data.sprites);
 }

@@ -79,6 +79,7 @@ typedef struct s_map
 {
 	int width;
 	int height;
+	int sprites_count;
 	int **matrix;
 } t_map;
 
