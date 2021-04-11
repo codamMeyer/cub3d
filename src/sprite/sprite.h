@@ -10,7 +10,7 @@ typedef struct s_sprite
 	double dist_from_player;
 } t_sprite;
 
-void find_sprites(t_player player, t_map worldMap, t_list **sprites, double ray_angle);
+int find_sprites(t_player player, t_map worldMap, t_sprite *sprites, double ray_angle);
 void sort_sprites(t_list *sprites);
 
 #endif

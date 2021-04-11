@@ -6,17 +6,13 @@
 #include <raycast/raycast_utils.h>
 #include <render/render_utils.h>
 
-void compute_sprite_dist_from_player(t_player player, t_list *sprites)
+void compute_sprite_dist_from_player(t_player player, t_sprite *sprites, int num_sprites)
 {
-	t_list *cur;
-	t_sprite *sprite;
-
-	cur = sprites;
-	while (cur != NULL)
+	int i = 0;
+	while (i < num_sprites)
 	{
-		sprite = (t_sprite *)cur->content;
-		sprite->dist_from_player = get_distance_from_player(sprite->center, player.position);
-		cur = cur->next;
+		sprites[i].dist_from_player = get_distance_from_player(sprites[i].center, player.position);
+	++i;
 	}
 }
 
@@ -111,21 +107,15 @@ void draw_sprites_slice(t_data *data, int col, double dist_to_wall, t_sprite_pro
 
 void find_and_draw_sprites(int col, t_data *data, t_ray *ray, double wall_dist)
 {
-	t_list *sprites;
-	t_list *cur;
 	t_sprite_projection projection;
-
-	sprites = NULL;
-	find_sprites(data->player, data->worldMap, &sprites, ray->angle);
-	compute_sprite_dist_from_player(data->player, sprites);
-	sort_sprites(sprites);
-	cur = sprites;
-	while (cur != NULL)
+	const int sprite_count = find_sprites(data->player, data->worldMap, data->sprites, ray->angle);
+	compute_sprite_dist_from_player(data->player, data->sprites, sprite_count);
+	// sort_sprites(sprites);
+	int i = 0;
+	while (i < sprite_count)
 	{
-		projection =
-			create_sprite_projection(data->player, data->screen, *(t_sprite *)(cur->content));
+		projection = create_sprite_projection(data->player, data->screen, data->sprites[i]);
 		draw_sprites_slice(data, col, wall_dist, projection);
-		cur = cur->next;
+		++i;
 	}
-	ft_lstclear(&sprites, free);
 }

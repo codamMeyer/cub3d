@@ -11,7 +11,7 @@ SRC_FILES=									\
 	src/render/color.c						\
 	src/game/game.c 						\
 	src/sprite/sprite.c						\
-	src/sprite/sprite_render.c						\
+	src/sprite/sprite_render.c				\
 	src/raycast/horizontal_detection.c		\
 	src/raycast/vertical_detection.c		\
 	src/walls/walls.c    					\
@@ -51,7 +51,7 @@ INC_FILES=									\
 	src/player/player.h						\
 	src/game/game.h 						\
 	src/sprite/sprite.h						\
-	src/sprite/sprite_render.c						\
+	src/sprite/sprite_render.c				\
 	src/gnl/get_next_line.h					\
 	src/parser/parser.h						\
 	src/parser/utils_parser.h				\
@@ -62,7 +62,7 @@ INC_FILES=									\
 
 TEST_FILES= 								\
 	test/main.c 							\
-	test/test_sprite.c					\
+	test/test_sprite.c						\
 	test/test_parser.c						\
 	test/test_horizontal_lines_detection.c 	\
 	test/test_vertical_lines_detection.c 	\
