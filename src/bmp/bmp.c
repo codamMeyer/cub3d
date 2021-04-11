@@ -7,7 +7,8 @@ t_bmp_header create_bmp_header(t_window window)
 {
 	const int pixel_data_offset = 54;
 	const int bytes_per_pixel = 4;
-	const uint32_t bitmap_size = pixel_data_offset + (window.height * window.width * bytes_per_pixel);
+	const uint32_t bitmap_size =
+		pixel_data_offset + (window.height * window.width * bytes_per_pixel);
 	t_bmp_header bmp_header;
 
 	bmp_header.bitmap_signature_bytes[0] = 'B';
@@ -39,9 +40,16 @@ t_bmp_info_header create_bmp_info_header(t_window window)
 static void write_bmp_pixels(const int fd, t_window window, void *image)
 {
 	const int bytes_per_pixel = 4;
-	const int num_of_bytes = window.width * window.height * bytes_per_pixel;
+	const int num_of_bytes_per_line = window.width * bytes_per_pixel;
+	char *write_ptr;
 
-	write(fd, (char *)image, num_of_bytes);
+	write_ptr = (char *)image;
+	write_ptr += num_of_bytes_per_line * (window.height - 1);
+	while (write_ptr >= (char *)image)
+	{
+		write(fd, write_ptr, num_of_bytes_per_line);
+		write_ptr -= num_of_bytes_per_line;
+	}
 }
 
 void create_bmp_file(t_window window, void *image)

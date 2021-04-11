@@ -3,17 +3,13 @@
 #include <utils/angle_utils.h>
 #include <utils/math_utils.h>
 
-t_bool is_left_or_right(double ray_angle)
+t_bool is_straight_left_or_right(double ray_angle)
 {
-	if (ray_angle == 0.0 || ray_angle == 180.0 || ray_angle == 360.0)
-		return (TRUE);
-	return (FALSE);
+	return (ray_angle == 0.0 || ray_angle == 180.0 || ray_angle == 360.0);
 }
-t_bool is_up_or_down(double ray_angle)
+t_bool is_straight_up_or_down(double ray_angle)
 {
-	if (ray_angle == 90.0 || ray_angle == 270.0)
-		return (TRUE);
-	return (FALSE);
+	return (ray_angle == 90.0 || ray_angle == 270.0);
 }
 
 void keep_inside_map(t_grid_position *pos, t_map worldMap)
@@ -27,12 +23,10 @@ void keep_inside_map(t_grid_position *pos, t_map worldMap)
 t_bool detect_hit(t_map worldMap, t_position pos, t_collider collider)
 {
 	t_grid_position grid_pos = to_grid_position(worldMap, pos);
-	if (!is_valid_grid_position(worldMap, grid_pos))
-		return (INVALID);
+	// if (!is_valid_grid_position(worldMap, grid_pos))
+	// 	return (INVALID);
 	keep_inside_map(&grid_pos, worldMap);
-	if (worldMap.matrix[grid_pos.y][grid_pos.x] == (int)collider)
-		return (TRUE);
-	return (FALSE);
+	return (worldMap.matrix[grid_pos.y][grid_pos.x] == (int)collider);
 }
 
 double fix_fisheye_effect(double dist, double angle)

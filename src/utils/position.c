@@ -30,6 +30,11 @@ t_bool is_valid_grid_position(t_map worldmap, t_grid_position position)
 			(position.y > 0 && position.y < worldmap.height));
 }
 
+t_bool is_valid_position(t_map worldmap, t_position position)
+{
+	return (is_valid_grid_position(worldmap, to_grid_position(worldmap, position)));
+}
+
 t_position create_invalid_position()
 {
 	t_position pos;
@@ -44,4 +49,9 @@ double get_distance_from_player(t_position ray_coord, t_position player_coord)
 	const double x_diff = (player_coord.x - ray_coord.x) * (player_coord.x - ray_coord.x);
 	const double y_diff = (player_coord.y - ray_coord.y) * (player_coord.y - ray_coord.y);
 	return (sqrt(x_diff + y_diff));
+}
+
+t_bool is_same_pos(t_position pos1, t_position pos2)
+{
+	return ((pos1.x == pos2.x) && (pos1.y == pos2.y));
 }

@@ -55,8 +55,8 @@ void ray_casting(t_data *data)
 		find_and_draw_sprites(col, data, &ray, dist);
 		ray.angle -= ray_increment;
 	}
-	save_image(data->screen, data->img.addr, data->save);
 	mlx_put_image_to_window(data->img.mlx, data->img.window, data->img.ptr, 0, 0);
+	save_image(data->screen, data->img.addr, data->save);
 }
 
 static int display(t_data *data)
@@ -135,7 +135,8 @@ t_status run(const char *filename, t_bool save)
 		close_window(&data);
 		return (TEXTURE_INFO_ERROR);
 	}
-	data.player.dist_to_plane = (data.screen.width / 2.0) / tan(degree_to_radians(data.player.FOV / 2.0));
+	data.player.dist_to_plane =
+		(data.screen.width / 2.0) / tan(degree_to_radians(data.player.FOV / 2.0));
 	data.save = save;
 	mlx_hook(data.img.window, KEY_PRESS_EVENT, KEY_PRESS_MASK, keypressed, &data);
 	mlx_hook(data.img.window, CLIENT_MESSAGE_EVENT, STRUCT_NOTIFY_MASK, red_cross, &data);

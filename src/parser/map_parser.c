@@ -34,7 +34,7 @@ static t_status get_player_init_pos(int **matrix, int row, int col, t_player *pl
 	return (SUCCESS);
 }
 
-t_bool check_map_content(t_map *map, t_player *player)
+t_status check_map_content(t_map *map, t_player *player)
 {
 	int i;
 	int j;

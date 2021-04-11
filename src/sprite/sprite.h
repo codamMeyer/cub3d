@@ -11,6 +11,6 @@ typedef struct s_sprite
 } t_sprite;
 
 int find_sprites(t_player player, t_map worldMap, t_sprite *sprites, double ray_angle);
-void sort_sprites(t_list *sprites);
+void sort_sprites(t_sprite *sprites, int sprite_count);
 
 #endif

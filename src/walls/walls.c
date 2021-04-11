@@ -52,7 +52,8 @@ t_position find_wall_horizontal_line(t_data *data, double ray_angle)
 {
 	const double tan_angle = tan(degree_to_radians(ray_angle));
 	const t_position increment = get_increment_for_horizontal_detection(ray_angle, tan_angle);
-	const t_position intersection = get_first_horizontal_intersection(data->player, ray_angle, tan_angle);
+	const t_position intersection =
+		get_first_horizontal_intersection(data->player, ray_angle, tan_angle);
 
 	return (find_wall(data->worldMap, increment, intersection));
 }
@@ -65,9 +66,9 @@ double find_and_draw_walls(int col, t_data *data, t_ray *ray)
 	h_intersection = create_invalid_position();
 	v_intersection = create_invalid_position();
 	ray->angle = fix_angle(ray->angle);
-	if (!is_left_or_right(ray->angle))
+	if (!is_straight_left_or_right(ray->angle))
 		h_intersection = find_wall_horizontal_line(data, ray->angle);
-	if (!is_up_or_down(ray->angle))
+	if (!is_straight_up_or_down(ray->angle))
 		v_intersection = find_wall_vertical_line(data, ray->angle);
 	find_closest_wall(h_intersection, v_intersection, data->player, ray);
 	draw_slice(data, col, ray);

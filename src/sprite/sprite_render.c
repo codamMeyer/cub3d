@@ -1,10 +1,12 @@
 #include "sprite_render.h"
 #include "sprite.h"
+#include <assert.h>
 #include <math.h>
-#include <utils/angle_utils.h>
-#include <utils/math_utils.h>
 #include <raycast/raycast_utils.h>
 #include <render/render_utils.h>
+#include <stdio.h>
+#include <utils/angle_utils.h>
+#include <utils/math_utils.h>
 
 void compute_sprite_dist_from_player(t_player player, t_sprite *sprites, int num_sprites)
 {
@@ -12,7 +14,7 @@ void compute_sprite_dist_from_player(t_player player, t_sprite *sprites, int num
 	while (i < num_sprites)
 	{
 		sprites[i].dist_from_player = get_distance_from_player(sprites[i].center, player.position);
-	++i;
+		++i;
 	}
 }
 
@@ -28,7 +30,6 @@ double get_sprite_screen_center(double dist_to_plane,
 		sprite_screen_center *= -1;
 	return (sprite_screen_center);
 }
-
 
 double get_sprite_angle(t_player player, t_sprite sprite)
 {
@@ -55,8 +56,7 @@ get_texture_position(const t_texture *texture, t_dimensions dimensions, int y_in
 
 t_bool is_visible(t_sprite_projection sprite, int col, double dist_to_wall)
 {
-	return (sprite.dist_from_player < dist_to_wall && sprite.dist_from_player > 0.0 &&
-			col >= sprite.start.x && col <= sprite.end.x);
+	return (sprite.dist_from_player < dist_to_wall && col >= sprite.start.x && col <= sprite.end.x);
 }
 
 t_sprite_projection create_sprite_projection(t_player player, t_window screen, t_sprite sprite)
@@ -110,7 +110,7 @@ void find_and_draw_sprites(int col, t_data *data, t_ray *ray, double wall_dist)
 	t_sprite_projection projection;
 	const int sprite_count = find_sprites(data->player, data->worldMap, data->sprites, ray->angle);
 	compute_sprite_dist_from_player(data->player, data->sprites, sprite_count);
-	// sort_sprites(sprites);
+	sort_sprites(data->sprites, sprite_count);
 	int i = 0;
 	while (i < sprite_count)
 	{

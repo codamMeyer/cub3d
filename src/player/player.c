@@ -13,8 +13,18 @@ t_player create_player(void)
 	return (player);
 }
 
-static t_bool can_move(t_map worldMap, t_position new_pos)
+static t_bool can_move(t_map worldMap, t_position new_pos, t_position prev_pos)
 {
+	const double player_width = 4.0;
+	const double half_player_width = player_width / 2;
+	const t_position delta = {.x = new_pos.x - prev_pos.x, .y = new_pos.y - prev_pos.y};
+	new_pos.x += half_player_width;
+	new_pos.y += half_player_width;
+	if (delta.x < 0)
+		new_pos.x -= player_width;
+	if (delta.y < 0)
+		new_pos.y -= player_width;
+
 	const t_grid_position pos = to_grid_position(worldMap, new_pos);
 
 	return (worldMap.matrix[pos.y][pos.x] == (int)EMPTY);
@@ -22,7 +32,7 @@ static t_bool can_move(t_map worldMap, t_position new_pos)
 
 static t_bool move(t_player *player, t_map worldMap, t_position new_pos)
 {
-	if (!can_move(worldMap, new_pos))
+	if (!can_move(worldMap, new_pos, player->position))
 		return (FALSE);
 	player->position.y = new_pos.y;
 	player->position.x = new_pos.x;

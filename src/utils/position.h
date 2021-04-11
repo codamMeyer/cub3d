@@ -33,6 +33,7 @@ t_position get_grid_center(t_grid_position grid_pos);
 t_bool is_valid_grid_position(t_map worldmap, t_grid_position position);
 t_position create_invalid_position();
 double get_distance_from_player(t_position ray_coord, t_position player_coord);
-
+t_bool is_valid_position(t_map worldmap, t_position position);
+t_bool is_same_pos(t_position pos1, t_position pos2);
 
 #endif
