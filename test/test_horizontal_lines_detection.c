@@ -1,24 +1,24 @@
 #include "ctest.h"
 
-#include <inc/game/game.h>
-#include <inc/game/ray_casting_logic.h>
-#include <inc/game/wall_detection.h>
-#include <inc/utils/defs.h>
-#include <inc/utils/map_utils.h>
-#include <inc/utils/utils.h>
+#include <game/game.h>
 #include <math.h>
+#include <raycast/raycast_utils.h>
 #include <stdio.h>
+#include <utils/angle_utils.h>
+#include <utils/defs.h>
+#include <utils/map_utils.h>
 #include <utils/math_utils.h>
+#include <walls/walls.h>
 
 static int **init_map(int height, int width)
 {
 	int i, j;
 	int **map = malloc_matrix(height, width);
 
-	for(i = 0; i < height; i++)
-		for(j = 0; j < width; j++)
+	for (i = 0; i < height; i++)
+		for (j = 0; j < width; j++)
 		{
-			if(i == 0 || j == 0 || i == height - 1 || j == width - 1)
+			if (i == 0 || j == 0 || i == height - 1 || j == width - 1)
 				map[i][j] = 1;
 			else
 				map[i][j] = 0;
@@ -29,16 +29,16 @@ static void draw_map(t_data game, int expected_x, int expected_y)
 {
 	printf("\n");
 	t_grid_position player_pos = to_grid_position(game.worldMap, game.player.position);
-	for(int i = 0; i < game.worldMap.height; i++)
+	for (int i = 0; i < game.worldMap.height; i++)
 	{
-		for(int j = 0; j < game.worldMap.width; j++)
+		for (int j = 0; j < game.worldMap.width; j++)
 		{
-			if(player_pos.x == j && player_pos.y == i)
+			if (player_pos.x == j && player_pos.y == i)
 				printf("👦");
-			else if((j == expected_x && i == expected_y) &&
-					(expected_x != INVALID && expected_y != INVALID))
+			else if ((j == expected_x && i == expected_y) &&
+					 (expected_x != INVALID && expected_y != INVALID))
 				printf("🔵");
-			else if(game.worldMap.matrix[i][j] == 1)
+			else if (game.worldMap.matrix[i][j] == 1)
 				printf("🟫");
 			else
 				printf("  ");
@@ -128,25 +128,6 @@ CTEST2(horizontal_lines, player_facing_0_degrees)
 	ASSERT_EQUAL(expected_y, ray_grid_position.y);
 }
 
-CTEST2(horizontal_lines, player_facing_30_degrees)
-{
-	int expected_x = INVALID;
-	int expected_y = INVALID;
-	data->game.player.position.x = 111;
-	data->game.player.position.y = 79;
-	data->game.player.angle = 30;
-
-	draw_map(data->game, expected_x, expected_y);
-
-	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
-	ray_angle = fix_angle(ray_angle);
-
-	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
-
-	ASSERT_EQUAL(expected_x, ray_position.x);
-	ASSERT_EQUAL(expected_y, ray_position.y);
-}
-
 CTEST2(horizontal_lines, player_facing_300_degrees)
 {
 	int expected_x = 1;
@@ -187,25 +168,6 @@ CTEST2(horizontal_lines, player_facing_270_degrees)
 
 	ASSERT_EQUAL(expected_x, ray_grid_position.x);
 	ASSERT_EQUAL(expected_y, ray_grid_position.y);
-}
-
-CTEST2(horizontal_lines, player_facing_210_degrees)
-{
-	int expected_x = INVALID;
-	int expected_y = INVALID;
-	data->game.player.position.x = 111;
-	data->game.player.position.y = 79;
-	data->game.player.angle = 210;
-
-	draw_map(data->game, expected_x, expected_y);
-
-	double ray_angle = data->game.player.angle - (data->game.player.FOV / 2);
-	ray_angle = fix_angle(ray_angle);
-
-	t_position ray_position = find_wall_horizontal_line(&(data->game), ray_angle);
-
-	ASSERT_EQUAL(expected_x, ray_position.x);
-	ASSERT_EQUAL(expected_y, ray_position.y);
 }
 
 CTEST2(horizontal_lines, player_facing_180_degrees)

@@ -1,14 +1,10 @@
 #include "ctest.h"
-#include <game/sprite.h>
-#include <inc/game/game.h>
-#include <inc/game/player.h>
-#include <inc/game/ray_casting_logic.h>
-#include <inc/utils/defs.h>
-#include <inc/utils/map_utils.h>
-#include <inc/utils/utils.h>
-#include <math.h>
+#include <game/game.h>
+#include <libft.h>
+#include <sprite/sprite.h>
 #include <stdio.h>
-#include <utils/math_utils.h>
+#include <utils/angle_utils.h>
+#include <utils/map_utils.h>
 
 static int **init_map(int height, int width)
 {
@@ -47,65 +43,6 @@ static void draw_map(t_data game)
 	}
 	printf("\n");
 }
-CTEST_DATA(sprite_center_position)
-{
-	t_data game;
-};
-
-CTEST_SETUP(sprite_center_position)
-{
-	data->game.player.FOV = 60;
-	data->game.player.speed = 10;
-
-	data->game.worldMap.height = 5;
-	data->game.worldMap.width = 7;
-	data->game.worldMap.matrix = init_map(data->game.worldMap.height, data->game.worldMap.width);
-}
-
-CTEST_TEARDOWN(sprite_center_position)
-{
-	free_matrix(data->game.worldMap.matrix, data->game.worldMap.height);
-}
-
-CTEST2(sprite_center_position, player_facing_345_degrees_vertical)
-{
-	data->game.worldMap.matrix[2][3] = SPRITE;
-	double expected_x = 4.0 * GRID_SIZE - (GRID_SIZE / 2.0);
-	double expected_y = 3.0 * GRID_SIZE - (GRID_SIZE / 2.0);
-
-	data->game.player.position.x = GRID_SIZE + 10;
-	data->game.player.position.y = GRID_SIZE + 20;
-	data->game.player.angle = 345;
-
-	draw_map(data->game);
-
-	double ray_angle = data->game.player.angle;
-	ray_angle = fix_angle(ray_angle);
-	t_sprite sprite = find_sprite_vertical_line(&(data->game), ray_angle);
-
-	ASSERT_DBL_NEAR_TOL(expected_x, sprite.center.x, 1e-2);
-	ASSERT_DBL_NEAR_TOL(expected_y, sprite.center.y, 1e-2);
-}
-
-CTEST2(sprite_center_position, player_facing_345_degrees_horizontal)
-{
-	data->game.worldMap.matrix[2][3] = 2;
-	double expected_x = 4.0 * GRID_SIZE - (GRID_SIZE / 2.0);
-	double expected_y = 3.0 * GRID_SIZE - (GRID_SIZE / 2.0);
-
-	data->game.player.position.x = 76;
-	data->game.player.position.y = 51;
-	data->game.player.angle = 345;
-
-	draw_map(data->game);
-
-	double ray_angle = data->game.player.angle;
-	ray_angle = fix_angle(ray_angle);
-	t_sprite sprite = find_sprite_horizontal_line(&(data->game), ray_angle);
-
-	ASSERT_DBL_NEAR_TOL(expected_x, sprite.center.x, 1e-2);
-	ASSERT_DBL_NEAR_TOL(expected_y, sprite.center.y, 1e-2);
-}
 
 CTEST_DATA(find_sprite_list)
 {
@@ -129,11 +66,8 @@ CTEST_TEARDOWN(find_sprite_list)
 	free_matrix(data->game.worldMap.matrix, data->game.worldMap.height);
 }
 
-CTEST2(find_sprite_list, player_facing_270_and_two_sprites)
+CTEST2(find_sprite_list, no_sprites)
 {
-	data->game.worldMap.matrix[3][2] = 2;
-	data->game.worldMap.matrix[4][2] = 2;
-
 	data->game.player.position.x = 76;
 	data->game.player.position.y = 51;
 	data->game.player.angle = 270;
@@ -141,10 +75,60 @@ CTEST2(find_sprite_list, player_facing_270_and_two_sprites)
 	ray.angle = 270;
 
 	draw_map(data->game);
-	find_sprites(&data->game, &data->sprites, ray.angle);
-	ASSERT_EQUAL(2, ft_lstsize(data->sprites));
+	find_sprites(data->game.player, data->game.worldMap, &data->sprites, ray.angle);
+	ASSERT_EQUAL(0, ft_lstsize(data->sprites));
+}
 
-	// double ray_angle = data->game.player.angle;
-	// ray_angle = fix_angle(ray_angle);
-	// t_sprite sprite = find_sprite_horizontal_line(&(data->game), ray_angle);
+CTEST2_SKIP(find_sprite_list, one_sprite)
+{
+	data->game.worldMap.matrix[4][3] = 2;
+
+	data->game.player.position.x = 51;
+	data->game.player.position.y = 76;
+	data->game.player.angle = 270;
+	t_ray ray;
+	ray.angle = 305;
+
+	draw_map(data->game);
+	find_sprites(data->game.player, data->game.worldMap, &data->sprites, ray.angle);
+	sort_sprites(data->sprites);
+	ASSERT_EQUAL(1, ft_lstsize(data->sprites));
+}
+
+CTEST2_SKIP(find_sprite_list, two_sprites)
+{
+	data->game.worldMap.matrix[3][2] = 2;
+	data->game.worldMap.matrix[4][3] = 2;
+
+	data->game.player.position.x = 51;
+	data->game.player.position.y = 76;
+	data->game.player.angle = 270;
+	t_ray ray;
+	ray.angle = 305;
+
+	draw_map(data->game);
+	find_sprites(data->game.player, data->game.worldMap, &data->sprites, ray.angle);
+	t_sprite *sp1 = (t_sprite *)data->sprites;
+	t_sprite *sp2 = (t_sprite *)data->sprites->next;
+	sort_sprites(data->sprites);
+	ASSERT_TRUE(sp1->dist_from_player > sp2->dist_from_player);
+	ASSERT_EQUAL(2, ft_lstsize(data->sprites));
+}
+
+CTEST2_SKIP(find_sprite_list, test_sort)
+{
+	const int num_sprites = 3;
+	t_sprite sprites[3];
+	sprites[0].dist_from_player = 1.0;
+	sprites[1].dist_from_player = 5.0;
+	sprites[2].dist_from_player = 9.0;
+
+	(void)data;
+	// sort_sprites(&sprites);
+
+	const double expected_dist[3] = {9.0, 5.0, 1.0};
+	for (int i = 0; i < num_sprites; ++i)
+	{
+		ASSERT_EQUAL(expected_dist[i], sprites[i].dist_from_player);
+	}
 }

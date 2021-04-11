@@ -79,7 +79,7 @@ t_status	get_color(const char *line, t_color_rgba *color)
 		color->red = ft_atoi(split[0]);
 		color->green = ft_atoi(split[1]);
 		color->blue = ft_atoi(split[2]);
-		color->opacity = 0xff;
+		color->opacity = 0xFF;
 		ret = SUCCESS;
 	}
 	free_split(split);
