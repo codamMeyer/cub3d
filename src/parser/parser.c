@@ -29,7 +29,7 @@ static t_status get_header_information(const char *filename,
 	t_status ret = SUCCESS;
 	if (fd < 0)
 		return (FILE_ERROR);
-	while (get_next_line(fd, &line))
+	while (get_next_line(fd, &line) && ret == SUCCESS)
 	{
 		if (line[0] == 'R')
 			ret = get_resolution(line, window);
@@ -39,8 +39,6 @@ static t_status get_header_information(const char *filename,
 			ret = get_color(line, floor);
 		else if (line[0] == 'C')
 			ret = get_color(line, ceiling);
-		if (ret != SUCCESS)
-			break;
 		free(line);
 	}
 	free(line);
@@ -89,10 +87,12 @@ t_status init_map_matrix(const char *filename, t_map *map, t_player *player)
 	map->matrix = malloc_matrix(map->height, map->width);
 	if (!map->matrix)
 		ret = MALLOC_ERROR;
-	if (ret == SUCCESS)
-		ret = populate_map(fd, map, &line);
-	if (ret == SUCCESS)
+	else if (!populate_map(fd, map, &line))
+		ret = (MALLOC_ERROR);
+	else
 		ret = check_map_content(map, player);
+	if (ret != SUCCESS)
+		free_matrix(map->matrix, map->height);
 	close(fd);
 	return (ret);
 }
@@ -122,7 +122,7 @@ t_status parse_map(const char *filename, t_map *map)
 t_bool init_sprites_array(t_data *data)
 {
 	data->sprites = malloc(sizeof(t_sprite) * data->worldMap.sprites_count);
-	if(data->sprites == NULL)
+	if (data->sprites == NULL)
 	{
 		free_matrix(data->worldMap.matrix, data->worldMap.height);
 		return (MALLOC_ERROR);

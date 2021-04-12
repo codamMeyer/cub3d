@@ -6,12 +6,12 @@ int **malloc_matrix(int height, int width)
 {
 	int i;
 	int **map = (int **)malloc(height * sizeof(int *));
-	if(!map)
+	if (!map)
 		return (NULL);
-	for(i = 0; i < height; i++)
+	for (i = 0; i < height; i++)
 	{
 		map[i] = (int *)malloc(width * sizeof(int));
-		if(!map[i])
+		if (!map[i])
 		{
 			free_matrix(map, i);
 			return (NULL);
@@ -24,7 +24,9 @@ void free_matrix(int **map, int height)
 {
 	int i;
 	i = 0;
-	while(i < height)
+	if (!map)
+		return;
+	while (i < height)
 	{
 		free(map[i]);
 		++i;
