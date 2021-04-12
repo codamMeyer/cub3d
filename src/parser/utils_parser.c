@@ -4,9 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int num_of_strings(char **split)
+int	num_of_strings(char **split)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	if (split == NULL)
 		return (i);
 	while (split[i] != NULL)
@@ -14,9 +16,11 @@ int num_of_strings(char **split)
 	return (i);
 }
 
-void free_split(char **split)
+void	free_split(char **split)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (split[i] != NULL)
 	{
 		free(split[i]);
@@ -25,26 +29,29 @@ void free_split(char **split)
 	free(split);
 }
 
-t_bool is_wall(char **line, int i)
+t_bool	is_wall(char **line, int i)
 {
-	const int line_len = ft_strlen(*line);
-	const char cur_char = (*line)[i];
+	const int	line_len = ft_strlen(*line);
+	const char	cur_char = (*line)[i];
 
 	return (line_len > 1 && (cur_char == ' ' || cur_char == '1'));
 }
 
-t_bool is_sprite(char cur)
+t_bool	is_sprite(char cur)
 {
 	return (cur == '2');
 }
 
-t_bool is_empty(char cur)
+t_bool	is_empty(char cur)
 {
 	return (cur == '0');
 }
 
-t_bool is_map(const char *line)
+t_bool	is_map(const char *line)
 {
-	return (line[0] != '\0' && line[0] != 'R' && line[0] != 'F' && line[0] != 'C' &&
+	return (line[0] != '\0' && \
+			line[0] != 'R' && \
+			line[0] != 'F' && \
+			line[0] != 'C' && \
 			!is_texture(line));
 }

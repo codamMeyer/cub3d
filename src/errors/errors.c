@@ -2,9 +2,10 @@
 #include <libminift.h>
 #include <stdio.h>
 #include <unistd.h>
-void print_error_message(t_status status)
+
+void	print_error_message(t_status status)
 {
-	const char *status_message[14] = {
+	const char	*status_message[14] = {
 		"Success\n",
 		"Failed to read file\n",
 		"Incorrect file extension, expected filename.cub\n",
@@ -20,8 +21,8 @@ void print_error_message(t_status status)
 		"Usage: ./raycaster <map_path> [--save]\n",
 		"Error while initializing window\n",
 	};
-	const int len = ft_strlen(status_message[(int)status]);
-	const char *error = "Error\n";
+	const int	len = ft_strlen(status_message[(int)status]);
+	const char	*error = "Error\n";
 
 	write(STDERR_FILENO, error, 6);
 	write(STDERR_FILENO, status_message[(int)status], len);

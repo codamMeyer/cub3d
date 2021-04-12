@@ -3,7 +3,7 @@
 #include <player/player.h>
 #include <stdlib.h>
 
-int keypressed(int keycode, t_data *data)
+int	keypressed(int keycode, t_data *data)
 {
 	if (keycode == ESC)
 		close_window(data);

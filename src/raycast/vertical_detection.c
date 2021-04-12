@@ -3,9 +3,10 @@
 #include <utils/direction.h>
 #include <utils/map_utils.h>
 
-t_position get_increment_for_vertical_detection(double ray_angle, double tan_angle)
+t_position	get_increment_for_vertical_detection(double ray_angle, \
+												double tan_angle)
 {
-	t_position increment;
+	t_position	increment;
 
 	increment.x = GRID_SIZE;
 	increment.y = GRID_SIZE * tan_angle;
@@ -16,12 +17,15 @@ t_position get_increment_for_vertical_detection(double ray_angle, double tan_ang
 	return (increment);
 }
 
-t_position get_first_vertical_intersection(t_player player, double ray_angle, double tan_angle)
+t_position	get_first_vertical_intersection(t_player player, \
+											double ray_angle, \
+											double tan_angle)
 {
-	const int grid_boundary = floor(player.position.x / GRID_SIZE) * GRID_SIZE;
-	const double small_value = 0.000001;
-	t_position ray;
-	double width;
+	const int		grid_boundary = \
+					floor(player.position.x / GRID_SIZE) * GRID_SIZE;
+	const double	small_value = 0.000001;
+	t_position		ray;
+	double			width;
 
 	if (is_facing_west(ray_angle))
 		ray.x = grid_boundary - small_value;

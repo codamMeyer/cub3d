@@ -6,7 +6,7 @@
 #include <libminift.h>
 #include <utils/map_utils.h>
 
-static t_bool find_first_line_of_map(const int fd, char **line)
+static t_bool	find_first_line_of_map(const int fd, char **line)
 {
 	while (get_next_line(fd, line) > 0)
 	{
@@ -17,15 +17,17 @@ static t_bool find_first_line_of_map(const int fd, char **line)
 	return (FALSE);
 }
 
-static t_status get_header_information(const char *filename,
+static t_status	get_header_information(const char *filename,
 									   t_window *window,
 									   t_texture textures[],
 									   t_color_rgba *floor,
 									   t_color_rgba *ceiling)
 {
-	const int fd = open(filename, O_RDONLY);
-	char *line;
-	t_status ret = SUCCESS;
+	const int	fd = open(filename, O_RDONLY);
+	char		*line;
+	t_status	ret;
+
+	ret = SUCCESS;
 	if (fd < 0)
 		return (FILE_ERROR);
 	while (get_next_line(fd, &line) && ret == SUCCESS)
@@ -45,11 +47,13 @@ static t_status get_header_information(const char *filename,
 	return (ret);
 }
 
-t_status get_resolution(const char *line, t_window *window)
+t_status	get_resolution(const char *line, t_window *window)
 {
-	char **split = NULL;
-	t_status ret = RESOLUTION_ERROR;
+	char		**split;
+	t_status	ret;
 
+	ret = RESOLUTION_ERROR;
+	split = NULL;
 	split = ft_split(line, ' ');
 	if (!split)
 		return (MALLOC_ERROR);
@@ -64,20 +68,20 @@ t_status get_resolution(const char *line, t_window *window)
 	return (ret);
 }
 
-t_status check_file_extension(const char *filename)
+t_status	check_file_extension(const char *filename)
 {
-	const int len = ft_strlen(filename);
+	const int	len = ft_strlen(filename);
 
 	if (ft_strncmp(&filename[len - 4], ".cub", 4) == 0)
 		return (SUCCESS);
 	return (EXTENSION_ERROR);
 }
 
-t_status init_map_matrix(const char *filename, t_map *map, t_player *player)
+t_status	init_map_matrix(const char *filename, t_map *map, t_player *player)
 {
-	const int fd = open(filename, O_RDONLY);
-	char *line;
-	t_status ret;
+	const int	fd = open(filename, O_RDONLY);
+	char		*line;
+	t_status	ret;
 
 	if (fd < 0)
 		return (FILE_ERROR);
@@ -96,11 +100,11 @@ t_status init_map_matrix(const char *filename, t_map *map, t_player *player)
 	return (ret);
 }
 
-t_status parse_map(const char *filename, t_map *map)
+t_status	parse_map(const char *filename, t_map *map)
 {
-	const int fd = open(filename, O_RDONLY);
-	char *line;
-	t_status ret;
+	const int	fd = open(filename, O_RDONLY);
+	char		*line;
+	t_status	ret;
 
 	if (fd < 0)
 		return (FILE_ERROR);
@@ -118,7 +122,7 @@ t_status parse_map(const char *filename, t_map *map)
 	return (ret);
 }
 
-t_bool init_sprites_array(t_data *data)
+t_bool	init_sprites_array(t_data *data)
 {
 	data->sprites = malloc(sizeof(t_sprite) * data->worldMap.sprites_count);
 	if (data->sprites == NULL)
@@ -129,18 +133,18 @@ t_bool init_sprites_array(t_data *data)
 	return (SUCCESS);
 }
 
-t_status parse_input(const char *filename, t_data *data)
+t_status	parse_input(const char *filename, t_data *data)
 {
-	t_status ret;
+	t_status	ret;
 
 	ret = SUCCESS;
 	ret = check_file_extension(filename);
 	if (ret == SUCCESS)
-		ret = get_header_information(filename,
-									 &data->screen,
-									 data->textures,
-									 &data->floor,
-									 &data->ceiling);
+		ret = get_header_information(filename, \
+									&data->screen, \
+									data->textures, \
+									&data->floor, \
+									&data->ceiling);
 	if (ret == SUCCESS)
 		ret = parse_map(filename, &data->worldMap);
 	if (ret == SUCCESS)

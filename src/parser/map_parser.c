@@ -6,7 +6,7 @@
 #include <utils/angle_utils.h>
 #include <utils/math_utils.h>
 
-static t_player_orientation get_orientation(char c)
+static t_player_orientation	get_orientation(char c)
 {
 	if (c == 'N')
 		return (N);
@@ -19,11 +19,12 @@ static t_player_orientation get_orientation(char c)
 	return (INVALID_ORIENTATION);
 }
 
-static t_status get_player_init_pos(int **matrix, t_grid_position pos, t_player *player)
+static t_status	get_player_init_pos(int **matrix,
+									t_grid_position pos,
+									t_player *player)
 {
-	t_grid_position player_pos;
+	const t_grid_position	player_pos = pos;
 
-	player_pos = pos;
 	if (player->angle != (int)INVALID_ORIENTATION)
 		return (PLAYER_INIT_ERROR);
 	player->angle = (int)matrix[pos.y][pos.x];
@@ -32,38 +33,41 @@ static t_status get_player_init_pos(int **matrix, t_grid_position pos, t_player 
 	return (SUCCESS);
 }
 
-t_bool is_surrounded_by_walls(t_map *map, t_grid_position pos)
+t_bool	is_surrounded_by_walls(t_map *map, t_grid_position pos)
 {
-	if ((pos.y == 0 || pos.y == map->height - 1) && map->matrix[pos.y][pos.x] != (int)WALL)
+	if ((pos.y == 0 || pos.y == map->height - 1) \
+		&& map->matrix[pos.y][pos.x] != (int)WALL)
 		return (FALSE);
-	if ((pos.x == 0 || pos.x == map->width - 1) && map->matrix[pos.y][pos.x] != (int)WALL)
+	if ((pos.x == 0 || pos.x == map->width - 1) \
+		&& map->matrix[pos.y][pos.x] != (int)WALL)
 		return (FALSE);
 	return (TRUE);
 }
 
-t_bool is_player_initialized(t_map *map, t_player *player, t_grid_position pos)
+t_bool	is_player_initialized(t_map *map, t_player *player, t_grid_position pos)
 {
-	t_status ret;
+	t_status	ret;
 
 	ret = SUCCESS;
-	if (map->matrix[pos.y][pos.x] != (int)WALL && map->matrix[pos.y][pos.x] != (int)SPRITE &&
+	if (map->matrix[pos.y][pos.x] != (int)WALL && \
+		map->matrix[pos.y][pos.x] != (int)SPRITE && \
 		map->matrix[pos.y][pos.x] != (int)EMPTY)
 		ret = get_player_init_pos(map->matrix, pos, player);
-	if (pos.y == map->height - 1 && pos.x == map->width - 1 &&
+	if (pos.y == map->height - 1 && pos.x == map->width - 1 && \
 		player->angle == (int)INVALID_ORIENTATION)
 		ret = PLAYER_INIT_ERROR;
 	return (ret == SUCCESS);
 }
 
-t_bool is_invalid(int i)
+t_bool	is_invalid(int i)
 {
 	return (i == INVALID);
 }
 
-t_status check_map_content(t_map *map, t_player *player)
+t_status	check_map_content(t_map *map, t_player *player)
 {
-	t_grid_position pos;
-	t_status ret;
+	t_grid_position	pos;
+	t_status		ret;
 
 	ret = SUCCESS;
 	pos.y = 0;
@@ -85,7 +89,7 @@ t_status check_map_content(t_map *map, t_player *player)
 	return (ret);
 }
 
-void fill_spaces(t_map *map, int i, int j, int line_len)
+void	fill_spaces(t_map *map, int i, int j, int line_len)
 {
 	while (j < map->width)
 	{
@@ -97,7 +101,7 @@ void fill_spaces(t_map *map, int i, int j, int line_len)
 	}
 }
 
-int get_value(char c, char **line, int j, int *sprite_count)
+int	get_value(char c, char **line, int j, int *sprite_count)
 {
 	if (is_wall(line, j))
 		return ((int)WALL);
@@ -114,11 +118,11 @@ int get_value(char c, char **line, int j, int *sprite_count)
 		return (INVALID);
 }
 
-t_bool populate_map(const int fd, t_map *map, char **line)
+t_bool	populate_map(const int fd, t_map *map, char **line)
 {
-	t_grid_position pos;
-	int bytes_read;
-	int line_len;
+	t_grid_position	pos;
+	int				bytes_read;
+	int				line_len;
 
 	map->sprites_count = 0;
 	pos.y = 0;
@@ -128,7 +132,7 @@ t_bool populate_map(const int fd, t_map *map, char **line)
 		line_len = ft_strlen(*line);
 		while (pos.x < line_len)
 		{
-			map->matrix[pos.y][pos.x] =
+			map->matrix[pos.y][pos.x] = \
 				get_value((*line)[pos.x], line, pos.x, &(map->sprites_count));
 			++pos.x;
 		}
@@ -143,10 +147,10 @@ t_bool populate_map(const int fd, t_map *map, char **line)
 	return (TRUE);
 }
 
-t_status get_map_dimensions(const int fd, char **line, t_map *map)
+t_status	get_map_dimensions(const int fd, char **line, t_map *map)
 {
-	int bytes_read;
-	t_status ret;
+	int			bytes_read;
+	t_status	ret;
 
 	ret = SUCCESS;
 	while (ret == SUCCESS)
@@ -165,7 +169,7 @@ t_status get_map_dimensions(const int fd, char **line, t_map *map)
 				++(map->height);
 			}
 			free(*line);
-			break;
+			break ;
 		}
 	}
 	return (ret);

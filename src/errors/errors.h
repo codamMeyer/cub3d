@@ -1,6 +1,6 @@
 #ifndef ERRORS_H
-#define ERRORS_H
-#include <utils/defs.h>
+# define ERRORS_H
+# include <utils/defs.h>
 
 typedef enum e_status
 {
@@ -18,8 +18,8 @@ typedef enum e_status
 	MALLOC_ERROR,
 	ARG_ERROR,
 	INIT_WINDOW_ERROR,
-} t_status;
+}	t_status;
 
-void print_error_message(t_status status);
+void	print_error_message(t_status status);
 
 #endif
