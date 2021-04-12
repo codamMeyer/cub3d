@@ -34,6 +34,32 @@ static t_status get_player_init_pos(int **matrix, int row, int col, t_player *pl
 	return (SUCCESS);
 }
 
+t_bool is_surrounded_by_walls(t_map *map, int i, int j)
+{
+	if ((i == 0 || i == map->height - 1) && map->matrix[i][j] != (int)WALL)
+		return (FALSE);
+	if ((j == 0 || j == map->width - 1) && map->matrix[i][j] != (int)WALL)
+		return (FALSE);
+	return (TRUE);
+}
+
+t_bool is_player_initialized(t_map *map, t_player *player, int i, int j)
+{
+	t_status ret;
+
+	ret = SUCCESS;
+	if (map->matrix[i][j] != WALL && map->matrix[i][j] != SPRITE && map->matrix[i][j] != EMPTY)
+		ret = get_player_init_pos(map->matrix, i, j, player);
+	if (i == map->height - 1 && j == map->width - 1 && player->angle == (int)INVALID_ORIENTATION)
+		ret = PLAYER_INIT_ERROR;
+	return (ret == SUCCESS);
+}
+
+t_bool is_invalid(int i)
+{
+	return (i == INVALID);
+}
+
 t_status check_map_content(t_map *map, t_player *player)
 {
 	int i;
@@ -47,29 +73,33 @@ t_status check_map_content(t_map *map, t_player *player)
 		j = 0;
 		while (j < map->width)
 		{
-			if (map->matrix[i][j] == INVALID)
+			if (is_invalid(map->matrix[i][j]))
 				ret = MAP_CONTENT_ERROR;
-			else if ((i == 0 || i == map->height - 1) && map->matrix[i][j] != 1)
+			else if (!is_player_initialized(map, player, i, j))
+				ret = PLAYER_INIT_ERROR;
+			else if (!is_surrounded_by_walls(map, i, j))
 				ret = MAP_NOT_SURROUNDED_ERROR;
-			else if ((j == 0 || j == map->width - 1) && map->matrix[i][j] != 1)
-				ret = MAP_NOT_SURROUNDED_ERROR;
-			else if (map->matrix[i][j] > 2 || map->matrix[i][j] < 0)
-				ret = get_player_init_pos(map->matrix, i, j, player);
-			if (ret)
-			{
-				free_matrix(map->matrix, map->height);
-				return (ret);
-			}
+			if (ret != SUCCESS)
+				break;
 			j++;
 		}
 		i++;
 	}
-	if (player->angle == (int)INVALID_ORIENTATION)
-	{
+	if (ret != SUCCESS)
 		free_matrix(map->matrix, map->height);
-		ret = PLAYER_INIT_ERROR;
-	}
 	return (ret);
+}
+
+void fill_spaces(t_map *map, int i, int j, int line_len)
+{
+	while (j < map->width)
+	{
+		if (line_len > 0)
+			map->matrix[i][j] = WALL;
+		else
+			map->matrix[i][j] = INVALID;
+		++j;
+	}
 }
 
 t_status populate_map(const int fd, t_map *map, char **line)
@@ -82,7 +112,7 @@ t_status populate_map(const int fd, t_map *map, char **line)
 
 	map->sprites_count = 0;
 	i = 0;
-	while (TRUE)
+	while (i < map->height)
 	{
 		j = 0;
 
@@ -99,30 +129,21 @@ t_status populate_map(const int fd, t_map *map, char **line)
 				++(map->sprites_count);
 				map->matrix[i][j] = SPRITE;
 			}
-			else if (cur_char == '0')
+			else if (is_empty(cur_char))
 				map->matrix[i][j] = EMPTY;
 			else
 				map->matrix[i][j] = INVALID;
 			++j;
 		}
-		while (j < map->width)
-		{
-			if (line_len > 0)
-				map->matrix[i][j] = WALL;
-			else
-				map->matrix[i][j] = INVALID;
-			++j;
-		}
-		++i;
+		fill_spaces(map, i, j, line_len);
 		free(*line);
+		++i;
 		bytes_read = get_next_line(fd, line);
 		if (bytes_read < 0)
 		{
 			free_matrix(map->matrix, map->height);
 			return (MALLOC_ERROR);
 		}
-		if (i == map->height)
-			break;
 	}
 	free(*line);
 	return (SUCCESS);

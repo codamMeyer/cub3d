@@ -47,7 +47,7 @@ static void draw_map(t_data game)
 CTEST_DATA(find_sprite_list)
 {
 	t_data game;
-	t_list *sprites;
+	t_sprite *sprites;
 };
 
 CTEST_SETUP(find_sprite_list)
@@ -62,7 +62,7 @@ CTEST_SETUP(find_sprite_list)
 
 CTEST_TEARDOWN(find_sprite_list)
 {
-	ft_lstclear(&data->sprites, free);
+	free(data->sprites);
 	free_matrix(data->game.worldMap.matrix, data->game.worldMap.height);
 }
 
@@ -75,8 +75,7 @@ CTEST2(find_sprite_list, no_sprites)
 	ray.angle = 270;
 
 	draw_map(data->game);
-	find_sprites(data->game.player, data->game.worldMap, &data->sprites, ray.angle);
-	ASSERT_EQUAL(0, ft_lstsize(data->sprites));
+	find_sprites(data->game.player, data->game.worldMap, data->sprites, ray.angle);
 }
 
 CTEST2_SKIP(find_sprite_list, one_sprite)
@@ -90,29 +89,8 @@ CTEST2_SKIP(find_sprite_list, one_sprite)
 	ray.angle = 305;
 
 	draw_map(data->game);
-	find_sprites(data->game.player, data->game.worldMap, &data->sprites, ray.angle);
-	sort_sprites(data->sprites);
-	ASSERT_EQUAL(1, ft_lstsize(data->sprites));
-}
-
-CTEST2_SKIP(find_sprite_list, two_sprites)
-{
-	data->game.worldMap.matrix[3][2] = 2;
-	data->game.worldMap.matrix[4][3] = 2;
-
-	data->game.player.position.x = 51;
-	data->game.player.position.y = 76;
-	data->game.player.angle = 270;
-	t_ray ray;
-	ray.angle = 305;
-
-	draw_map(data->game);
-	find_sprites(data->game.player, data->game.worldMap, &data->sprites, ray.angle);
-	t_sprite *sp1 = (t_sprite *)data->sprites;
-	t_sprite *sp2 = (t_sprite *)data->sprites->next;
-	sort_sprites(data->sprites);
-	ASSERT_TRUE(sp1->dist_from_player > sp2->dist_from_player);
-	ASSERT_EQUAL(2, ft_lstsize(data->sprites));
+	find_sprites(data->game.player, data->game.worldMap, data->sprites, ray.angle);
+	sort_sprites(data->sprites, 1);
 }
 
 CTEST2_SKIP(find_sprite_list, test_sort)

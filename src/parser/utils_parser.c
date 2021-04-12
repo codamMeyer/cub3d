@@ -38,6 +38,11 @@ t_bool is_sprite(char cur)
 	return (cur == '2');
 }
 
+t_bool is_empty(char cur)
+{
+	return (cur == '0');
+}
+
 t_bool is_map(const char *line)
 {
 	return (line[0] != '\0' && line[0] != 'R' && line[0] != 'F' && line[0] != 'C' &&
