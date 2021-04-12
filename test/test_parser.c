@@ -1,7 +1,6 @@
 #include "ctest.h"
 #include <fcntl.h>
 #include <gnl/get_next_line.h>
-#include <libft.h>
 #include <parser/parser.h>
 #include <parser/texture_parser.h>
 #include <stdio.h>

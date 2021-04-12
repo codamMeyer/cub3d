@@ -8,6 +8,41 @@
 #include <utils/direction.h>
 #include <utils/math_utils.h>
 
+
+static t_bool swap(t_sprite *cur, t_sprite *prev)
+{
+	t_sprite tmp;
+
+	if (cur->dist_from_player > prev->dist_from_player)
+	{
+		tmp = *cur;
+		*cur = *prev;
+		*prev = tmp;
+		return (TRUE);
+	}
+	return (FALSE);
+}
+
+void sort_sprites(t_sprite *sprites, int sprite_count)
+{
+	t_bool swapped;
+	int i;
+
+	if (sprite_count <= 1)
+		return;
+	swapped = TRUE;
+	while (swapped)
+	{
+		swapped = FALSE;
+		i = 1;
+		while (i < sprite_count)
+		{
+			swapped = swap(&sprites[i], &sprites[i - 1]);
+			++i;
+		}
+	}
+}
+
 t_grid_position create_invalid_grid_pos()
 {
 	const t_grid_position pos = {.x = INVALID, .y = INVALID};
@@ -15,13 +50,7 @@ t_grid_position create_invalid_grid_pos()
 	return (pos);
 }
 
-void apply_incremento_to_intersections(t_intersections *intersections)
-{
-	intersections->horizontal.x += intersections->hor_increment.x;
-	intersections->horizontal.y += intersections->hor_increment.y;
-	intersections->vertical.x += intersections->ver_increment.x;
-	intersections->vertical.y += intersections->ver_increment.y;
-}
+
 
 int add_sprites_to_array(t_map worldMap, t_sprite *sprites, t_intersections intersections)
 {
@@ -62,38 +91,4 @@ int find_sprites(t_player player, t_map worldMap, t_sprite *sprites, double ray_
 	};
 
 	return (add_sprites_to_array(worldMap, sprites, intersections));
-}
-
-static t_bool swap(t_sprite *cur, t_sprite *prev)
-{
-	t_sprite tmp;
-
-	if (cur->dist_from_player > prev->dist_from_player)
-	{
-		tmp = *cur;
-		*cur = *prev;
-		*prev = tmp;
-		return (TRUE);
-	}
-	return (FALSE);
-}
-
-void sort_sprites(t_sprite *sprites, int sprite_count)
-{
-	t_bool swapped;
-	int i;
-
-	if (sprite_count <= 1)
-		return;
-	swapped = TRUE;
-	while (swapped)
-	{
-		swapped = FALSE;
-		i = 1;
-		while (i < sprite_count)
-		{
-			swapped = swap(&sprites[i], &sprites[i - 1]);
-			++i;
-		}
-	}
 }

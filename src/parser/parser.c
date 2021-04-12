@@ -3,8 +3,7 @@
 #include "texture_parser.h"
 #include "utils_parser.h"
 #include <fcntl.h>
-#include <gnl/get_next_line.h>
-#include <libft.h>
+#include <libminift.h>
 #include <utils/map_utils.h>
 
 static t_bool find_first_line_of_map(const int fd, char **line)

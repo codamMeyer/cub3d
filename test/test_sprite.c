@@ -1,6 +1,5 @@
 #include "ctest.h"
 #include <game/game.h>
-#include <libft.h>
 #include <sprite/sprite.h>
 #include <stdio.h>
 #include <utils/angle_utils.h>

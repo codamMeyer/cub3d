@@ -1,5 +1,5 @@
 #include "errors.h"
-#include <libft.h>
+#include <libminift.h>
 #include <stdio.h>
 #include <unistd.h>
 void print_error_message(t_status status)

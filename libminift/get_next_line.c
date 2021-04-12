@@ -1,4 +1,4 @@
-#include "get_next_line.h"
+#include "libminift.h"
 
 static int	populate_line(char **dest, t_file_state *file_state, int *ret)
 {

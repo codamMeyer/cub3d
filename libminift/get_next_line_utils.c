@@ -1,6 +1,6 @@
-#include "get_next_line.h"
+#include "libminift.h"
 
-static size_t ft_min(size_t lhs, size_t rhs)
+static size_t	ft_min(size_t lhs, size_t rhs)
 {
 	if (lhs <= rhs)
 		return (lhs);
@@ -8,26 +8,9 @@ static size_t ft_min(size_t lhs, size_t rhs)
 		return (rhs);
 }
 
-static void *ft_memcpy(void *dest, const void *src, size_t n)
+int	realloc_line(char **dest, t_file_state **file_state, int *ret)
 {
-	unsigned char *csrc;
-	unsigned char *cdest;
-	size_t i;
-
-	i = 0;
-	csrc = (unsigned char *)src;
-	cdest = (unsigned char *)dest;
-	while (i < n && (dest || src))
-	{
-		cdest[i] = csrc[i];
-		++i;
-	}
-	return (dest);
-}
-
-int realloc_line(char **dest, t_file_state **file_state, int *ret)
-{
-	int new_size;
+	int	new_size;
 
 	(*dest)[(*file_state)->line_index] = '\0';
 	new_size = ((*file_state)->line_index + 1) * sizeof(char);
@@ -42,9 +25,9 @@ int realloc_line(char **dest, t_file_state **file_state, int *ret)
 	return (0);
 }
 
-int adjust_mem_size(t_file_state *f_state, char **dest)
+int	adjust_mem_size(t_file_state *f_state, char **dest)
 {
-	int new_size;
+	int	new_size;
 
 	if (f_state->line_index == f_state->line_size)
 	{
@@ -57,10 +40,10 @@ int adjust_mem_size(t_file_state *f_state, char **dest)
 	return (1);
 }
 
-void *ft_realloc(void *ptr, size_t prev_size, size_t new_size)
+void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size)
 {
-	void *new;
-	const size_t size = ft_min(prev_size, new_size);
+	void			*new;
+	const size_t	size = ft_min(prev_size, new_size);
 
 	if (new_size == 0)
 	{

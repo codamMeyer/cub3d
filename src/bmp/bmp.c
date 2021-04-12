@@ -3,13 +3,13 @@
 #include <unistd.h>
 #include <utils/defs.h>
 
-t_bmp_header create_bmp_header(t_window window)
+t_bmp_header	create_bmp_header(t_window window)
 {
-	const int pixel_data_offset = 54;
-	const int bytes_per_pixel = 4;
-	const uint32_t bitmap_size =
+	const int		pixel_data_offset = 54;
+	const int		bytes_per_pixel = 4;
+	const uint32_t	bitmap_size =
 		pixel_data_offset + (window.height * window.width * bytes_per_pixel);
-	t_bmp_header bmp_header;
+	t_bmp_header	bmp_header;
 
 	bmp_header.bitmap_signature_bytes[0] = 'B';
 	bmp_header.bitmap_signature_bytes[1] = 'M';
@@ -19,9 +19,9 @@ t_bmp_header create_bmp_header(t_window window)
 	return (bmp_header);
 }
 
-t_bmp_info_header create_bmp_info_header(t_window window)
+t_bmp_info_header	create_bmp_info_header(t_window window)
 {
-	t_bmp_info_header bmp_info_header;
+	t_bmp_info_header	bmp_info_header;
 
 	bmp_info_header.size_of_this_header = 40;
 	bmp_info_header.width = window.width;
@@ -37,11 +37,11 @@ t_bmp_info_header create_bmp_info_header(t_window window)
 	return (bmp_info_header);
 }
 
-static void write_bmp_pixels(const int fd, t_window window, void *image)
+static void	write_bmp_pixels(const int fd, t_window window, void *image)
 {
-	const int bytes_per_pixel = 4;
-	const int num_of_bytes_per_line = window.width * bytes_per_pixel;
-	char *write_ptr;
+	const int	bytes_per_pixel = 4;
+	const int	num_of_bytes_per_line = window.width * bytes_per_pixel;
+	char		*write_ptr;
 
 	write_ptr = (char *)image;
 	write_ptr += num_of_bytes_per_line * (window.height - 1);
@@ -52,24 +52,25 @@ static void write_bmp_pixels(const int fd, t_window window, void *image)
 	}
 }
 
-void create_bmp_file(t_window window, void *image)
+void	create_bmp_file(t_window window, void *image)
 {
-	const int fd = open("image.bmp", O_WRONLY | O_CREAT | O_TRUNC | O_APPEND, 0666);
-	const t_bmp_header bmp_header = create_bmp_header(window);
-	const t_bmp_info_header bmp_info_header = create_bmp_info_header(window);
+	const int				fd = open("image.bmp", \
+								O_WRONLY | O_CREAT | O_TRUNC | O_APPEND, 0666);
+	const t_bmp_header		bmp_header = create_bmp_header(window);
+	const t_bmp_info_header	bmp_info_header = create_bmp_info_header(window);
 
 	if (fd < 0)
-		return;
+		return ;
 	write(fd, (char *)&bmp_header, 14);
 	write(fd, (char *)&bmp_info_header, 40);
 	write_bmp_pixels(fd, window, image);
 	close(fd);
-	return;
+	return ;
 }
 
-void save_image(t_window screen, void *address, t_bool save)
+void	save_image(t_window screen, void *address, t_bool save)
 {
-	static t_bool image_saved = FALSE;
+	static t_bool	image_saved = FALSE;
 
 	if (!image_saved && save)
 	{

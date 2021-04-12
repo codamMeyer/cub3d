@@ -34,7 +34,7 @@ t_color_rgba get_pixel_color(const t_texture *texture, int x, int y)
 
 t_color_rgba apply_shading(double distance, t_color_rgba color, double min_dist)
 {
-	const double gradient = 1.0 - ((distance - min_dist) / 1000);
+	const double gradient = max_d(0.3, 1.0 - ((distance - min_dist) / 1000));
 	t_color_rgba shade;
 
 	if (distance <= min_dist || is_black(color))

@@ -42,7 +42,7 @@ typedef enum e_player_orientation
 	N = 90,
 	S = 270,
 	W = 180,
-	E = 0,
+	E = 360,
 } t_player_orientation;
 
 typedef enum e_orientation
@@ -50,7 +50,6 @@ typedef enum e_orientation
 	VERTICAL,
 	HORIZONTAL
 } t_orientation;
-
 
 typedef struct s_dimensions
 {

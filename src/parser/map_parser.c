@@ -1,6 +1,5 @@
 #include "map_parser.h"
-#include <gnl/get_next_line.h>
-#include <libft.h>
+#include <libminift.h>
 #include <parser/utils_parser.h>
 #include <player/player.h>
 #include <stdio.h>

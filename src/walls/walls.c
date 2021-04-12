@@ -4,6 +4,7 @@
 #include <raycast/raycast_utils.h>
 #include <raycast/vertical_detection.h>
 #include <render/render.h>
+#include <stdio.h>
 #include <utils/angle_utils.h>
 #include <utils/math_utils.h>
 
@@ -42,9 +43,8 @@ t_position find_wall_vertical_line(t_data *data, double ray_angle)
 {
 	const double tan_angle = tan(degree_to_radians(ray_angle));
 	const t_position increment = get_increment_for_vertical_detection(ray_angle, tan_angle);
-	t_position intersection;
-
-	intersection = get_first_vertical_intersection(data->player, ray_angle, tan_angle);
+	const t_position intersection =
+		get_first_vertical_intersection(data->player, ray_angle, tan_angle);
 	return (find_wall(data->worldMap, increment, intersection));
 }
 

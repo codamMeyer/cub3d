@@ -2,8 +2,8 @@ NAME=raycaster
 CC=clang
 CFLAGS= -ggdb3 -Wall -Wextra -Werror -fsanitize=address -fsanitize=leak
 TEST_CFLAGS= -ggdb3 -Wall -Wextra -Werror #-fsanitize=address -fsanitize=leak
-INC_PATH=-I./mlx_linux -I./ -I./libft -I./src
-LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz  -L./libft -lft
+INC_PATH=-I./mlx_linux -I./ -I./libminift -I./src
+LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz  -L./libminift -lminift
 
 SRC_FILES=									\
 	src/render/render.c						\
@@ -24,8 +24,6 @@ SRC_FILES=									\
 	src/utils/position.c	  				\
 	src/utils/direction.c  					\
 	src/errors/errors.c						\
-	src/gnl/get_next_line_utils.c			\
-	src/gnl/get_next_line.c					\
 	src/parser/parser.c						\
 	src/parser/utils_parser.c				\
 	src/parser/texture_parser.c				\
@@ -52,7 +50,6 @@ INC_FILES=									\
 	src/game/game.h 						\
 	src/sprite/sprite.h						\
 	src/sprite/sprite_render.c				\
-	src/gnl/get_next_line.h					\
 	src/parser/parser.h						\
 	src/parser/utils_parser.h				\
 	src/parser/texture_parser.h				\
@@ -73,27 +70,27 @@ TEST_FILES= 								\
 	test/test_find_closest_wall.c			\
 	
 
-all: libft $(NAME)
+all: libminift $(NAME)
 
 $(NAME): $(INC_FILES) $(SRC_FILES)
-		@cp ./libft/libft.a .
+		@cp ./libminift/libminift.a .
 		$(CC) $(CFLAGS) $(INC_PATH) $(SRC_FILES) src/main.c $(LDFLAGS) -o $(NAME)
 
 test: $(INC_FILES) $(SRC_FILES) $(TEST_FILES)
 	$(CC) -D GRID_SIZE=32 $(TEST_CFLAGS) $(INC_PATH) $(SRC_FILES) $(TEST_FILES) $(LDFLAGS) -o tester
 
 clean:
-	$(MAKE) clean -C ./libft
+	$(MAKE) clean -C ./libminift
 	rm -f $(SRC_OBJ)
 
 re: fclean all
 
 
-libft:
-	$(MAKE) bonus -C ./libft
+libminift:
+	$(MAKE) -C ./libminift
 
 fclean: clean
-	$(MAKE) fclean -C ./libft
+	$(MAKE) fclean -C ./libminift
 	rm -f $(NAME)
 
-.PHONY: all clean fclean re test libft
+.PHONY: all clean fclean re test libminift

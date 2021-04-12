@@ -23,8 +23,7 @@ void keep_inside_map(t_grid_position *pos, t_map worldMap)
 t_bool detect_hit(t_map worldMap, t_position pos, t_collider collider)
 {
 	t_grid_position grid_pos = to_grid_position(worldMap, pos);
-	// if (!is_valid_grid_position(worldMap, grid_pos))
-	// 	return (INVALID);
+
 	keep_inside_map(&grid_pos, worldMap);
 	return (worldMap.matrix[grid_pos.y][grid_pos.x] == (int)collider);
 }
@@ -32,4 +31,12 @@ t_bool detect_hit(t_map worldMap, t_position pos, t_collider collider)
 double fix_fisheye_effect(double dist, double angle)
 {
 	return (dist * cos(degree_to_radians(angle)));
+}
+
+void apply_incremento_to_intersections(t_intersections *intersections)
+{
+	intersections->horizontal.x += intersections->hor_increment.x;
+	intersections->horizontal.y += intersections->hor_increment.y;
+	intersections->vertical.x += intersections->ver_increment.x;
+	intersections->vertical.y += intersections->ver_increment.y;
 }

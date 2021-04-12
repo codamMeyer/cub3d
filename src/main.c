@@ -1,7 +1,7 @@
 #include <bmp/bmp.h>
 #include <errors/errors.h>
 #include <game/game.h>
-#include <libft.h>
+#include <libminift.h>
 #include <stdio.h>
 
 int main(int argc, char *argv[])
