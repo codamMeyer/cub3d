@@ -1,6 +1,6 @@
 #include "ctest.h"
 #include <fcntl.h>
-#include <gnl/get_next_line.h>
+#include <libminift.h>
 #include <parser/parser.h>
 #include <parser/texture_parser.h>
 #include <stdio.h>
@@ -123,8 +123,8 @@ CTEST(get_colors, correct_file)
 {
 	char *filename = "./test/maps/colors.cub";
 	const int fd = open(filename, O_RDONLY);
-	t_color_rgba floor = get_black_color();
-	t_color_rgba celing = get_black_color();
+	t_color floor = get_black_color();
+	t_color celing = get_black_color();
 	char *line = NULL;
 
 	if (get_next_line(fd, &line))

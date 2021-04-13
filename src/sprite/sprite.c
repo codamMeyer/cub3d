@@ -8,10 +8,9 @@
 #include <utils/direction.h>
 #include <utils/math_utils.h>
 
-
-static t_bool swap(t_sprite *cur, t_sprite *prev)
+static t_bool	swap(t_sprite *cur, t_sprite *prev)
 {
-	t_sprite tmp;
+	t_sprite	tmp;
 
 	if (cur->dist_from_player > prev->dist_from_player)
 	{
@@ -23,13 +22,13 @@ static t_bool swap(t_sprite *cur, t_sprite *prev)
 	return (FALSE);
 }
 
-void sort_sprites(t_sprite *sprites, int sprite_count)
+void	sort_sprites(t_sprite *sprites, int sprite_count)
 {
-	t_bool swapped;
-	int i;
+	t_bool	swapped;
+	int		i;
 
 	if (sprite_count <= 1)
-		return;
+		return ;
 	swapped = TRUE;
 	while (swapped)
 	{
@@ -43,51 +42,55 @@ void sort_sprites(t_sprite *sprites, int sprite_count)
 	}
 }
 
-t_grid_position create_invalid_grid_pos()
+t_grid_position	create_invalid_grid_pos(void)
 {
-	const t_grid_position pos = {.x = INVALID, .y = INVALID};
+	const t_grid_position	pos = {.x = INVALID, .y = INVALID};
 
 	return (pos);
 }
 
-
-
-int add_sprites_to_array(t_map worldMap, t_sprite *sprites, t_intersections intersections)
+int	add_sprites_to_array(t_map worldMap,
+						t_sprite *sprites,
+						t_intersections intersections)
 {
-	int sprite_count = 0;
-	t_grid_position grid_pos;
+	int				count;
+	t_grid_position	grid_pos;
 
-	while (is_valid_position(worldMap, intersections.horizontal) ||
+	count = 0;
+	while (is_valid_position(worldMap, intersections.horizontal) || \
 		   is_valid_position(worldMap, intersections.vertical))
 	{
 		if (detect_hit(worldMap, intersections.horizontal, SPRITE))
 		{
 			grid_pos = to_grid_position(worldMap, intersections.horizontal);
-			sprites[sprite_count].center = get_grid_center(grid_pos);
-			++sprite_count;
+			sprites[count].center = get_grid_center(grid_pos);
+			++count;
 		}
 		if (detect_hit(worldMap, intersections.vertical, SPRITE))
 		{
 			grid_pos = to_grid_position(worldMap, intersections.vertical);
-			sprites[sprite_count].center = get_grid_center(grid_pos);
-			++sprite_count;
+			sprites[count].center = get_grid_center(grid_pos);
+			++count;
 		}
-		if (sprite_count > 1 &&
-			is_same_pos(sprites[sprite_count].center, sprites[sprite_count - 1].center))
-			--sprite_count;
+		if (count > 1 && \
+			is_same_pos(sprites[count].center, sprites[count - 1].center))
+			--count;
 		apply_incremento_to_intersections(&intersections);
 	}
-	return (sprite_count);
+	return (count);
 }
 
-int find_sprites(t_player player, t_map worldMap, t_sprite *sprites, double ray_angle)
+int	find_sprites(t_player player,
+				t_map worldMap,
+				t_sprite *sprites,
+				double angle)
 {
-	const double tan_angle = tan(degree_to_radians(ray_angle));
-	const t_intersections intersections = {
-		.hor_increment = get_increment_for_horizontal_detection(ray_angle, tan_angle),
-		.ver_increment = get_increment_for_vertical_detection(ray_angle, tan_angle),
-		.horizontal = get_first_horizontal_intersection(player, ray_angle, tan_angle),
-		.vertical = get_first_vertical_intersection(player, ray_angle, tan_angle),
+	const double			tan_angle = tan(degree_to_radians(angle));
+	const t_intersections	intersections = {
+	.hor_increment = get_horizontal_detection_increment(angle, tan_angle),
+	.ver_increment = get_vertical_detection_increment(angle, tan_angle),
+	.horizontal = get_first_horizontal_intersection(player, angle, tan_angle),
+	.vertical = get_first_vertical_intersection(player, angle, tan_angle),
 	};
 
 	return (add_sprites_to_array(worldMap, sprites, intersections));

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <utils/angle_utils.h>
 #include <utils/map_utils.h>
+#include <stdlib.h>
 
 static int **init_map(int height, int width)
 {

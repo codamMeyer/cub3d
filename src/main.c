@@ -4,10 +4,10 @@
 #include <libminift.h>
 #include <stdio.h>
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
-	t_status error;
-	t_bool save;
+	t_status	error;
+	t_bool		save;
 
 	save = FALSE;
 	if (argc < 2 || argc > 3)

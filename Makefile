@@ -8,7 +8,9 @@ LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz  -L./libminift -lminift
 SRC_FILES=									\
 	src/render/render.c						\
 	src/render/render_utils.c				\
+	src/render/shade.c						\
 	src/render/color.c						\
+	src/game/game_utils.c 					\
 	src/game/game.c 						\
 	src/sprite/sprite.c						\
 	src/sprite/sprite_render.c				\
@@ -38,6 +40,7 @@ INC_FILES=									\
 	src/utils/direction.h  					\
 	src/utils/defs.h						\
 	src/render/color.h						\
+	src/render/shade.h						\
 	src/render/render.h						\
 	src/render/render_utils.h				\
 	src/walls/walls.h    					\
@@ -47,6 +50,7 @@ INC_FILES=									\
 	src/game/keyboard.h						\
 	src/errors/errors.h						\
 	src/player/player.h						\
+	src/game/game_utils.h 					\
 	src/game/game.h 						\
 	src/sprite/sprite.h						\
 	src/sprite/sprite_render.c				\

@@ -3,7 +3,7 @@
 #include <utils/direction.h>
 #include <utils/map_utils.h>
 
-t_position	get_increment_for_vertical_detection(double ray_angle, \
+t_position	get_vertical_detection_increment(double ray_angle, \
 												double tan_angle)
 {
 	t_position	increment;

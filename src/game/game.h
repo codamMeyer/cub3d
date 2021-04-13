@@ -20,8 +20,8 @@ typedef struct s_data
 	t_sprite		*sprites;
 	t_player		player;
 	t_texture		textures[6];
-	t_color_rgba	floor;
-	t_color_rgba	ceiling;
+	t_color			floor;
+	t_color			ceiling;
 	t_bool			save;
 }	t_data;
 

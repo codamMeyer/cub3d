@@ -13,38 +13,9 @@
 #include <utils/map_utils.h>
 #include <utils/math_utils.h>
 #include <walls/walls.h>
+#include "game_utils.h"
 
-void	cleanup(t_data *data)
-{
-	free_matrix(data->worldMap.matrix, data->worldMap.height);
-	free(data->sprites);
-}
-
-void	close_window(t_data *data)
-{
-	cleanup(data);
-	mlx_destroy_window(data->img.mlx, data->img.window);
-	exit(0);
-}
-
-t_texture	load_texture(t_data *data, char *filename)
-{
-	t_texture	texture;
-	int			endian;
-
-	endian = 0;
-	texture.initialized = FALSE;
-	texture.ptr = mlx_xpm_file_to_image(data->img.mlx, filename, \
-										&(texture.width), &(texture.height));
-	if (!texture.ptr)
-		return (texture);
-	texture.data = mlx_get_data_addr(texture.ptr, &texture.bit_per_pixel, \
-							&texture.line_size, &endian);
-	texture.initialized = TRUE;
-	return (texture);
-}
-
-void	ray_casting(t_data *data)
+static int	raycast(t_data *data)
 {
 	const double	ray_increment = \
 					(double)data->player.FOV / (double)data->screen.width;
@@ -64,11 +35,6 @@ void	ray_casting(t_data *data)
 	mlx_put_image_to_window(data->img.mlx, data->img.window, \
 							data->img.ptr, 0, 0);
 	save_image(data->screen, data->img.addr, data->save);
-}
-
-static int	display(t_data *data)
-{
-	ray_casting(data);
 	return (1);
 }
 
@@ -117,12 +83,6 @@ static t_bool	init_window(t_data *data)
 	return (TRUE);
 }
 
-int	red_cross(t_data *data)
-{
-	close_window(data);
-	return (1);
-}
-
 t_status	run(const char *filename, t_bool save)
 {
 	const unsigned int	key_mask = (1L << 0);
@@ -146,7 +106,7 @@ t_status	run(const char *filename, t_bool save)
 	data.save = save;
 	mlx_hook(data.img.window, KEY_PRESS_EVENT, key_mask, keypressed, &data);
 	mlx_hook(data.img.window, CLIENT_MSG_EVENT, notify_mask, red_cross, &data);
-	mlx_loop_hook(data.img.mlx, display, &data);
+	mlx_loop_hook(data.img.mlx, raycast, &data);
 	mlx_loop(data.img.mlx);
 	return (TRUE);
 }

@@ -2,27 +2,35 @@
 #include <utils/defs.h>
 #include <utils/math_utils.h>
 
-int min_i(int a, int b)
+int	min_i(int a, int b)
 {
-	return (a < b ? a : b);
+	if (a < b)
+		return (a);
+	return (b);
 }
 
-int max_i(int a, int b)
+int	max_i(int a, int b)
 {
-	return (a > b ? a : b);
+	if (a > b)
+		return (a);
+	return (b);
 }
 
-double min_d(double a, double b)
+double	min_d(double a, double b)
 {
-	return (a < b ? a : b);
+	if (a < b)
+		return (a);
+	return (b);
 }
 
-double max_d(double a, double b)
+double	max_d(double a, double b)
 {
-	return (a > b ? a : b);
+	if (a > b)
+		return (a);
+	return (b);
 }
 
-double abs_value(double value)
+double	abs_value(double value)
 {
 	if (value < 0.0)
 		return (value * -1.0);

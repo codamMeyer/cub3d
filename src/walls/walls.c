@@ -8,7 +8,9 @@
 #include <utils/angle_utils.h>
 #include <utils/math_utils.h>
 
-static t_position find_wall(t_map worldMap, t_position increment, t_position intersection)
+static t_position	find_wall(t_map worldMap,
+								t_position increment,
+								t_position intersection)
 {
 	while (!detect_hit(worldMap, intersection, WALL))
 	{
@@ -18,12 +20,16 @@ static t_position find_wall(t_map worldMap, t_position increment, t_position int
 	return (intersection);
 }
 
-static void
-find_closest_wall(t_position h_intersection, t_position v_intersection, t_player player, t_ray *ray)
+static void	find_closest_wall(t_position h_intersection,
+							t_position v_intersection,
+							t_player player,
+							t_ray *ray)
 {
-	const double v_dist = get_distance_from_player(v_intersection, player.position);
-	const double h_dist = get_distance_from_player(h_intersection, player.position);
-	const double angle = fix_angle(player.angle - ray->angle);
+	const double	v_dist = \
+					get_distance_from_player(v_intersection, player.position);
+	const double	h_dist = \
+					get_distance_from_player(h_intersection, player.position);
+	const double	angle = fix_angle(player.angle - ray->angle);
 
 	if (v_dist < h_dist)
 	{
@@ -39,29 +45,32 @@ find_closest_wall(t_position h_intersection, t_position v_intersection, t_player
 	}
 }
 
-t_position find_wall_vertical_line(t_data *data, double ray_angle)
+t_position	find_wall_vertical_line(t_data *data, double ray_angle)
 {
-	const double tan_angle = tan(degree_to_radians(ray_angle));
-	const t_position increment = get_increment_for_vertical_detection(ray_angle, tan_angle);
-	const t_position intersection =
+	const double		tan_angle = tan(degree_to_radians(ray_angle));
+	const t_position	increment = \
+		get_vertical_detection_increment(ray_angle, tan_angle);
+	const t_position	intersection = \
 		get_first_vertical_intersection(data->player, ray_angle, tan_angle);
+
 	return (find_wall(data->worldMap, increment, intersection));
 }
 
-t_position find_wall_horizontal_line(t_data *data, double ray_angle)
+t_position	find_wall_horizontal_line(t_data *data, double ray_angle)
 {
-	const double tan_angle = tan(degree_to_radians(ray_angle));
-	const t_position increment = get_increment_for_horizontal_detection(ray_angle, tan_angle);
-	const t_position intersection =
+	const double		tan_angle = tan(degree_to_radians(ray_angle));
+	const t_position	increment = \
+		get_horizontal_detection_increment(ray_angle, tan_angle);
+	const t_position	intersection = \
 		get_first_horizontal_intersection(data->player, ray_angle, tan_angle);
 
 	return (find_wall(data->worldMap, increment, intersection));
 }
 
-double find_and_draw_walls(int col, t_data *data, t_ray *ray)
+double	find_and_draw_walls(int col, t_data *data, t_ray *ray)
 {
-	t_position h_intersection;
-	t_position v_intersection;
+	t_position	h_intersection;
+	t_position	v_intersection;
 
 	h_intersection = create_invalid_position();
 	v_intersection = create_invalid_position();

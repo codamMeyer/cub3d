@@ -64,7 +64,7 @@ t_status	get_texture(const char *line, t_texture textures[])
 	return (ret);
 }
 
-t_status	get_color(const char *line, t_color_rgba *color)
+t_status	get_color(const char *line, t_color *color)
 {
 	char		**split;
 	t_status	ret;

@@ -17,11 +17,7 @@ static t_bool	find_first_line_of_map(const int fd, char **line)
 	return (FALSE);
 }
 
-static t_status	get_header_information(const char *filename,
-									   t_window *window,
-									   t_texture textures[],
-									   t_color_rgba *floor,
-									   t_color_rgba *ceiling)
+static t_status	get_header_information(const char *filename, t_data *data)
 {
 	const int	fd = open(filename, O_RDONLY);
 	char		*line;
@@ -33,13 +29,13 @@ static t_status	get_header_information(const char *filename,
 	while (get_next_line(fd, &line) && ret == SUCCESS)
 	{
 		if (line[0] == 'R')
-			ret = get_resolution(line, window);
+			ret = get_resolution(line, &data->screen);
 		else if (is_texture(line))
-			ret = get_texture(line, textures);
+			ret = get_texture(line, data->textures);
 		else if (line[0] == 'F')
-			ret = get_color(line, floor);
+			ret = get_color(line, &data->floor);
 		else if (line[0] == 'C')
-			ret = get_color(line, ceiling);
+			ret = get_color(line, &data->ceiling);
 		free(line);
 	}
 	free(line);
@@ -140,11 +136,7 @@ t_status	parse_input(const char *filename, t_data *data)
 	ret = SUCCESS;
 	ret = check_file_extension(filename);
 	if (ret == SUCCESS)
-		ret = get_header_information(filename, \
-									&data->screen, \
-									data->textures, \
-									&data->floor, \
-									&data->ceiling);
+		ret = get_header_information(filename, data);
 	if (ret == SUCCESS)
 		ret = parse_map(filename, &data->worldMap);
 	if (ret == SUCCESS)
