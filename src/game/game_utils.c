@@ -17,8 +17,7 @@ void	close_window(t_data *data, t_status status)
 		cleanup(data);
 	if (data->img.mlx != NULL)
 		mlx_destroy_window(data->img.mlx, data->img.window);
-	exit(0);
-
+	exit(status);
 }
 
 int	red_cross(t_data *data, t_status status)
@@ -42,4 +41,18 @@ t_texture	load_texture(t_data *data, char *filename)
 							&texture.line_size, &endian);
 	texture.initialized = TRUE;
 	return (texture);
+}
+
+t_status	load_textures(t_data *data)
+{
+	data->textures[NO] = load_texture(data, data->textures[NO].filename);
+	data->textures[SO] = load_texture(data, data->textures[SO].filename);
+	data->textures[WE] = load_texture(data, data->textures[WE].filename);
+	data->textures[EA] = load_texture(data, data->textures[EA].filename);
+	data->textures[SP] = load_texture(data, data->textures[SP].filename);
+	if (!data->textures[NO].initialized || !data->textures[SO].initialized || \
+		!data->textures[WE].initialized || !data->textures[EA].initialized || \
+		!data->textures[SP].initialized)
+		return (TEXTURE_INFO_ERROR);
+	return (SUCCESS);
 }

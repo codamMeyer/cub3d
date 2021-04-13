@@ -39,20 +39,6 @@ static int	raycast(t_data *data)
 	return (1);
 }
 
-static t_status	load_textures(t_data *data)
-{
-	data->textures[NO] = load_texture(data, data->textures[NO].filename);
-	data->textures[SO] = load_texture(data, data->textures[SO].filename);
-	data->textures[WE] = load_texture(data, data->textures[WE].filename);
-	data->textures[EA] = load_texture(data, data->textures[EA].filename);
-	data->textures[SP] = load_texture(data, data->textures[SP].filename);
-	if (!data->textures[NO].initialized || !data->textures[SO].initialized || \
-		!data->textures[WE].initialized || !data->textures[EA].initialized || \
-		!data->textures[SP].initialized)
-		return (TEXTURE_INFO_ERROR);
-	return (SUCCESS);
-}
-
 static void	update_screen_resolution(t_data *data)
 {
 	int	width;
@@ -93,21 +79,11 @@ static t_status	init_window(t_data *data)
 	return (SUCCESS);
 }
 
-static void	setup_hooks(t_data *data)
+void	run(const char *filename, t_bool save)
 {
 	const unsigned int	press = (1L << 0);
 	const unsigned int	notify = (1L << 17);
 	const unsigned int	release = (1L << 1);
-
-	mlx_hook(data->img.window, KEY_PRESS_EVENT, press, key_pressed, data);
-	mlx_hook(data->img.window, KEY_RELEASE_EVENT, release, key_released, data);
-	mlx_hook(data->img.window, CLIENT_MSG_EVENT, notify, red_cross, data);
-	mlx_loop_hook(data->img.mlx, update_frame, data);
-	mlx_loop(data->img.mlx);
-}
-
-void	run(const char *filename, t_bool save)
-{
 	t_data				data;
 	t_status			ret;
 
@@ -121,6 +97,10 @@ void	run(const char *filename, t_bool save)
 	if (ret != SUCCESS)
 		close_window(&data, ret);
 	data.save = save;
-	setup_hooks(&data);
+	mlx_hook(data.img.window, KEY_PRESS_EVENT, press, key_pressed, &data);
+	mlx_hook(data.img.window, KEY_RELEASE_EVENT, release, key_released, &data);
+	mlx_hook(data.img.window, CLIENT_MSG_EVENT, notify, red_cross, &data);
+	mlx_loop_hook(data.img.mlx, update_frame, &data);
+	mlx_loop(data.img.mlx);
 	return ;
 }

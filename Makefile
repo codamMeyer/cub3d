@@ -28,9 +28,11 @@ SRC_FILES=									\
 	src/utils/direction.c  					\
 	src/errors/errors.c						\
 	src/parser/parser.c						\
+	src/parser/parse_header.c				\
 	src/parser/utils_parser.c				\
 	src/parser/texture_parser.c				\
 	src/parser/map_parser.c					\
+	src/parser/map_parser_utils.c			\
 	src/bmp/bmp.c
 
 INC_FILES=									\
@@ -57,9 +59,11 @@ INC_FILES=									\
 	src/sprite/sprite.h						\
 	src/sprite/sprite_render.c				\
 	src/parser/parser.h						\
+	src/parser/parse_header.h				\
 	src/parser/utils_parser.h				\
 	src/parser/texture_parser.h				\
 	src/parser/map_parser.h					\
+	src/parser/map_parser_utils.h			\
 	src/bmp/bmp.h
 
 
