@@ -13,20 +13,15 @@ t_bool	is_straight_up_or_down(double ray_angle)
 	return (ray_angle == 90.0 || ray_angle == 270.0);
 }
 
-void	keep_inside_map(t_grid_position *pos, t_map worldMap)
-{
-	pos->x = max_i(pos->x, 0);
-	pos->y = max_i(pos->y, 0);
-	pos->x = min_i(pos->x, worldMap.width - 1);
-	pos->y = min_i(pos->y, worldMap.height - 1);
-}
-
 t_bool	detect_hit(t_map worldMap, t_position pos, t_collider collider)
 {
 	t_grid_position	grid_pos;
 
 	grid_pos = to_grid_position(worldMap, pos);
-	keep_inside_map(&grid_pos, worldMap);
+	grid_pos.x = max_i(grid_pos.x, 0);
+	grid_pos.y = max_i(grid_pos.y, 0);
+	grid_pos.x = min_i(grid_pos.x, worldMap.width - 1);
+	grid_pos.y = min_i(grid_pos.y, worldMap.height - 1);
 	return (worldMap.matrix[grid_pos.y][grid_pos.x] == (int)collider);
 }
 

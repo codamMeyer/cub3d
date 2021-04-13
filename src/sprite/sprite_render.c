@@ -4,69 +4,35 @@
 #include <math.h>
 #include <raycast/raycast_utils.h>
 #include <render/render_utils.h>
+#include "sprite_render_utils.h"
 #include <stdio.h>
 #include <utils/angle_utils.h>
 #include <utils/math_utils.h>
 
-void	compute_sprite_dist_from_player(t_player player,
-										t_sprite *sprites,
-										int num_sprites)
+void	draw_sprites_slice(t_data *data,
+							int col,
+							double dist_to_wall,
+							t_sprite_projection sprite)
 {
-	int	i;
-
-	i = 0;
-	while (i < num_sprites)
-	{
-		sprites[i].dist_from_player = \
-				get_distance_from_player(sprites[i].center, player.position);
-		++i;
-	}
-}
-
-double	get_sprite_screen_center(double dist_to_plane,
-								double sprite_to_player_angle,
-								double player_angle,
-								double sprite_angle)
-{
-	double	sprite_screen_center;
-
-	sprite_screen_center = dist_to_plane * \
-					tan(degree_to_radians(sprite_to_player_angle));
-	if (player_angle > sprite_angle)
-		sprite_screen_center *= -1;
-	return (sprite_screen_center);
-}
-
-double	get_sprite_angle(t_player player, t_sprite sprite)
-{
-	const t_position	delta = {.x = sprite.center.x - player.position.x,
-							  .y = sprite.center.y - player.position.y};
-	const double		sprite_angle = \
-		fix_angle(radians_to_degrees(atan2(-delta.y, delta.x)));
-
-	return (sprite_angle);
-}
-
-static t_texture_position	get_texture_position(const t_texture *texture,
-												t_dimensions dimensions,
-												int y_index,
-												double x)
-{
-	const double		texture_to_sprite_ratio = (double)texture->height / \
-												(double)dimensions.real_height;
-	const int			wall_pixel_position = (y_index - dimensions.real_top);
 	t_texture_position	pos;
+	t_color				color;
+	int					y;
 
-	pos.y = floor(wall_pixel_position * texture_to_sprite_ratio);
-	pos.x = (int)x * texture_to_sprite_ratio;
-	return (pos);
-}
-
-t_bool	is_visible(t_sprite_projection sprite, int col, double dist_to_wall)
-{
-	return (sprite.dist_from_player < dist_to_wall && \
-			sprite.dist_from_player < dist_to_wall && sprite.dist_from_player > 0.0 &&\
-			col >= sprite.start.x && col <= sprite.end.x);
+	if (is_visible(sprite, col, dist_to_wall))
+	{
+		y = max_i(sprite.start.y, 0);
+		while (y <= min_i(sprite.end.y, data->screen.height))
+		{
+			pos = get_texture_position(&data->textures[SP], \
+									   sprite.dimensions, y, \
+									   col - sprite.start.x);
+			color = get_pixel_color(&data->textures[SP], pos.x, pos.y);
+			color = apply_shading(sprite.dist_from_player, color, 400);
+			if (!is_black(color))
+				my_mlx_pixel_put(&data->img, col, y, color);
+			y++;
+		}
+	}
 }
 
 t_sprite_projection	create_sprite_projection(t_player player,
@@ -95,29 +61,18 @@ t_sprite_projection	create_sprite_projection(t_player player,
 	return (proj);
 }
 
-void	draw_sprites_slice(t_data *data,
-							int col,
-							double dist_to_wall,
-							t_sprite_projection sprite)
+void	compute_sprite_dist_from_player(t_player player,
+										t_sprite *sprites,
+										int num_sprites)
 {
-	t_texture_position	pos;
-	t_color				color;
-	int					y;
+	int	i;
 
-	if (is_visible(sprite, col, dist_to_wall))
+	i = 0;
+	while (i < num_sprites)
 	{
-		y = max_i(sprite.start.y, 0);
-		while (y <= min_i(sprite.end.y, data->screen.height))
-		{
-			pos = get_texture_position(&data->textures[SP], \
-									   sprite.dimensions, y, \
-									   col - sprite.start.x);
-			color = get_pixel_color(&data->textures[SP], pos.x, pos.y);
-			color = apply_shading(sprite.dist_from_player, color, 400);
-			if (!is_black(color))
-				my_mlx_pixel_put(&data->img, col, y, color);
-			y++;
-		}
+		sprites[i].dist_from_player = \
+				get_distance_from_player(sprites[i].center, player.position);
+		++i;
 	}
 }
 
