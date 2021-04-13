@@ -3,10 +3,10 @@
 #include <game/game.h>
 #include <libminift.h>
 #include <stdio.h>
+#include <errno.h>
 
 int	main(int argc, char *argv[])
 {
-	t_status	error;
 	t_bool		save;
 
 	save = FALSE;
@@ -17,11 +17,6 @@ int	main(int argc, char *argv[])
 	}
 	if (argc == 3 && (ft_strncmp("--save", argv[2], 7) == 0))
 		save = TRUE;
-	error = run(argv[1], save);
-	if (error)
-	{
-		print_error_message(error);
-		return (1);
-	}
+	run(argv[1], save);
 	return (0);
 }

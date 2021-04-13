@@ -1,6 +1,6 @@
 NAME=raycaster
 CC=clang
-CFLAGS= -ggdb3 -Wall -Wextra -Werror -fsanitize=address -fsanitize=leak
+CFLAGS= -ggdb3 -Wall -Wextra -Werror -O3 #-fsanitize=address -fsanitize=leak
 TEST_CFLAGS= -ggdb3 -Wall -Wextra -Werror #-fsanitize=address -fsanitize=leak
 INC_PATH=-I./mlx_linux -I./ -I./libminift -I./src
 LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz  -L./libminift -lminift
@@ -18,6 +18,7 @@ SRC_FILES=									\
 	src/raycast/vertical_detection.c		\
 	src/walls/walls.c    					\
 	src/raycast/raycast_utils.c 			\
+	src/player/movement.c					\
 	src/player/player.c						\
 	src/game/keyboard.c						\
 	src/utils/map_utils.c	    			\
@@ -50,6 +51,7 @@ INC_FILES=									\
 	src/game/keyboard.h						\
 	src/errors/errors.h						\
 	src/player/player.h						\
+	src/player/movement.h					\
 	src/game/game_utils.h 					\
 	src/game/game.h 						\
 	src/sprite/sprite.h						\

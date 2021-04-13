@@ -25,7 +25,6 @@ typedef struct s_data
 	t_bool			save;
 }	t_data;
 
-void		close_window(t_data *data);
-t_status	run(const char *filename, t_bool save);
+void	run(const char *filename, t_bool save);
 
 #endif

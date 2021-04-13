@@ -2,8 +2,8 @@
 # define GAME_UTILS_H
 # include "game.h"
 
-void		close_window(t_data *data);
-int			red_cross(t_data *data);
+void		close_window(t_data *data, t_status status);
+int			red_cross(t_data *data, t_status status);
 t_texture	load_texture(t_data *data, char *filename);
 
 #endif

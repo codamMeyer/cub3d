@@ -60,11 +60,7 @@ static void	draw_wall_slice(t_data *data,
 		color = get_pixel_color(&data->textures[texture], \
 								texture_pos.x, texture_pos.y);
 		if (ray->orientation == VERTICAL)
-		{
-			color.red *= 0.8;
-			color.green *= 0.8;
-			color.blue *= 0.8;
-		}
+			color = get_darker_color(color, 0.8);
 		color = apply_shading(ray->distance, color, 400);
 		if (!is_black(color))
 			my_mlx_pixel_put(&data->img, slice_col, wall_index, color);

@@ -7,6 +7,7 @@
 #include <mlx.h>
 #include <parser/parser.h>
 #include <player/player.h>
+#include <player/movement.h>
 #include <src/sprite/sprite_render.h>
 #include <stdio.h>
 #include <utils/angle_utils.h>
@@ -38,7 +39,7 @@ static int	raycast(t_data *data)
 	return (1);
 }
 
-static t_bool	load_textures(t_data *data)
+static t_status	load_textures(t_data *data)
 {
 	data->textures[NO] = load_texture(data, data->textures[NO].filename);
 	data->textures[SO] = load_texture(data, data->textures[SO].filename);
@@ -48,8 +49,8 @@ static t_bool	load_textures(t_data *data)
 	if (!data->textures[NO].initialized || !data->textures[SO].initialized || \
 		!data->textures[WE].initialized || !data->textures[EA].initialized || \
 		!data->textures[SP].initialized)
-		return (FALSE);
-	return (TRUE);
+		return (TEXTURE_INFO_ERROR);
+	return (SUCCESS);
 }
 
 static void	update_screen_resolution(t_data *data)
@@ -60,53 +61,66 @@ static void	update_screen_resolution(t_data *data)
 	mlx_get_screen_size(data->img.mlx, &width, &height);
 	data->screen.width = min_i(data->screen.width, width);
 	data->screen.height = min_i(data->screen.height, height);
+	data->player.dist_to_plane = (data->screen.width / 2.0) \
+							/ tan(degree_to_radians(data->player.FOV / 2.0));
 }
 
-static t_bool	init_window(t_data *data)
+static int	update_frame(t_data *data)
+{
+	raycast(data);
+	update(&data->player, data->worldMap);
+	return (1);
+}
+
+static t_status	init_window(t_data *data)
 {
 	data->img.mlx = mlx_init();
 	if (!data->img.mlx)
-		return (FALSE);
+		return (INIT_WINDOW_ERROR);
 	update_screen_resolution(data);
 	data->img.window = mlx_new_window(data->img.mlx, data->screen.width, \
 						data->screen.height, "CUB3D");
 	if (!data->img.window)
-		return (FALSE);
+		return (INIT_WINDOW_ERROR);
 	data->img.ptr = mlx_new_image(data->img.mlx, \
 									data->screen.width, data->screen.height);
 	if (!data->img.ptr)
-		return (FALSE);
+		return (INIT_WINDOW_ERROR);
 	data->img.addr = mlx_get_data_addr(data->img.ptr, &data->img.bits_per_pixel, \
 									&data->img.line_length, &data->img.endian);
 	if (!data->img.addr)
-		return (FALSE);
-	return (TRUE);
+		return (INIT_WINDOW_ERROR);
+	return (SUCCESS);
 }
 
-t_status	run(const char *filename, t_bool save)
+static void	setup_hooks(t_data *data)
 {
-	const unsigned int	key_mask = (1L << 0);
-	const unsigned int	notify_mask = (1L << 17);
+	const unsigned int	press = (1L << 0);
+	const unsigned int	notify = (1L << 17);
+	const unsigned int	release = (1L << 1);
+
+	mlx_hook(data->img.window, KEY_PRESS_EVENT, press, key_pressed, data);
+	mlx_hook(data->img.window, KEY_RELEASE_EVENT, release, key_released, data);
+	mlx_hook(data->img.window, CLIENT_MSG_EVENT, notify, red_cross, data);
+	mlx_loop_hook(data->img.mlx, update_frame, data);
+	mlx_loop(data->img.mlx);
+}
+
+void	run(const char *filename, t_bool save)
+{
 	t_data				data;
 	t_status			ret;
 
 	data.player = create_player();
+	ret = SUCCESS;
 	ret = parse_input(filename, &data);
+	if (ret == SUCCESS)
+		ret = init_window(&data);
+	if (ret == SUCCESS)
+		ret = load_textures(&data);
 	if (ret != SUCCESS)
-		return (ret);
-	if (!init_window(&data))
-		return (INIT_WINDOW_ERROR);
-	if (!load_textures(&data))
-	{
-		close_window(&data);
-		return (TEXTURE_INFO_ERROR);
-	}
-	data.player.dist_to_plane = (data.screen.width / 2.0) \
-							/ tan(degree_to_radians(data.player.FOV / 2.0));
+		close_window(&data, ret);
 	data.save = save;
-	mlx_hook(data.img.window, KEY_PRESS_EVENT, key_mask, keypressed, &data);
-	mlx_hook(data.img.window, CLIENT_MSG_EVENT, notify_mask, red_cross, &data);
-	mlx_loop_hook(data.img.mlx, raycast, &data);
-	mlx_loop(data.img.mlx);
-	return (TRUE);
+	setup_hooks(&data);
+	return ;
 }

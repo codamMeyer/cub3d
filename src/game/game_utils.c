@@ -9,16 +9,21 @@ static void	cleanup(t_data *data)
 	free(data->sprites);
 }
 
-void	close_window(t_data *data)
+void	close_window(t_data *data, t_status status)
 {
-	cleanup(data);
-	mlx_destroy_window(data->img.mlx, data->img.window);
+	if (status != SUCCESS)
+		print_error_message(status);
+	if (data->worldMap.matrix != NULL)
+		cleanup(data);
+	if (data->img.mlx != NULL)
+		mlx_destroy_window(data->img.mlx, data->img.window);
 	exit(0);
+
 }
 
-int	red_cross(t_data *data)
+int	red_cross(t_data *data, t_status status)
 {
-	close_window(data);
+	close_window(data, status);
 	return (1);
 }
 
