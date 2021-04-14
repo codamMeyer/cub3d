@@ -1,4 +1,4 @@
-#include "libminift.h"
+#include "libft.h"
 
 void	ft_strcpy(char *dest, char *src)
 {

@@ -1,5 +1,5 @@
-NAME = libminift.a
-HEADER_FILES = libminift.h
+NAME = libft.a
+HEADER_FILES = libft.h
 CC=gcc
 CFLAGS= -Wall -Werror -Wextra -O3
 LDFLAGS= -shared -fPIC
@@ -14,10 +14,8 @@ SRC_FILES=					\
 	ft_memcpy.c				\
 	ft_isdigit.c			\
 	get_next_line.c			\
-	get_next_line_utils.c	\
+	get_next_line_utils.c	
 	
-	
-
 SRC_OBJ = $(SRC_FILES:.c=.o)
 OBJ_FILES = $(SRC_OBJ)
 

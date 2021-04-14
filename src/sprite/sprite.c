@@ -6,6 +6,7 @@
 #include <render/render_utils.h>
 #include <utils/angle_utils.h>
 #include <utils/direction.h>
+#include <utils/grid_position.h>
 #include <utils/math_utils.h>
 
 static t_bool	swap(t_sprite *cur, t_sprite *prev)

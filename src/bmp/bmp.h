@@ -38,11 +38,6 @@ typedef struct __attribute__((__packed__)) s_bmp_info_header
 	uint32_t	important_colors;
 }	t_bmp_info_header;
 
-unsigned int		get_size_of_bitmap_file(t_window window, \
-											const int pixel_data_offset);
-t_bmp_header		create_bmp_header(t_window window);
-t_bmp_info_header	create_bmp_info_header(t_window window);
-void				create_bmp_file(t_window window, void *image);
 void				save_image(t_window screen, void *address, t_bool save);
 
 #endif

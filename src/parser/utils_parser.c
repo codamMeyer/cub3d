@@ -1,6 +1,6 @@
 #include "utils_parser.h"
 #include "texture_parser.h"
-#include <libminift.h>
+#include <libft.h>
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -1,6 +1,6 @@
 #include "ctest.h"
 #include <fcntl.h>
-#include <libminift.h>
+#include <libft.h>
 #include <parser/parser.h>
 #include <parser/texture_parser.h>
 #include <stdio.h>

@@ -1,4 +1,4 @@
-#include <libminift.h>
+#include <libft.h>
 #include <parser/texture_parser.h>
 #include <parser/utils_parser.h>
 #include <stdio.h>

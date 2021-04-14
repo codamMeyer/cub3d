@@ -1,9 +1,11 @@
 NAME=raycaster
+LIBFT=libft
+MLX=mlx_linux
 CC=clang
 CFLAGS= -ggdb3 -Wall -Wextra -Werror -O3 #-fsanitize=address -fsanitize=leak
 TEST_CFLAGS= -ggdb3 -Wall -Wextra -Werror #-fsanitize=address -fsanitize=leak
-INC_PATH=-I./mlx_linux -I./ -I./libminift -I./src
-LDFLAGS=-L./mlx_linux -lmlx -L./ -lXext -lX11 -lm -lz  -L./libminift -lminift
+INC_PATH=-I./$(MLX) -I./ -I./$(LIBFT) -I./src
+LDFLAGS=-L./$(MLX) -lmlx -L./ -lXext -lX11 -lm -lz  -L./$(LIBFT) -lft
 
 SRC_FILES=									\
 	src/render/render.c						\
@@ -26,6 +28,7 @@ SRC_FILES=									\
 	src/utils/math_utils.c  				\
 	src/utils/angle_utils.c  				\
 	src/utils/position.c	  				\
+	src/utils/grid_position.c	  			\
 	src/utils/direction.c  					\
 	src/errors/errors.c						\
 	src/parser/parser.c						\
@@ -41,6 +44,7 @@ INC_FILES=									\
 	src/utils/math_utils.h  				\
 	src/utils/angle_utils.c  				\
 	src/utils/position.h	  				\
+	src/utils/grid_position.h	  			\
 	src/utils/direction.h  					\
 	src/utils/defs.h						\
 	src/render/color.h						\
@@ -82,27 +86,31 @@ TEST_FILES= 								\
 	test/test_find_closest_wall.c			\
 	
 
-all: libminift $(NAME)
+all: $(LIBFT) $(MLX) $(NAME)
 
 $(NAME): $(INC_FILES) $(SRC_FILES)
-		@cp ./libminift/libminift.a .
+		# @cp ./$(LIBFT)/$(LIBFT).a .
 		$(CC) $(CFLAGS) $(INC_PATH) $(SRC_FILES) src/main.c $(LDFLAGS) -o $(NAME)
+
+$(LIBFT):
+	$(MAKE) -C ./$(LIBFT)
+
+$(MLX):
+	$(MAKE) -C ./$(MLX)
 
 test: $(INC_FILES) $(SRC_FILES) $(TEST_FILES)
 	$(CC) -D GRID_SIZE=32 $(TEST_CFLAGS) $(INC_PATH) $(SRC_FILES) $(TEST_FILES) $(LDFLAGS) -o tester
 
 clean:
-	$(MAKE) clean -C ./libminift
-	rm -f $(SRC_OBJ)
+	$(MAKE) clean -C ./$(LIBFT)
+	$(MAKE) clean -C ./$(MLX)
 
 re: fclean all
 
-
-libminift:
-	$(MAKE) -C ./libminift
-
 fclean: clean
-	$(MAKE) fclean -C ./libminift
-	rm -f $(NAME)
+	$(MAKE) fclean -C ./$(LIBFT)
+	$(MAKE) fclean -C ./$(MLX)
+	rm -f $(LIBFT).a
+	rm -f image.bmp
 
-.PHONY: all clean fclean re test libminift
+.PHONY: all clean fclean re test libft mlx_linux

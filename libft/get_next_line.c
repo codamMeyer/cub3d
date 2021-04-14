@@ -1,4 +1,4 @@
-#include "libminift.h"
+#include "libft.h"
 
 static int	populate_line(char **dest, t_file_state *file_state, int *ret)
 {

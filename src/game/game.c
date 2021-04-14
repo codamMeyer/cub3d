@@ -2,7 +2,7 @@
 #include <bmp/bmp.h>
 #include <errors/errors.h>
 #include <game/keyboard.h>
-#include <libminift/libminift.h>
+#include <libft/libft.h>
 #include <math.h>
 #include <mlx.h>
 #include <parser/parser.h>

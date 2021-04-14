@@ -1,6 +1,7 @@
 #include "raycast_utils.h"
 #include <math.h>
 #include <utils/angle_utils.h>
+#include <utils/grid_position.h>
 #include <utils/math_utils.h>
 
 t_bool	is_straight_left_or_right(double ray_angle)

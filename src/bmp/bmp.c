@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <utils/defs.h>
 
-t_bmp_header	create_bmp_header(t_window window)
+static t_bmp_header	create_bmp_header(t_window window)
 {
 	const int		pixel_data_offset = 54;
 	const int		bytes_per_pixel = 4;
@@ -19,7 +19,7 @@ t_bmp_header	create_bmp_header(t_window window)
 	return (bmp_header);
 }
 
-t_bmp_info_header	create_bmp_info_header(t_window window)
+static t_bmp_info_header	create_bmp_info_header(t_window window)
 {
 	t_bmp_info_header	bmp_info_header;
 
@@ -52,7 +52,7 @@ static void	write_bmp_pixels(const int fd, t_window window, void *image)
 	}
 }
 
-void	create_bmp_file(t_window window, void *image)
+static void	create_bmp_file(t_window window, void *image)
 {
 	const int				fd = open("image.bmp", \
 								O_WRONLY | O_CREAT | O_TRUNC | O_APPEND, 0666);

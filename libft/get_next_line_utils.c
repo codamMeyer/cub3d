@@ -1,4 +1,4 @@
-#include "libminift.h"
+#include "libft.h"
 
 static size_t	ft_min(size_t lhs, size_t rhs)
 {

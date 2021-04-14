@@ -1,5 +1,5 @@
 #include "map_parser.h"
-#include <libminift.h>
+#include <libft.h>
 #include <parser/utils_parser.h>
 #include <player/player.h>
 #include <stdio.h>

@@ -1,7 +1,7 @@
 #include <bmp/bmp.h>
 #include <errors/errors.h>
 #include <game/game.h>
-#include <libminift.h>
+#include <libft.h>
 #include <stdio.h>
 #include <errno.h>
 

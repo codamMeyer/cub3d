@@ -1,5 +1,5 @@
 #include "errors.h"
-#include <libminift.h>
+#include <libft.h>
 #include <stdio.h>
 #include <unistd.h>
 

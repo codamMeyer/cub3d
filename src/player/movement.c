@@ -1,6 +1,7 @@
 #include "movement.h"
 #include <math.h>
 #include <utils/angle_utils.h>
+#include <utils/grid_position.h>
 
 static t_bool	can_move(t_map worldMap,
 						t_position new_pos,

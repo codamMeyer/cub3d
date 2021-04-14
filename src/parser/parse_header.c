@@ -1,5 +1,5 @@
 #include "parse_header.h"
-#include <libminift.h>
+#include <libft.h>
 #include <fcntl.h>
 #include "texture_parser.h"
 #include "utils_parser.h"

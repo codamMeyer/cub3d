@@ -1,4 +1,4 @@
-#include "libminift.h"
+#include "libft.h"
 
 static void	free_mem(char **splits, int i)
 {

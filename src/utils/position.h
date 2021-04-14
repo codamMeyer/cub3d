@@ -8,12 +8,6 @@ typedef struct s_position
 	double	y;
 }	t_position;
 
-typedef struct s_grid_position
-{
-	int	x;
-	int	y;
-}	t_grid_position;
-
 typedef struct s_texture_position
 {
 	int	x;
@@ -28,14 +22,9 @@ typedef struct s_ray
 	t_orientation	orientation;
 }	t_ray;
 
-t_grid_position	to_grid_position(t_map worldMap, t_position pos);
-t_position		get_grid_center(t_grid_position grid_pos);
-t_bool			is_valid_grid_position(t_map worldmap, \
-										t_grid_position position);
 t_position		create_invalid_position(void);
 double			get_distance_from_player(t_position ray_coord, \
 											t_position player_coord);
-t_bool			is_valid_position(t_map worldmap, t_position position);
 t_bool			is_same_pos(t_position pos1, t_position pos2);
 
 #endif

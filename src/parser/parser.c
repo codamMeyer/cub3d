@@ -4,7 +4,7 @@
 #include "utils_parser.h"
 #include "parse_header.h"
 #include <fcntl.h>
-#include <libminift.h>
+#include <libft.h>
 #include <utils/map_utils.h>
 
 static t_bool	find_first_line_of_map(const int fd, char **line)
