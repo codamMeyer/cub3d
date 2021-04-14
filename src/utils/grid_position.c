@@ -31,6 +31,21 @@ t_position	get_grid_center(t_grid_position grid_pos)
 	return (center);
 }
 
+
+t_position	compute_grid_center(t_map worldMap, t_position pos)
+{
+	const t_grid_position	grid_pos = to_grid_position(worldMap, pos);
+	const double			half_grid = GRID_SIZE / 2;
+	t_position				center;
+
+	pos.x = (grid_pos.x + 1) * GRID_SIZE;
+	pos.y = (grid_pos.y + 1) * GRID_SIZE;
+	center.x = pos.x - half_grid;
+	center.y = pos.y - half_grid;
+	return (center);
+}
+
+
 t_bool	is_valid_grid_position(t_map worldmap, t_grid_position pos)
 {
 	return ((pos.x > 0 && pos.x < worldmap.width) && \

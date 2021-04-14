@@ -2,8 +2,9 @@ NAME=raycaster
 LIBFT=libft
 MLX=mlx_linux
 CC=clang
-CFLAGS= -ggdb3 -Wall -Wextra -Werror -O3 #-fsanitize=address -fsanitize=leak
-TEST_CFLAGS= -ggdb3 -Wall -Wextra -Werror #-fsanitize=address -fsanitize=leak
+CFLAGS= -Wall -Wextra -Werror #-fsanitize=address -fsanitize=leak
+TEST_CFLAGS=-ggdb3 $(CFLAGS) #-fsanitize=address -fsanitize=leak
+DEBUG_CFLAGS=-ggdb3 $(CFLAGS)
 INC_PATH=-I./$(MLX) -I./ -I./$(LIBFT) -I./src
 LDFLAGS=-L./$(MLX) -lmlx -L./ -lXext -lX11 -lm -lz  -L./$(LIBFT) -lft
 
@@ -89,13 +90,16 @@ TEST_FILES= 								\
 all: $(LIBFT) $(MLX) $(NAME)
 
 $(NAME): $(INC_FILES) $(SRC_FILES)
-		$(CC) $(CFLAGS) $(INC_PATH) $(SRC_FILES) src/main.c $(LDFLAGS) -o $(NAME)
+		$(CC) -O3 $(CFLAGS) $(INC_PATH) $(SRC_FILES) src/main.c $(LDFLAGS) -o $(NAME)
 
 $(LIBFT):
 	$(MAKE) -C ./$(LIBFT)
 
 $(MLX):
 	$(MAKE) -C ./$(MLX)
+
+debug:$(LIBFT) $(MLX) $(INC_FILES) $(SRC_FILES)
+	$(CC) $(DEBUG_CFLAGS) $(INC_PATH) $(SRC_FILES) src/main.c $(LDFLAGS) -o $(NAME)
 
 test: $(INC_FILES) $(SRC_FILES) $(TEST_FILES)
 	$(CC) -D GRID_SIZE=32 $(TEST_CFLAGS) $(INC_PATH) $(SRC_FILES) $(TEST_FILES) $(LDFLAGS) -o tester

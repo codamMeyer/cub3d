@@ -16,10 +16,10 @@ double	get_sprite_screen_center(double dist_to_plane,
 	return (sprite_screen_center);
 }
 
-double	get_sprite_angle(t_player player, t_sprite sprite)
+double	get_sprite_angle(t_position player_pos, t_position sprite_pos)
 {
-	const t_position	delta = {.x = sprite.center.x - player.position.x,
-							  .y = sprite.center.y - player.position.y};
+	const t_position	delta = {.x = sprite_pos.x - player_pos.x,
+							  .y = sprite_pos.y - player_pos.y};
 	const double		sprite_angle = \
 		fix_angle(radians_to_degrees(atan2(-delta.y, delta.x)));
 

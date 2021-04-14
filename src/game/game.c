@@ -10,6 +10,7 @@
 #include <utils/math_utils.h>
 #include <walls/walls.h>
 #include "game_utils.h"
+#include <stdlib.h>
 
 static int	raycast(t_data *data)
 {
@@ -18,19 +19,37 @@ static int	raycast(t_data *data)
 	t_ray			ray;
 	double			dist;
 	int				col;
+	t_sprite_projection *projections = malloc(sizeof(t_sprite_projection) * data->worldMap.sprites_count);
+	int					sprites_count;
 
+	ray.angle = data->player.angle + (data->player.FOV / 2);
+	col = 0;
+	sprites_count = 0;
+	while (col < data->screen.width)
+	{
+		get_all_sprites(data, projections, &sprites_count, ray.angle);
+		ray.angle -= ray_increment;
+		++col;
+	}
+	int i = 0;
+	while (i < sprites_count)
+	{
+		projections[i] = get_sprite_projection(data->player, data->screen, projections[i]);
+		++i;
+	}
 	ray.angle = data->player.angle + (data->player.FOV / 2);
 	col = 0;
 	while (col < data->screen.width)
 	{
 		dist = find_and_draw_walls(col, data, &ray);
-		find_and_draw_sprites(col, data, &ray, dist);
+		// find_and_draw_sprites(col, data, &ray, dist);
 		ray.angle -= ray_increment;
 		++col;
 	}
 	mlx_put_image_to_window(data->img.mlx, data->img.window, \
 							data->img.ptr, 0, 0);
 	save_image(data->screen, data->img.addr, data->save);
+	free(projections);
 	return (1);
 }
 

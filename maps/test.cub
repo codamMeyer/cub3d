@@ -1,0 +1,14 @@
+R 920 700
+NO ./textures/tile.xpm
+SO ./textures/tile.xpm
+WE ./textures/tile.xpm
+EA ./textures/tile.xpm
+S ./textures/ghost.xpm
+F 106, 158, 25
+C 98, 200, 243
+
+11111111
+10000001
+10000021
+1E000001
+11111111

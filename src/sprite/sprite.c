@@ -56,7 +56,6 @@ int	add_sprites_to_array(t_map worldMap,
 						t_intersections intersections)
 {
 	int				count;
-	t_grid_position	grid_pos;
 
 	count = 0;
 	while (is_valid_position(worldMap, intersections.horizontal) || \
@@ -64,14 +63,12 @@ int	add_sprites_to_array(t_map worldMap,
 	{
 		if (detect_hit(worldMap, intersections.horizontal, SPRITE))
 		{
-			grid_pos = to_grid_position(worldMap, intersections.horizontal);
-			sprites[count].center = get_grid_center(grid_pos);
+			sprites[count].center = compute_grid_center(worldMap, intersections.horizontal);
 			++count;
 		}
 		if (detect_hit(worldMap, intersections.vertical, SPRITE))
 		{
-			grid_pos = to_grid_position(worldMap, intersections.vertical);
-			sprites[count].center = get_grid_center(grid_pos);
+			sprites[count].center = compute_grid_center(worldMap, intersections.vertical);
 			++count;
 		}
 		if (count > 1 && \

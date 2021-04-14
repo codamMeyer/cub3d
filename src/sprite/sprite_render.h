@@ -5,6 +5,7 @@
 
 typedef struct s_sprite_projection
 {
+	t_position		center;
 	t_position		start;
 	t_position		end;
 	double			dist_from_player;
@@ -22,5 +23,9 @@ void					find_and_draw_sprites(int col, \
 t_sprite_projection		create_sprite_projection(t_player player, \
 													t_window screen, \
 													t_sprite sprite);
+void get_all_sprites(t_data *data, t_sprite_projection *sprites, int *index, double angle);
+t_sprite_projection	get_sprite_projection(t_player player,
+											t_window screen,
+											t_sprite_projection sprite);
 
 #endif
