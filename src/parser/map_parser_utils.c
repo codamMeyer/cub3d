@@ -1,5 +1,6 @@
 #include "map_parser_utils.h"
 #include "utils_parser.h"
+#include <errors/errors.h>
 
 static t_player_orientation	get_orientation(char c)
 {

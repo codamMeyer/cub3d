@@ -13,9 +13,9 @@ t_dimensions	get_dimensions(double dist_to_wall,
 	dim.real_width = round((GRID_SIZE / dist_to_wall) * player.dist_to_plane);
 	dim.height = min_i(dim.real_height, screen.height);
 	dim.width = min_i(dim.real_width, screen.width);
-	dim.top = round(((double)screen.height / 2.0) - (dim.height / 2.0));
+	dim.top = round(((double)screen.height / 2.0) - ((double)dim.height / 2.0));
 	dim.real_top = round(((double)screen.height / 2.0) \
-							- (dim.real_height / 2.0));
+							- ((double)dim.real_height / 2.0));
 	dim.bottom = dim.top + dim.height;
 	return (dim);
 }

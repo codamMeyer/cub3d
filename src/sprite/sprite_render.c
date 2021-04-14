@@ -54,9 +54,10 @@ t_sprite_projection	create_sprite_projection(t_player player,
 	proj.dist_from_player = fix_fisheye_effect(sprite.dist_from_player, \
 												sprite_to_player_angle);
 	proj.dimensions = get_dimensions(proj.dist_from_player, player, screen);
-	proj.start.y = (screen.height / 2.0) - (proj.dimensions.height / 2.0);
+	proj.start.y = ((double)screen.height / 2.0) - \
+					((double)proj.dimensions.height / 2.0);
 	proj.end.y = proj.start.y + screen.height;
-	proj.start.x = sprite_screen_x - (proj.dimensions.width / 2.0);
+	proj.start.x = sprite_screen_x - ((double)proj.dimensions.width / 2.0);
 	proj.end.x = proj.start.x + proj.dimensions.width;
 	return (proj);
 }

@@ -1,7 +1,4 @@
 #include "player.h"
-#include <math.h>
-#include <utils/angle_utils.h>
-#include <utils/math_utils.h>
 
 t_player	create_player(void)
 {

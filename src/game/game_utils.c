@@ -26,7 +26,7 @@ int	red_cross(t_data *data, t_status status)
 	return (1);
 }
 
-t_texture	load_texture(t_data *data, char *filename)
+static t_texture	load_texture(t_data *data, char *filename)
 {
 	t_texture	texture;
 	int			endian;

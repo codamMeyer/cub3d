@@ -1,9 +1,5 @@
 #include "map_parser.h"
 #include <libft.h>
-#include <parser/utils_parser.h>
-#include <player/player.h>
-#include <stdio.h>
-#include <utils/angle_utils.h>
 #include <utils/math_utils.h>
 #include "map_parser_utils.h"
 

@@ -1,9 +1,5 @@
 #include "keyboard.h"
 #include "game_utils.h"
-#include <mlx.h>
-#include <player/player.h>
-#include <player/movement.h>
-#include <stdlib.h>
 
 int	key_pressed(int keycode, t_data *data)
 {

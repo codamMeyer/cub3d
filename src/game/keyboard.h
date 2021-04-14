@@ -4,8 +4,6 @@
 # define KEY_RELEASE_EVENT 3
 # define CLIENT_MSG_EVENT 33
 # include "game.h"
-# include <player/player.h>
-# include <utils/defs.h>
 
 typedef enum e_key
 {

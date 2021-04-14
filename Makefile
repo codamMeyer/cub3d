@@ -89,7 +89,6 @@ TEST_FILES= 								\
 all: $(LIBFT) $(MLX) $(NAME)
 
 $(NAME): $(INC_FILES) $(SRC_FILES)
-		# @cp ./$(LIBFT)/$(LIBFT).a .
 		$(CC) $(CFLAGS) $(INC_PATH) $(SRC_FILES) src/main.c $(LDFLAGS) -o $(NAME)
 
 $(LIBFT):
@@ -109,8 +108,6 @@ re: fclean all
 
 fclean: clean
 	$(MAKE) fclean -C ./$(LIBFT)
-	$(MAKE) fclean -C ./$(MLX)
-	rm -f $(LIBFT).a
 	rm -f image.bmp
 
 .PHONY: all clean fclean re test libft mlx_linux

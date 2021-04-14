@@ -1,6 +1,5 @@
 #include "parser.h"
 #include "map_parser.h"
-#include "texture_parser.h"
 #include "utils_parser.h"
 #include "parse_header.h"
 #include <fcntl.h>
