@@ -7,7 +7,7 @@ static t_bool	can_move(t_map worldMap,
 						t_position new_pos,
 						t_position prev_pos)
 {
-	const double		player_width = 4.0;
+	const double		player_width = GRID_SIZE / 2;
 	const double		half_player_width = player_width / 2;
 	const t_position	delta = {
 									.x = new_pos.x - prev_pos.x,

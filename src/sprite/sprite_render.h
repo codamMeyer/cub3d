@@ -15,17 +15,15 @@ typedef struct s_sprite_projection
 void					draw_sprites_slice(t_data *data, \
 											int col, \
 											double dist_to_wall, \
-											t_sprite_projection sprite);
-void					find_and_draw_sprites(int col, \
-												t_data *data, \
-												t_ray *ray, \
-												double wall_dist, int sprite_count, t_sprite_projection *sprites);
-t_sprite_projection		create_sprite_projection(t_player player, \
-													t_window screen, \
-													t_sprite sprite);
-void get_all_sprites(t_data *data, t_sprite_projection *sprites, int *index, double angle);
+											t_sprite sprite);
+void					draw_sprites(t_data *data, \
+									int col, \
+									t_ray *ray, \
+									double wall_dist);
+void					find_sprites(t_data *data, int *index, double angle);
 void					get_sprite_projection(t_player player,
-											t_window screen,
-											t_sprite_projection *sprite);
-
+												t_window screen,
+												t_sprite *sprite);
+void					sort(t_sprite *sprites, int sprite_count);
+int						get_all_sprites(t_data *data);
 #endif

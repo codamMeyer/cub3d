@@ -14,38 +14,25 @@
 
 static int	raycast(t_data *data)
 {
-	const double	ray_increment = \
-					(double)data->player.FOV / (double)data->screen.width;
+	const double	ray_increment = (double)data->player.FOV \
+									/ (double)data->screen.width;
 	t_ray			ray;
 	double			dist;
 	int				col;
-	t_sprite_projection *projections = malloc(sizeof(t_sprite_projection) * data->worldMap.sprites_count);
-	int					sprites_count;
 
-	ray.angle = data->player.angle + (data->player.FOV / 2);
 	col = 0;
-	sprites_count = 0;
-	while (col < data->screen.width)
-	{
-		ray.angle = fix_angle(ray.angle);
-		get_all_sprites(data, projections, &sprites_count, ray.angle);
-		ray.angle -= ray_increment;
-		++col;
-	}
-	// sort(projections, sprites_count);
+	data->visible_sprites = get_all_sprites(data);
 	ray.angle = data->player.angle + (data->player.FOV / 2);
-	col = 0;
 	while (col < data->screen.width)
 	{
 		dist = find_and_draw_walls(col, data, &ray);
-		find_and_draw_sprites(col, data, &ray, dist, sprites_count, projections);
+		draw_sprites(data, col, &ray, dist);
 		ray.angle -= ray_increment;
 		++col;
 	}
 	mlx_put_image_to_window(data->img.mlx, data->img.window, \
 							data->img.ptr, 0, 0);
 	save_image(data->screen, data->img.addr, data->save);
-	free(projections);
 	return (1);
 }
 

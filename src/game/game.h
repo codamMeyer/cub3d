@@ -17,6 +17,7 @@ typedef struct s_data
 	t_window		screen;
 	t_img			img;
 	t_map			worldMap;
+	int				visible_sprites;
 	t_sprite		*sprites;
 	t_player		player;
 	t_texture		textures[6];

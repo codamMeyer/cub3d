@@ -41,7 +41,7 @@ t_texture_position	get_texture_position(const t_texture *texture,
 	return (pos);
 }
 
-t_bool	is_visible(t_sprite_projection sprite, int col, double dist_to_wall)
+t_bool	is_visible(t_sprite sprite, int col, double dist_to_wall)
 {
 	(void)col;
 	return (sprite.dist_from_player < dist_to_wall);
