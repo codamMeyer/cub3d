@@ -98,7 +98,7 @@ $(LIBFT):
 $(MLX):
 	$(MAKE) -C ./$(MLX)
 
-debug:$(LIBFT) $(MLX) $(INC_FILES) $(SRC_FILES)
+debug: fclean $(LIBFT) $(MLX) $(INC_FILES) $(SRC_FILES)
 	$(CC) $(DEBUG_CFLAGS) $(INC_PATH) $(SRC_FILES) src/main.c $(LDFLAGS) -o $(NAME)
 
 test: $(INC_FILES) $(SRC_FILES) $(TEST_FILES)

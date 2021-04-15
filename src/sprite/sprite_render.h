@@ -19,13 +19,13 @@ void					draw_sprites_slice(t_data *data, \
 void					find_and_draw_sprites(int col, \
 												t_data *data, \
 												t_ray *ray, \
-												double wall_dist);
+												double wall_dist, int sprite_count, t_sprite_projection *sprites);
 t_sprite_projection		create_sprite_projection(t_player player, \
 													t_window screen, \
 													t_sprite sprite);
 void get_all_sprites(t_data *data, t_sprite_projection *sprites, int *index, double angle);
-t_sprite_projection	get_sprite_projection(t_player player,
+void					get_sprite_projection(t_player player,
 											t_window screen,
-											t_sprite_projection sprite);
+											t_sprite_projection *sprite);
 
 #endif

@@ -27,22 +27,18 @@ static int	raycast(t_data *data)
 	sprites_count = 0;
 	while (col < data->screen.width)
 	{
+		ray.angle = fix_angle(ray.angle);
 		get_all_sprites(data, projections, &sprites_count, ray.angle);
 		ray.angle -= ray_increment;
 		++col;
 	}
-	int i = 0;
-	while (i < sprites_count)
-	{
-		projections[i] = get_sprite_projection(data->player, data->screen, projections[i]);
-		++i;
-	}
+	// sort(projections, sprites_count);
 	ray.angle = data->player.angle + (data->player.FOV / 2);
 	col = 0;
 	while (col < data->screen.width)
 	{
 		dist = find_and_draw_walls(col, data, &ray);
-		// find_and_draw_sprites(col, data, &ray, dist);
+		find_and_draw_sprites(col, data, &ray, dist, sprites_count, projections);
 		ray.angle -= ray_increment;
 		++col;
 	}

@@ -29,7 +29,7 @@ void	free_matrix(int **map, int height)
 	int	i;
 
 	i = 0;
-	if (!map)
+	if (map == NULL)
 		return ;
 	while (i < height)
 	{

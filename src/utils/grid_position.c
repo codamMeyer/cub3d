@@ -6,8 +6,8 @@ t_grid_position	to_grid_position(t_map worldMap, t_position pos)
 
 	grid_pos.x = pos.x / GRID_SIZE;
 	grid_pos.y = pos.y / GRID_SIZE;
-	if (grid_pos.x >= worldMap.width || \
-		grid_pos.y >= worldMap.height || \
+	if (grid_pos.x >= worldMap.width - 1|| \
+		grid_pos.y >= worldMap.height - 1 || \
 		grid_pos.x < 0 || grid_pos.y < 0)
 	{
 		grid_pos.x = INVALID;

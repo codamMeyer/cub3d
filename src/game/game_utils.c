@@ -13,8 +13,7 @@ void	close_window(t_data *data, t_status status)
 {
 	if (status != SUCCESS)
 		print_error_message(status);
-	if (data->worldMap.matrix != NULL)
-		cleanup(data);
+	cleanup(data);
 	if (data->img.mlx != NULL)
 		mlx_destroy_window(data->img.mlx, data->img.window);
 	exit(status);
