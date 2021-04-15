@@ -12,8 +12,6 @@ t_texture_position	get_texture_position(const t_texture *texture, \
 												t_dimensions dimensions, \
 												int y_index, \
 												double x);
-t_bool				is_visible(t_sprite sprite, \
-								int col, \
-								double dist_to_wall);
+t_bool				is_visible(t_sprite sprite, double dist_to_wall);
 
 #endif

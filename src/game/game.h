@@ -1,11 +1,10 @@
 #ifndef GAME_H
 # define GAME_H
-# include <errors/errors.h>
-# include <player/player.h>
-# include <render/color.h>
 # include <utils/defs.h>
+# include <render/color.h>
 # include <sprite/sprite.h>
-
+# include <player/player.h>
+ 
 typedef struct s_window
 {
 	int	width;

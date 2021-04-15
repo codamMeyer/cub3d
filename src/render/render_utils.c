@@ -24,6 +24,8 @@ void	my_mlx_pixel_put(t_img *img, int x, int y, t_color color)
 {
 	char	*dst;
 
+	if (is_black(color))
+		return ;
 	dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
 	dst[0] = color.blue;
 	dst[1] = color.green;

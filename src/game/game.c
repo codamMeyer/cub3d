@@ -20,13 +20,13 @@ static int	raycast(t_data *data)
 	double			dist;
 	int				col;
 
-	col = 0;
-	data->visible_sprites = get_all_sprites(data);
+	get_all_sprites(data);
 	ray.angle = data->player.angle + (data->player.FOV / 2);
+	col = 0;
 	while (col < data->screen.width)
 	{
 		dist = find_and_draw_walls(col, data, &ray);
-		draw_sprites(data, col, &ray, dist);
+		draw_sprites(data, col, dist);
 		ray.angle -= ray_increment;
 		++col;
 	}

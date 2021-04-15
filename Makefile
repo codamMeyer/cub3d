@@ -15,7 +15,7 @@ SRC_FILES=									\
 	src/render/color.c						\
 	src/game/game_utils.c 					\
 	src/game/game.c 						\
-	src/sprite/sprite.c						\
+	src/sprite/sprite_projection.c			\
 	src/sprite/sprite_render_utils.c		\
 	src/sprite/sprite_render.c				\
 	src/raycast/horizontal_detection.c		\
@@ -63,6 +63,7 @@ INC_FILES=									\
 	src/game/game_utils.h 					\
 	src/game/game.h 						\
 	src/sprite/sprite.h						\
+	src/sprite/sprite_projection.h			\
 	src/sprite/sprite_render.h				\
 	src/sprite/sprite_render_utils.h		\
 	src/parser/parser.h						\
