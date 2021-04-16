@@ -1,6 +1,7 @@
 #include "game.h"
-#include <bmp/bmp.h>
+#include "game_utils.h"
 #include "keyboard.h"
+#include <bmp/bmp.h>
 #include <math.h>
 #include <mlx.h>
 #include <parser/parser.h>
@@ -9,8 +10,6 @@
 #include <utils/angle_utils.h>
 #include <utils/math_utils.h>
 #include <walls/walls.h>
-#include "game_utils.h"
-#include <stdlib.h>
 
 static int	raycast(t_data *data)
 {
@@ -30,9 +29,10 @@ static int	raycast(t_data *data)
 		ray.angle -= ray_increment;
 		++col;
 	}
+	if (save_image(data->screen, data->img.addr, data->save))
+		close_window(data, SUCCESS);
 	mlx_put_image_to_window(data->img.mlx, data->img.window, \
 							data->img.ptr, 0, 0);
-	save_image(data->screen, data->img.addr, data->save);
 	return (1);
 }
 
@@ -52,7 +52,7 @@ static int	update_frame(t_data *data)
 {
 	raycast(data);
 	update(&data->player, data->worldMap);
-	return (1);
+	return (0);
 }
 
 static t_status	init_window(t_data *data)

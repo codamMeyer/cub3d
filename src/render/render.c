@@ -9,15 +9,15 @@ static void	draw_ceiling_slice(t_data *data,
 								int wall_top,
 								int wall_height)
 {
-	int		i;
-	t_color	color;
+	const double	shading_dist = \
+						(data->screen.height / 2) + (data->screen.height / 20);
+	int				i;
+	t_color			color;
 
 	i = 0;
 	while (i < wall_top + (wall_height / 2))
 	{
-		color = apply_ceiling_shading(i, \
-					data->ceiling, \
-					(data->screen.height / 2) - (data->screen.height / 20));
+		color = apply_ceiling_shading(i, data->ceiling, shading_dist);
 		my_mlx_pixel_put(&data->img, slice_col, i, color);
 		++i;
 	}
@@ -28,15 +28,15 @@ static void	draw_floor_slice(t_data *data,
 								int wall_bottom,
 								int wall_height)
 {
-	int		i;
-	t_color	color;
+	const double	shading_dist = \
+						(data->screen.height / 2) + (data->screen.height / 20);
+	int				i;
+	t_color			color;
 
 	i = wall_bottom - (wall_height / 2);
 	while (i < data->screen.height)
 	{
-		color = apply_floor_shading(i, \
-					data->floor, \
-					(data->screen.height / 2) + (data->screen.height / 20));
+		color = apply_floor_shading(i, data->floor, shading_dist);
 		my_mlx_pixel_put(&data->img, slice_col, i, color);
 		++i;
 	}

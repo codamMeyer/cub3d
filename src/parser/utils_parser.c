@@ -1,5 +1,5 @@
-#include "utils_parser.h"
 #include "texture_parser.h"
+#include "utils_parser.h"
 #include <libft.h>
 #include <stdio.h>
 #include <stdlib.h>

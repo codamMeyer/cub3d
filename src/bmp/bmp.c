@@ -68,7 +68,7 @@ static void	create_bmp_file(t_window window, void *image)
 	return ;
 }
 
-void	save_image(t_window screen, void *address, t_bool save)
+t_bool	save_image(t_window screen, void *address, t_bool save)
 {
 	static t_bool	image_saved = FALSE;
 
@@ -77,4 +77,5 @@ void	save_image(t_window screen, void *address, t_bool save)
 		image_saved = TRUE;
 		create_bmp_file(screen, address);
 	}
+	return (image_saved);
 }

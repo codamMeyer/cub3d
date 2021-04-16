@@ -38,6 +38,6 @@ typedef struct __attribute__((__packed__)) s_bmp_info_header
 	uint32_t	important_colors;
 }	t_bmp_info_header;
 
-void				save_image(t_window screen, void *address, t_bool save);
+t_bool	save_image(t_window screen, void *address, t_bool save);
 
 #endif

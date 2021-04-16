@@ -4,11 +4,28 @@
 #include "texture_parser.h"
 #include "utils_parser.h"
 
-t_status	check_if_initialized(t_color floor, t_color ceiling)
+static t_status	check_if_initialized(t_color floor, t_color ceiling)
 {
 	if (floor.initialized == TRUE && ceiling.initialized == TRUE)
 		return (SUCCESS);
 	return (COLOR_ERROR);
+}
+
+static t_bool	is_valid_width_and_height(char *width, char *height)
+{
+	while (*width != '\0')
+	{
+		if (!ft_isdigit(*width))
+			return (FALSE);
+		++width;
+	}
+	while (*height != '\0')
+	{
+		if (!ft_isdigit(*height))
+			return (FALSE);
+		++height;
+	}
+	return (TRUE);
 }
 
 t_status	get_header_information(const char *filename, t_data *data)
@@ -37,23 +54,6 @@ t_status	get_header_information(const char *filename, t_data *data)
 	free(line);
 	close(fd);
 	return (ret);
-}
-
-t_bool	is_valid_width_and_height(char *width, char *height)
-{
-	while (*width != '\0')
-	{
-		if (!ft_isdigit(*width))
-			return (FALSE);
-		++width;
-	}
-	while (*height != '\0')
-	{
-		if (!ft_isdigit(*height))
-			return (FALSE);
-		++height;
-	}
-	return (TRUE);
 }
 
 t_status	get_resolution(const char *line, t_window *window)

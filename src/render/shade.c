@@ -2,24 +2,24 @@
 #include "color.h"
 #include <utils/math_utils.h>
 
-t_color	get_darker_color(t_color color, double gradient)
+static t_color	get_lighter_color(t_color color, double gradient)
 {
 	const t_color	darker_color = {
-		.red = max_i(0, color.red * gradient),
-		.green = max_i(0, color.green * gradient),
-		.blue = max_i(0, color.blue * gradient),
+		.red = min_i(255, color.red / gradient),
+		.green = min_i(255, color.green / gradient),
+		.blue = min_i(255, color.blue / gradient),
 		.opacity = 0xFF,
 	};
 
 	return (darker_color);
 }
 
-t_color	get_lighter_color(t_color color, double gradient)
+t_color	get_darker_color(t_color color, double gradient)
 {
 	const t_color	darker_color = {
-		.red = min_i(255, color.red / gradient),
-		.green = min_i(255, color.green / gradient),
-		.blue = min_i(255, color.blue / gradient),
+		.red = max_i(0, color.red * gradient),
+		.green = max_i(0, color.green * gradient),
+		.blue = max_i(0, color.blue * gradient),
 		.opacity = 0xFF,
 	};
 

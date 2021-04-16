@@ -1,7 +1,7 @@
 #include "map_parser.h"
+#include "map_parser_utils.h"
 #include <libft.h>
 #include <utils/math_utils.h>
-#include "map_parser_utils.h"
 
 static t_bool	is_surrounded_by_walls(t_map *map, t_grid_position pos)
 {

@@ -1,5 +1,5 @@
-#include "keyboard.h"
 #include "game_utils.h"
+#include "keyboard.h"
 
 int	key_pressed(int keycode, t_data *data)
 {

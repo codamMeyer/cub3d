@@ -1,17 +1,10 @@
-#include "sprite_render.h"
-#include "sprite.h"
-#include "sprite_projection.h"
-#include <assert.h>
-#include <math.h>
-#include <raycast/raycast_utils.h>
-#include <render/render_utils.h>
 #include "sprite_render_utils.h"
-#include <stdio.h>
+#include "sprite_render.h"
+#include "sprite_projection.h"
+#include <render/render_utils.h>
 #include <utils/angle_utils.h>
 #include <utils/math_utils.h>
 #include <utils/grid_position.h>
-#include <raycast/horizontal_detection.h>
-#include <raycast/vertical_detection.h>
 #include <render/shade.h>
 
 static void	add_sprites_to_list(t_data *data, t_position position)

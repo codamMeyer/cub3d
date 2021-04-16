@@ -1,7 +1,7 @@
-#include "parser.h"
 #include "map_parser.h"
-#include "utils_parser.h"
+#include "parser.h"
 #include "parse_header.h"
+#include "utils_parser.h"
 #include <fcntl.h>
 #include <libft.h>
 #include <utils/map_utils.h>
@@ -15,6 +15,14 @@ static t_bool	find_first_line_of_map(const int fd, char **line)
 		free(*line);
 	}
 	return (FALSE);
+}
+
+static t_bool	init_sprites_array(t_data *data)
+{
+	data->sprites = malloc(sizeof(t_sprite) * data->worldMap.sprites_count);
+	if (data->sprites == NULL)
+		return (MALLOC_ERROR);
+	return (SUCCESS);
 }
 
 t_status	init_map_matrix(const char *filename, t_map *map, t_player *player)
@@ -58,14 +66,6 @@ t_status	parse_map(const char *filename, t_map *map)
 	ret = get_map_dimensions(fd, &line, map);
 	close(fd);
 	return (ret);
-}
-
-t_bool	init_sprites_array(t_data *data)
-{
-	data->sprites = malloc(sizeof(t_sprite) * data->worldMap.sprites_count);
-	if (data->sprites == NULL)
-		return (MALLOC_ERROR);
-	return (SUCCESS);
 }
 
 t_status	parse_input(const char *filename, t_data *data)
