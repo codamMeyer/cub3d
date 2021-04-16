@@ -7,7 +7,8 @@ double				get_sprite_screen_center(double dist_to_plane, \
 								double sprite_to_player_angle, \
 								double player_angle, \
 								double sprite_angle);
-double				get_sprite_angle(t_position player_pos, t_position sprite_pos);
+double				get_sprite_angle(t_position player_pos, \
+									t_position sprite_pos);
 t_texture_position	get_texture_position(const t_texture *texture, \
 												t_dimensions dimensions, \
 												int y_index, \

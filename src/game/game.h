@@ -4,7 +4,7 @@
 # include <render/color.h>
 # include <sprite/sprite.h>
 # include <player/player.h>
- 
+
 typedef struct s_window
 {
 	int	width;

@@ -22,7 +22,8 @@ static t_bool	can_move(t_map worldMap,
 	if (delta.y < 0)
 		new_pos.y -= player_width;
 	pos = to_grid_position(worldMap, new_pos);
-	return (is_valid_position(worldMap, new_pos) && worldMap.matrix[pos.y][pos.x] == (int)EMPTY);
+	return (is_valid_position(worldMap, new_pos) && \
+			worldMap.matrix[pos.y][pos.x] == (int)EMPTY);
 }
 
 static void	move(t_player *player, t_map worldMap, t_position new_pos)

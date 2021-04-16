@@ -73,19 +73,14 @@ t_bool	init_sprites_array(t_data *data)
 	return (SUCCESS);
 }
 
-void init_data(t_data *data)
+t_status	parse_input(const char *filename, t_data *data)
 {
+	t_status	ret;
+
 	data->worldMap.matrix = NULL;
 	data->sprites = NULL;
 	data->img.addr = NULL;
 	data->img.mlx = NULL;
-}
-
-t_status	parse_input(const char *filename, t_data *data)
-{
-	t_status	ret;
-	
-	init_data(data);
 	ret = SUCCESS;
 	ret = check_file_extension(filename);
 	if (ret == SUCCESS)

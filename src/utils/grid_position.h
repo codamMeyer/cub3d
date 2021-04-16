@@ -13,6 +13,6 @@ t_grid_position	to_grid_position(t_map worldMap, t_position pos);
 t_position		get_grid_center(t_grid_position grid_pos);
 t_bool			is_valid_grid_position(t_map worldmap, t_grid_position pos);
 t_bool			is_valid_position(t_map worldmap, t_position pos);
-t_position	compute_grid_center(t_map worldMap, t_position pos);
+t_position		compute_grid_center(t_map worldMap, t_position pos);
 
 #endif
