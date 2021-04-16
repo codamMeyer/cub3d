@@ -8,22 +8,15 @@ typedef struct s_color_rgba
 	uint8_t	green;
 	uint8_t	red;
 	uint8_t	opacity;
+	t_bool	initialized;
 }	t_color;
 
 t_color				get_black_color(void);
 t_bool				is_black(t_color color);
 t_color				get_pixel_color(const t_texture *texture, int x, int y);
-t_color				apply_shading(double distance, \
-									t_color color, \
-									double min_dist);
-t_color				apply_floor_shading(double distance, \
-										t_color color, \
-										double min_dist);
-t_color				apply_ceiling_shading(double distance, \
-										t_color color, \
-										double min_dist);
 t_texture_position	get_wall_texture_position(const t_texture *texture, \
 											 const t_ray *ray, \
 											 t_dimensions wall_dimensions, \
 											 int wall_index);
+
 #endif

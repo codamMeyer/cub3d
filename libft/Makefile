@@ -13,6 +13,9 @@ SRC_FILES=					\
 	ft_split.c      		\
 	ft_memcpy.c				\
 	ft_isdigit.c			\
+	ft_strtrim.c			\
+	ft_calloc.c				\
+	ft_bzero.c				\
 	get_next_line.c			\
 	get_next_line_utils.c	
 	

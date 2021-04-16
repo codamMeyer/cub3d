@@ -57,6 +57,8 @@ static int	update_frame(t_data *data)
 
 static t_status	init_window(t_data *data)
 {
+	if (data->screen.width < 200 || data->screen.height < 200)
+		return (RESOLUTION_ERROR);
 	data->img.mlx = mlx_init();
 	if (!data->img.mlx)
 		return (INIT_WINDOW_ERROR);

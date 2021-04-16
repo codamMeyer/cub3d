@@ -9,6 +9,10 @@ static t_bool	is_valid_color_range(char **colors)
 	const int	green = ft_atoi(colors[1]);
 	const int	blue = ft_atoi(colors[0]);
 
+	if (!is_valid_hex_color(colors[0]) || \
+	!is_valid_hex_color(colors[1]) || \
+	!is_valid_hex_color(colors[2]))
+		return (FALSE);
 	return ((red >= 0 && red <= 255) && \
 			(green >= 0 && green <= 255) && \
 			(blue >= 0 && blue <= 255));
@@ -74,12 +78,14 @@ t_status	get_color(const char *line, t_color *color)
 	split = ft_split(&line[1], ',');
 	if (!split)
 		return (MALLOC_ERROR);
-	if (num_of_strings(split) == 3 && is_valid_color_range(split))
+	if (num_of_strings(split) == 3 && is_valid_color_range(split) &&\
+		!color->initialized)
 	{
 		color->red = ft_atoi(split[0]);
 		color->green = ft_atoi(split[1]);
 		color->blue = ft_atoi(split[2]);
 		color->opacity = 0xFF;
+		color->initialized = TRUE;
 		ret = SUCCESS;
 	}
 	free_split(split);

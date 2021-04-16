@@ -12,6 +12,7 @@
 #include <utils/grid_position.h>
 #include <raycast/horizontal_detection.h>
 #include <raycast/vertical_detection.h>
+#include <render/shade.h>
 
 static void	add_sprites_to_list(t_data *data, t_position position)
 {

@@ -34,8 +34,6 @@ t_status	init_map_matrix(const char *filename, t_map *map, t_player *player)
 		ret = (MALLOC_ERROR);
 	else
 		ret = check_map_content(map, player);
-	if (ret != SUCCESS)
-		free_matrix(map->matrix, map->height);
 	close(fd);
 	return (ret);
 }
@@ -66,10 +64,7 @@ t_bool	init_sprites_array(t_data *data)
 {
 	data->sprites = malloc(sizeof(t_sprite) * data->worldMap.sprites_count);
 	if (data->sprites == NULL)
-	{
-		free_matrix(data->worldMap.matrix, data->worldMap.height);
 		return (MALLOC_ERROR);
-	}
 	return (SUCCESS);
 }
 
@@ -81,6 +76,9 @@ t_status	parse_input(const char *filename, t_data *data)
 	data->sprites = NULL;
 	data->img.addr = NULL;
 	data->img.mlx = NULL;
+	data->img.window = NULL;
+	data->floor.initialized = FALSE;
+	data->ceiling.initialized = FALSE;
 	ret = SUCCESS;
 	ret = check_file_extension(filename);
 	if (ret == SUCCESS)

@@ -4,6 +4,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+t_bool	is_valid_hex_color(char *color)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	tmp = ft_strtrim(color, " ,");
+	while (tmp[i] != '\0')
+	{
+		if (!ft_isdigit(tmp[i]))
+		{
+			free(tmp);
+			return (FALSE);
+		}
+		++i;
+	}
+	free(tmp);
+	return (TRUE);
+}
+
 int	num_of_strings(char **split)
 {
 	int	i;

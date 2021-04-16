@@ -1,4 +1,4 @@
-NAME=raycaster
+NAME=cub3D
 LIBFT=libft
 MLX=mlx_linux
 CC=clang
@@ -113,6 +113,7 @@ re: fclean all
 
 fclean: clean
 	$(MAKE) fclean -C ./$(LIBFT)
+	rm -f $(NAME)
 	rm -f image.bmp
 
 .PHONY: all clean fclean re test libft mlx_linux
