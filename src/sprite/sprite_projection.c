@@ -80,7 +80,7 @@ void	sort(t_sprite *sprites, int sprite_count)
 	}
 }
 
-t_intersections	create_intersections(t_player player, double angle)
+t_intersections	create_intersections(const t_player *player, double angle)
 {
 	const double			tan_angle = tan(degree_to_radians(angle));
 	const t_intersections	intersections = {

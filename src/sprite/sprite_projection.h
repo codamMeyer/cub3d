@@ -14,6 +14,6 @@ t_bool				in_sprites_list(t_sprite *sprites, \
 									int index);
 void				swap(t_sprite *cur, t_sprite *prev);
 void				sort(t_sprite *sprites, int sprite_count);
-t_intersections		create_intersections(t_player player, double angle);
+t_intersections		create_intersections(const t_player *player, double angle);
 
 #endif

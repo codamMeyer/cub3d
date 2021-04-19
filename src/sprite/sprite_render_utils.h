@@ -10,9 +10,9 @@ double				get_sprite_screen_center(double dist_to_plane, \
 double				get_sprite_angle(t_position player_pos, \
 									t_position sprite_pos);
 t_texture_position	get_texture_position(const t_texture *texture, \
-												t_dimensions dimensions, \
-												int y_index, \
-												double x);
-t_bool				is_visible(t_sprite sprite, double dist_to_wall);
+										const t_dimensions *dimensions, \
+										int y_index, \
+										double x);
+t_bool				is_visible(double dist_to_sprite, double dist_to_wall);
 
 #endif

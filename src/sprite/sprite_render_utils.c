@@ -27,13 +27,13 @@ double	get_sprite_angle(t_position player_pos, t_position sprite_pos)
 }
 
 t_texture_position	get_texture_position(const t_texture *texture,
-												t_dimensions dimensions,
+												const t_dimensions *dimensions,
 												int y_index,
 												double x)
 {
 	const double		texture_to_sprite_ratio = (double)texture->height / \
-												(double)dimensions.real_height;
-	const int			wall_pixel_position = (y_index - dimensions.real_top);
+												(double)dimensions->real_height;
+	const int			wall_pixel_position = (y_index - dimensions->real_top);
 	t_texture_position	pos;
 
 	pos.y = floor(wall_pixel_position * texture_to_sprite_ratio);
@@ -41,7 +41,7 @@ t_texture_position	get_texture_position(const t_texture *texture,
 	return (pos);
 }
 
-t_bool	is_visible(t_sprite sprite, double dist_to_wall)
+t_bool	is_visible(double dist_to_sprite, double dist_to_wall)
 {
-	return (sprite.dist_from_player < dist_to_wall);
+	return (dist_to_sprite < dist_to_wall);
 }

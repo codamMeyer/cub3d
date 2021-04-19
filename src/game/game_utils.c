@@ -19,10 +19,9 @@ void	close_window(t_data *data, t_status status)
 	exit(status);
 }
 
-int	red_cross(t_data *data, t_status status)
+int	red_cross(t_data *data)
 {
-	status = SUCCESS;
-	close_window(data, status);
+	close_window(data, SUCCESS);
 	return (1);
 }
 

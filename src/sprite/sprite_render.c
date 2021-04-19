@@ -26,7 +26,7 @@ static void	find_sprites(t_data *data, double angle)
 {
 	t_intersections	intersections;
 
-	intersections = create_intersections(data->player, angle);
+	intersections = create_intersections(&data->player, angle);
 	while (is_valid_position(data->worldMap, intersections.horizontal) || \
 		   is_valid_position(data->worldMap, intersections.vertical))
 	{
@@ -41,22 +41,22 @@ static void	find_sprites(t_data *data, double angle)
 static void	draw_sprites_slice(t_data *data,
 							int col,
 							double dist_to_wall,
-							t_sprite sprite)
+							const t_sprite *sprite)
 {
 	t_texture_position	pos;
 	t_color				color;
 	int					y;
 
-	if (is_visible(sprite, dist_to_wall))
+	if (is_visible(sprite->dist_from_player, dist_to_wall))
 	{
-		y = max_i(sprite.start.y, 0);
-		while (y <= min_i(sprite.end.y, data->screen.height))
+		y = max_i(sprite->start.y, 0);
+		while (y <= min_i(sprite->end.y, data->screen.height))
 		{
 			pos = get_texture_position(&data->textures[SP], \
-									   sprite.dimensions, y, \
-									   col - sprite.start.x);
+									   &sprite->dimensions, y, \
+									   col - sprite->start.x);
 			color = get_pixel_color(&data->textures[SP], pos.x, pos.y);
-			color = apply_shading(sprite.dist_from_player, color, 400);
+			color = apply_shading(sprite->dist_from_player, color, 400);
 			my_mlx_pixel_put(&data->img, col, y, color);
 			y++;
 		}
@@ -71,7 +71,7 @@ void	draw_sprites(t_data *data, int col, double wall_dist)
 	while (i < data->visible_sprites)
 	{
 		if (col >= data->sprites[i].start.x && col <= data->sprites[i].end.x)
-			draw_sprites_slice(data, col, wall_dist, data->sprites[i]);
+			draw_sprites_slice(data, col, wall_dist, &data->sprites[i]);
 		++i;
 	}
 }

@@ -52,7 +52,7 @@ static double	get_increment_angle(double angle, t_direction direction)
 static void	turn(t_player *player)
 {
 	player->angle = fix_angle(player->angle);
-	player->angle += (player->rotation / 3.0);
+	player->angle += (player->rotation / 1.5);
 }
 
 void	update(t_player *player, t_map worldMap)

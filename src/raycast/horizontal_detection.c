@@ -3,12 +3,12 @@
 #include <utils/direction.h>
 #include <utils/map_utils.h>
 
-t_position	get_first_horizontal_intersection(t_player player,
+t_position	get_first_horizontal_intersection(const t_player *player,
 												double ray_angle,
 												double tan_angle)
 {
 	const int		grid_boundary = \
-					floor(player.position.y / GRID_SIZE) * GRID_SIZE;
+					floor(player->position.y / GRID_SIZE) * GRID_SIZE;
 	const double	small_value = 0.000001;
 	t_position		ray;
 	double			width;
@@ -17,8 +17,8 @@ t_position	get_first_horizontal_intersection(t_player player,
 		ray.y = grid_boundary - small_value;
 	else
 		ray.y = grid_boundary + GRID_SIZE;
-	width = (player.position.y - ray.y) / tan_angle;
-	ray.x = player.position.x + width;
+	width = (player->position.y - ray.y) / tan_angle;
+	ray.x = player->position.x + width;
 	return (ray);
 }
 

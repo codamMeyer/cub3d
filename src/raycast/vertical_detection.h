@@ -5,7 +5,7 @@
 
 t_position	get_vertical_detection_increment(double ray_angle, \
 												double tan_angle);
-t_position	get_first_vertical_intersection(t_player player, \
+t_position	get_first_vertical_intersection(const t_player *player, \
 											double ray_angle, \
 											double tan_angle);
 

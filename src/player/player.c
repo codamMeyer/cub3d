@@ -5,7 +5,7 @@ t_player	create_player(void)
 	const t_player	player = {
 								.angle = INVALID_ORIENTATION,
 								.FOV = 60,
-								.speed = 3,
+								.speed = 5,
 								.direction = STILL,
 								.rotation = NONE,
 							};

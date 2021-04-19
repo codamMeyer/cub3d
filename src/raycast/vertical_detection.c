@@ -17,12 +17,12 @@ t_position	get_vertical_detection_increment(double ray_angle, \
 	return (increment);
 }
 
-t_position	get_first_vertical_intersection(t_player player, \
+t_position	get_first_vertical_intersection(const t_player *player, \
 											double ray_angle, \
 											double tan_angle)
 {
 	const int		grid_boundary = \
-					floor(player.position.x / GRID_SIZE) * GRID_SIZE;
+					floor(player->position.x / GRID_SIZE) * GRID_SIZE;
 	const double	small_value = 0.000001;
 	t_position		ray;
 	double			width;
@@ -31,7 +31,7 @@ t_position	get_first_vertical_intersection(t_player player, \
 		ray.x = grid_boundary - small_value;
 	else
 		ray.x = grid_boundary + GRID_SIZE;
-	width = (player.position.x - ray.x) * tan_angle;
-	ray.y = player.position.y + width;
+	width = (player->position.x - ray.x) * tan_angle;
+	ray.y = player->position.y + width;
 	return (ray);
 }

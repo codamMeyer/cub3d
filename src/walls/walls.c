@@ -22,14 +22,14 @@ static t_position	find_wall(t_map worldMap,
 
 static void	find_closest_wall(t_position h_intersection,
 							t_position v_intersection,
-							t_player player,
+							const t_player *player,
 							t_ray *ray)
 {
 	const double	v_dist = \
-					get_distance_from_player(v_intersection, player.position);
+					get_distance_from_player(v_intersection, player->position);
 	const double	h_dist = \
-					get_distance_from_player(h_intersection, player.position);
-	const double	angle = fix_angle(player.angle - ray->angle);
+					get_distance_from_player(h_intersection, player->position);
+	const double	angle = fix_angle(player->angle - ray->angle);
 
 	if (v_dist < h_dist)
 	{
@@ -51,7 +51,7 @@ t_position	find_wall_vertical_line(t_data *data, double ray_angle)
 	const t_position	increment = \
 		get_vertical_detection_increment(ray_angle, tan_angle);
 	const t_position	intersection = \
-		get_first_vertical_intersection(data->player, ray_angle, tan_angle);
+		get_first_vertical_intersection(&data->player, ray_angle, tan_angle);
 
 	return (find_wall(data->worldMap, increment, intersection));
 }
@@ -62,7 +62,7 @@ t_position	find_wall_horizontal_line(t_data *data, double ray_angle)
 	const t_position	increment = \
 		get_horizontal_detection_increment(ray_angle, tan_angle);
 	const t_position	intersection = \
-		get_first_horizontal_intersection(data->player, ray_angle, tan_angle);
+		get_first_horizontal_intersection(&data->player, ray_angle, tan_angle);
 
 	return (find_wall(data->worldMap, increment, intersection));
 }
@@ -79,7 +79,7 @@ double	find_and_draw_walls(int col, t_data *data, t_ray *ray)
 		h_intersection = find_wall_horizontal_line(data, ray->angle);
 	if (!is_straight_up_or_down(ray->angle))
 		v_intersection = find_wall_vertical_line(data, ray->angle);
-	find_closest_wall(h_intersection, v_intersection, data->player, ray);
+	find_closest_wall(h_intersection, v_intersection, &data->player, ray);
 	draw_slice(data, col, ray);
 	return (ray->distance);
 }
