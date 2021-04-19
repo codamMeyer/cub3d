@@ -6,7 +6,7 @@
 #include <mlx.h>
 #include <parser/parser.h>
 #include <player/movement.h>
-#include <src/sprite/sprite_render.h>
+#include <sprite/sprite_render.h>
 #include <utils/angle_utils.h>
 #include <utils/math_utils.h>
 #include <walls/walls.h>

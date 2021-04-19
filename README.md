@@ -4,6 +4,7 @@
   - [🗺️ STEP 1: creating a world](#️-step-1-creating-a-world)
   - [📝 STEP 2: Defining projection attributes](#-step-2-defining-projection-attributes)
   - [🧱 STEP 3: Finding walls](#-step-3-finding-walls)
+- [Checking Horizontal Intersections](#checking-horizontal-intersections)
       - [Steps of finding intersections with horizontal grid lines:](#steps-of-finding-intersections-with-horizontal-grid-lines)
         - [1. Finding y_increment](#1-finding-y_increment)
         - [2. Finding x_increment](#2-finding-x_increment)
@@ -121,7 +122,7 @@ The trick to step 2.A is that instead of checking each pixels, we only have to c
 To find walls, we need to check any grid intersection points that are encountered by the ray; and see if there is a wall on the grid or not. The best way is to check for horizontal and vertical intersections separately. When there is a wall on either a vertical or a horizontal intersection, the checking stops. The distance to both intersection points is then compared, and the closer distance is chosen. This process is illustrated in the following two figures.
 
 
-#Checking Horizontal Intersections
+# Checking Horizontal Intersections
 
 ![figure 10](./images/figure10.png)
 
@@ -148,7 +149,7 @@ As an example the following is how you can get the point 1:
       1.y = rounded_down( 224 / 64 ) * (64) = 192;
    
    The ray is facing up and we want to check the grid above the line, that's why we subtract a small amount from it from it:
-      
+
       1.y = 1.y - (1e-6);
       So the grid coordinate of 1.y is 191 / 64 = 2;
    
