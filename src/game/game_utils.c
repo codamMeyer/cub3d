@@ -22,7 +22,7 @@ void	close_window(t_data *data, t_status status)
 int	red_cross(t_data *data)
 {
 	close_window(data, SUCCESS);
-	return (1);
+	return (0);
 }
 
 static t_texture	load_texture(t_data *data, char *filename)

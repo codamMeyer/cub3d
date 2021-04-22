@@ -34,7 +34,7 @@ static void	find_sprites(t_data *data, double angle)
 			add_sprites_to_list(data, intersections.horizontal);
 		if (detect_hit(data->worldMap, intersections.vertical, SPRITE))
 			add_sprites_to_list(data, intersections.vertical);
-		apply_incremento_to_intersections(&intersections);
+		apply_increment_to_intersections(&intersections);
 	}
 }
 

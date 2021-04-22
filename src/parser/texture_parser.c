@@ -78,7 +78,7 @@ t_status	get_color(const char *line, t_color *color)
 	split = ft_split(&line[1], ',');
 	if (!split)
 		return (MALLOC_ERROR);
-	if (num_of_strings(split) == 3 && is_valid_color_range(split) &&\
+	if (num_of_strings(split) == 3 && is_valid_color_range(split) && \
 		!color->initialized)
 	{
 		color->red = ft_atoi(split[0]);

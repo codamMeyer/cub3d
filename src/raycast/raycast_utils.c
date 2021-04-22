@@ -31,7 +31,7 @@ double	fix_fisheye_effect(double dist, double angle)
 	return (dist * cos(degree_to_radians(angle)));
 }
 
-void	apply_incremento_to_intersections(t_intersections *intersections)
+void	apply_increment_to_intersections(t_intersections *intersections)
 {
 	intersections->horizontal.x += intersections->hor_increment.x;
 	intersections->horizontal.y += intersections->hor_increment.y;
