@@ -375,15 +375,6 @@ int get_pixel_color(const t_texture *texture, int x, int y)
 ![sprite 4](./images/sprite4.png)
 
 
-
-
-
-
-
-
-
-
-
 # 📚 Reference
 
 
